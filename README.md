@@ -12,12 +12,12 @@ An AI agent (GitHub Copilot) reads the Epic and linked stories directly from Jir
 
 ## Prerequisites
 
-| Requirement | Notes |
-|---|---|
-| Python 3.9+ | For xlsx generation |
-| GitHub Copilot (Agent mode) | Requires access to this repo |
-| Atlassian MCP configured | See setup below |
-| Jira Data Center access | Read access to the target project |
+| Requirement                 | Notes                             |
+| --------------------------- | --------------------------------- |
+| Python 3.9+                 | For xlsx generation               |
+| GitHub Copilot (Agent mode) | Requires access to this repo      |
+| Atlassian MCP configured    | See setup below                   |
+| Jira Data Center access     | Read access to the target project |
 
 ---
 
@@ -60,6 +60,8 @@ CONFLUENCE_API_TOKEN=your-confluence-token
 
 ## Generating a Test Plan
 
+### Single Epic
+
 1. Open this repo in VS Code with GitHub Copilot Agent mode enabled.
 2. Open Copilot Chat and attach the prompt template:
 
@@ -68,11 +70,22 @@ CONFLUENCE_API_TOKEN=your-confluence-token
 Generate test plan for https://jira.mytheresa.com/browse/<EPIC_KEY>
 ```
 
+### Multiple Epics
+
+Pass a comma-separated list — the agent processes each Epic independently and produces a separate output folder per Epic:
+
+```
+@workspace Use .github/prompts/atlassian-mcp-test-plan-template.md
+Generate test plans for G2-19278, G2-19500, G2-20100
+```
+
+Each Epic gets its own folder under `uat-test-plans/` with all three artifacts.
+
 3. The agent will:
-   - Read the Epic and linked stories from Jira
+   - Read each Epic and its linked stories from Jira
    - Extract GitHub development evidence (PRs/commits)
-   - Build the canonical coverage matrix
-   - Generate the simplified checklist
+   - Build one canonical coverage matrix per Epic
+   - Generate the simplified checklist per Epic
    - Produce and save all output files to `uat-test-plans/<EPIC_KEY>/`
 
 ---
@@ -89,12 +102,12 @@ uat-test-plans/
 
 ### Workbook sheets
 
-| Sheet | Purpose |
-|---|---|
-| Checklist | 8-column business checklist — Result and Notes left blank for tester |
-| Overview | Epic metadata, scope, dev evidence, gaps |
-| Coverage Matrix | AC-to-check traceability (no Status column — tracking is done in Checklist) |
-| Exploratory and Design Obs | Evidence-backed non-AC observations |
+| Sheet                      | Purpose                                                                      |
+| -------------------------- | ---------------------------------------------------------------------------- |
+| Checklist                  | 8-column business checklist — Result and Notes left blank for tester        |
+| Overview                   | Epic metadata, scope, dev evidence, gaps                                     |
+| Coverage Matrix            | AC-to-check traceability (no Status column — tracking is done in Checklist) |
+| Exploratory and Design Obs | Evidence-backed non-AC observations                                          |
 
 ---
 
@@ -124,9 +137,9 @@ Key rules enforced automatically:
 
 ## Skills Reference
 
-| Skill | File | Purpose |
-|---|---|---|
-| atlassian-test-plans | `.github/skills/atlassian-test-plans/SKILL.md` | Orchestrates plan generation |
+| Skill                                 | File                                                              | Purpose                            |
+| ------------------------------------- | ----------------------------------------------------------------- | ---------------------------------- |
+| atlassian-test-plans                  | `.github/skills/atlassian-test-plans/SKILL.md`                  | Orchestrates plan generation       |
 | atlassian-development-evidence-github | `.github/skills/atlassian-development-evidence-github/SKILL.md` | Extracts GitHub PR/commit evidence |
 
 ---
@@ -148,6 +161,7 @@ The script enforces all formatting rules (styling, column structure, auto-fit) a
 ## Contributing
 
 To change output format or checklist rules, update **both**:
+
 1. `.github/skills/atlassian-test-plans/SKILL.md` — agent behaviour
 2. `.github/scripts/generate-test-plan-xlsx.py` — xlsx output rules
 
