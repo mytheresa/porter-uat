@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "atlassian-confluence-dc": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@atlassian-dc-mcp/confluence"],
+      "env": {
+        "CONFLUENCE_HOST": "confluence.mytheresa.com"
+      }
+    },
+    "atlassian-jira-dc": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@atlassian-dc-mcp/jira"],
+      "env": {
+        "JIRA_HOST": "jira.mytheresa.com"
+      }
+    }
+  }
+}

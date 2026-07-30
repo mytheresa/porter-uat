@@ -132,7 +132,7 @@ EXPLORATORY_ROWS = [
 wb = Workbook()
 
 # Sheet 1: Checklist
-ws1 = wb.active
+ws1 = wb.worksheets[0]
 ws1.title = "Checklist"
 ws1.freeze_panes = "A2"
 checklist_headers = ["Check ID", "Section", "Check", "How to Verify", "Pass Criteria", "Result", "Notes"]
