@@ -1,0 +1,15 @@
+# Generated test plan outputs — committed intentionally
+# Uncomment the line below to exclude them from git
+# uat-test-plans/
+
+# Python virtualenvs — never commit
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# VS Code workspace storage (local memory files are not for git)
+.vscode/
