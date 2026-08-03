@@ -30,7 +30,12 @@ Acts as the data transformation bridge between evidence extraction and the deter
    - Preserve Jira-first behavior for non-trigger stories; do not degrade Checklist coverage when PR/Confluence enrichment is absent by design.
    - Map PRs/comments/test notes directly to AC scenarios as supporting evidence only.
    - Formulate atomic verification checks for `CHECKLIST_ROWS` and map parity to `MATRIX_ROWS`.
-   - **Checklist Leanness Rule (mandatory):** `CHECKLIST_ROWS` must cover only the highest-priority business user journeys. Target **8–12 checks** (hard cap: 15 for the most complex Epics). The full checklist must be executable in **15–30 minutes** by a business user. Collapse all of the following into a single check per user journey: device variants (desktop/mobile), cancel/close modal behaviour, and success-notification timing. Exclude entirely: brand-specific references (do not mention NAP, MRP, or any brand name — the UAT is run against one target environment at a time as defined by `TARGET_URLS`), Safari-specific rendering, raw localisation string checks, isolated cancel/X behaviour, developer-level or API-level verification, and any negative/boundary case already captured in `MATRIX_ROWS`. Move those concerns to `MATRIX_ROWS` `Inconsistencies` or `EXPLORATORY_ROWS` instead.
+   - **Checklist Balance Rule (mandatory):** `CHECKLIST_ROWS` must be complete enough to avoid missing important business steps, while remaining practical for execution.
+   - Target **8–12 checks** for typical Epics; allow up to **15 checks** for high-complexity Epics with multiple high-risk flows.
+   - Cover critical business outcomes from AC and known risk context without forcing a fixed scenario template when a behavior is not applicable.
+   - Do not over-compress distinct user actions into one row when that would hide a meaningful verification outcome.
+   - Keep brand-specific names out of checklist wording and keep checks business-facing (no API-level or code-level steps). Put deep technical diagnostics in `MATRIX_ROWS` or `EXPLORATORY_ROWS`.
+   - Keep the checklist executable by a business user in one session (recommended **25–45 minutes**), prioritizing clarity and testability over minimum row count.
 2. **Silent JSON Payload Generation (`/tmp/data_payload_<EPIC_KEY>.json`):**
 
    - Consolidate all transformed chunk rows into a single flat JSON file saved directly to disk at `/tmp/data_payload_<EPIC_KEY>.json`.

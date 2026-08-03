@@ -40,6 +40,13 @@ Generate a reproducible UAT test plan iteratively starting from an Epic key and 
 - Keep final chat output compact while preserving the required 5-section order.
 - Do not call GitHub MCP for every UI story by default. Call it only for trigger-matched stories.
 
+## Checklist Depth Rule (Future Runs)
+
+- Generate a balanced `CHECKLIST_ROWS` set that does not miss critical business steps and does not over-compress distinct validations.
+- Target **8–12 checks** for typical Epics; allow up to **15 checks** only when complexity/risk justifies it.
+- Cover the critical business outcomes expressed by AC and risk context, but avoid forcing a fixed checklist template when a flow is not applicable.
+- Keep checklist wording business-facing and environment-agnostic (no brand-name wording, no API/code-level steps).
+
 ## Inputs
 
 - **Target Epic Key:** Explicit Epic key provided in prompt payload
