@@ -9,13 +9,17 @@
       "ui_testable": true,
       "ac_summary": "Navigation affordances for create/edit/remove are visible and usable.",
       "development_evidence": {
-        "status": "Evidence Unavailable",
+        "status": "Available",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
-        "links": []
+        "links": [
+          "https://github.com/mytheresa/atelier/pull/559"
+        ]
       }
     },
     {
@@ -27,9 +31,11 @@
       "development_evidence": {
         "status": "Evidence Unavailable",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
         "links": []
       }
@@ -41,13 +47,17 @@
       "ui_testable": true,
       "ac_summary": "Remove modal copy, controls, and confirmation flow.",
       "development_evidence": {
-        "status": "Evidence Unavailable",
+        "status": "Available",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
-        "links": []
+        "links": [
+          "https://github.com/mytheresa/atelier/pull/569"
+        ]
       }
     },
     {
@@ -59,9 +69,11 @@
       "development_evidence": {
         "status": "Evidence Unavailable",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
         "links": []
       }
@@ -73,13 +85,17 @@
       "ui_testable": true,
       "ac_summary": "MiniPDP shows WL dropdown variant when user has multiple lists.",
       "development_evidence": {
-        "status": "Evidence Unavailable",
+        "status": "Available",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
-        "links": []
+        "links": [
+          "https://github.com/mytheresa/atelier/pull/596"
+        ]
       }
     }
   ]

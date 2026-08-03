@@ -20,6 +20,21 @@ Create a consistent evidence, documentation, and metadata snapshot per Jira issu
 - Use a two-pass strategy: classify with minimal fields first, then enrich only for in-scope UI stories.
 - Avoid requesting large text blobs unless required for AC mapping or conflict resolution.
 - Return normalized summaries (ids/keys/status/links) instead of raw payload dumps.
+- Jira-first mode is default. Confluence and GitHub lookups are trigger-gated, not always-on.
+
+## Trigger-Gated Enrichment Policy (Mandatory)
+
+For each in-scope UI story, compute these boolean triggers from minimal Jira pass data:
+
+- `TRG-AC`: AC is partial, vague, or ambiguous.
+- `TRG-BRAND`: story indicates cross-brand behavior/variance.
+- `TRG-RISK`: story maps to auth continuity, undo/delete integrity, or known regression clusters.
+- `TRG-REL`: release confidence explicitly requires code-level evidence.
+
+Behavior:
+
+- If no triggers fire: keep Jira-first path and skip Confluence/GitHub retrieval.
+- If any trigger fires: allow Confluence/GitHub enrichment under the rules below.
 
 ## Output Contract
 
@@ -51,12 +66,12 @@ For each processed issue (Epic or Child), return one standardized JSON block con
 
 2. **Doc Extraction (Confluence MCP & General Links):**
    - Scan descriptions first, then comments/remote links only if needed for missing AC context.
-   - If a recognized Confluence URL is detected, dynamically execute Confluence MCP lookup tools to pull document body content.
+   - Execute Confluence MCP lookup only for trigger-matched stories and only when a recognized Confluence URL is detected.
    - **BDD Filter Rules:** Extract only sections matching "Requirements", "Acceptance Criteria", or explicit "Given/When/Then" specifications. Discard historical revision logs and author notes.
 
 3. **GitHub Fetch & BDD Extraction (`@modelcontextprotocol/server-github` MCP):**
    - **NEVER call `jira_getIssueDevelopmentInfo`** — the Jira instance is linked to a self-hosted Bitbucket (`git.mytheresa.com`) that returns `unauthorized`. It does not expose GitHub data. Skip it entirely and go directly to GitHub MCP.
-   - Perform repository-scoped search using the Jira story key across PR titles and metadata first; fetch body/comment detail only when required to map ambiguous AC.
+   - Perform repository-scoped search using the Jira story key across PR titles and metadata only for trigger-matched stories; fetch body/comment detail only when required to map ambiguous AC.
    - **Smart BDD Extraction & Filtering Rules:**
      - *Ignore Bots:* Strip automated CI/CD comments (Jenkins, Dependabot, SonarQube, GitHub Actions).
      - *Target BDD Context:* Extract *only* PR Title, main summary, and sections labeled "How to Test", "Testing Notes", "Impact", or explicit state-change steps. Retain comments containing feature flag toggles or testing workarounds.
@@ -69,8 +84,9 @@ For each processed issue (Epic or Child), return one standardized JSON block con
 
 4. **Status Determination:**
    - Mark `Available` if explicit PR/commit evidence was found via GitHub MCP **or** via Jira-link evidence fallback.
-   - If GitHub MCP lookup fails (tool/server/auth/transient error), continue with Jira-link fallback and record outcome in the existing evidence format.
-   - Mark `Evidence Unavailable` only after both checks are performed and no PR/commit evidence is found.
+   - If no triggers fire for a story, keep Jira-first mode and rely on Jira-link evidence only.
+   - If any trigger fires and GitHub MCP lookup fails (tool/server/auth/transient error), continue with Jira-link fallback and record outcome in the existing evidence format.
+   - For trigger-matched stories, mark `Evidence Unavailable` only after both GitHub and Jira-link fallback checks are performed and no PR/commit evidence is found.
 
 ## Deterministic Rules
 

@@ -9,13 +9,17 @@
       "ui_testable": true,
       "ac_summary": "UI modal for create/rename wishlist interactions.",
       "development_evidence": {
-        "status": "Evidence Unavailable",
+        "status": "Available",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
-        "links": []
+        "links": [
+          "https://github.com/mytheresa/atelier/pull/582"
+        ]
       }
     },
     {
@@ -25,13 +29,17 @@
       "ui_testable": true,
       "ac_summary": "Rename action persists and surfaces backend/API responses.",
       "development_evidence": {
-        "status": "Evidence Unavailable",
+        "status": "Available",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
-        "links": []
+        "links": [
+          "https://github.com/mytheresa/atelier/pull/702"
+        ]
       }
     },
     {
@@ -41,13 +49,17 @@
       "ui_testable": true,
       "ac_summary": "Wishlist page consumes all-items/all-lists query contract.",
       "development_evidence": {
-        "status": "Evidence Unavailable",
+        "status": "Available",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
-        "links": []
+        "links": [
+          "https://github.com/mytheresa/atelier/pull/614"
+        ]
       }
     },
     {
@@ -57,13 +69,17 @@
       "ui_testable": true,
       "ac_summary": "Remove wishlist action integrated with API and expected confirmations.",
       "development_evidence": {
-        "status": "Evidence Unavailable",
+        "status": "Available",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
-        "links": []
+        "links": [
+          "https://github.com/mytheresa/atelier/pull/629"
+        ]
       }
     },
     {
@@ -73,13 +89,17 @@
       "ui_testable": true,
       "ac_summary": "Create wishlist modal submits and receives API response.",
       "development_evidence": {
-        "status": "Evidence Unavailable",
+        "status": "Available",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
-        "links": []
+        "links": [
+          "https://github.com/mytheresa/atelier/pull/595"
+        ]
       }
     }
   ]

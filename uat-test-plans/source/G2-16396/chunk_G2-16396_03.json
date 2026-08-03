@@ -9,13 +9,17 @@
       "ui_testable": true,
       "ac_summary": "View List truncation and responsive collapse behavior.",
       "development_evidence": {
-        "status": "Evidence Unavailable",
+        "status": "Available",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
-        "links": []
+        "links": [
+          "https://github.com/mytheresa/atelier/pull/598"
+        ]
       }
     },
     {
@@ -25,13 +29,17 @@
       "ui_testable": true,
       "ac_summary": "Delete from all-items view removes item from selected/all wishlists correctly.",
       "development_evidence": {
-        "status": "Evidence Unavailable",
+        "status": "Available",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
-        "links": []
+        "links": [
+          "https://github.com/mytheresa/atelier/pull/825"
+        ]
       }
     },
     {
@@ -41,13 +49,17 @@
       "ui_testable": true,
       "ac_summary": "Undo restore returns previously deleted wishlist-product associations.",
       "development_evidence": {
-        "status": "Evidence Unavailable",
+        "status": "Available",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
-        "links": []
+        "links": [
+          "https://github.com/mytheresa/atelier/pull/845"
+        ]
       }
     },
     {
@@ -57,13 +69,17 @@
       "ui_testable": true,
       "ac_summary": "Single-WL user redirect from nav points directly to the only wishlist.",
       "development_evidence": {
-        "status": "Evidence Unavailable",
+        "status": "Available",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
-        "links": []
+        "links": [
+          "https://github.com/mytheresa/atelier/pull/778"
+        ]
       }
     },
     {
@@ -73,13 +89,17 @@
       "ui_testable": true,
       "ac_summary": "MRP create/rename modal surfaces backend error state and recovery.",
       "development_evidence": {
-        "status": "Evidence Unavailable",
+        "status": "Available",
         "sources_checked": [
+          "github-mcp-search",
           "jira-description",
           "jira-comment",
-          "jira-issuelink"
+          "jira-issuelink",
+          "jira-remotelink"
         ],
-        "links": []
+        "links": [
+          "https://github.com/mytheresa/atelier/pull/776"
+        ]
       }
     }
   ]

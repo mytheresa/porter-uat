@@ -15,6 +15,7 @@ Acts as the data transformation bridge between evidence extraction and the deter
 - Secondary evidence allowed: Jira comments, PRs/commits, and linked docs (Confluence/Figma/external docs).
 - Secondary evidence may refine or clarify reproduction steps and expected outcomes, but must never contradict or override AC intent.
 - If secondary evidence conflicts with AC, keep AC as canonical and record the conflict in gaps/inconsistencies.
+- Trigger-driven enrichment: treat Confluence/GitHub evidence as optional per-story enrichment based on upstream trigger flags, not as mandatory retrieval for every UI story.
 
 ## Input
 
@@ -26,6 +27,7 @@ Acts as the data transformation bridge between evidence extraction and the deter
 
    - Ingest all batched story chunks for the Epic.
    - Parse UI-testable story AC first, then enrich with Confluence BDD notes, comments, and PR evidence as secondary context.
+   - Preserve Jira-first behavior for non-trigger stories; do not degrade Checklist coverage when PR/Confluence enrichment is absent by design.
    - Map PRs/comments/test notes directly to AC scenarios as supporting evidence only.
    - Formulate atomic verification checks for `CHECKLIST_ROWS` and map parity to `MATRIX_ROWS`.
    - **Checklist Leanness Rule (mandatory):** `CHECKLIST_ROWS` must cover only the highest-priority business user journeys. Target **8–12 checks** (hard cap: 15 for the most complex Epics). The full checklist must be executable in **15–30 minutes** by a business user. Collapse all of the following into a single check per user journey: device variants (desktop/mobile), cancel/close modal behaviour, and success-notification timing. Exclude entirely: brand-specific references (do not mention NAP, MRP, or any brand name — the UAT is run against one target environment at a time as defined by `TARGET_URLS`), Safari-specific rendering, raw localisation string checks, isolated cancel/X behaviour, developer-level or API-level verification, and any negative/boundary case already captured in `MATRIX_ROWS`. Move those concerns to `MATRIX_ROWS` `Inconsistencies` or `EXPLORATORY_ROWS` instead.
