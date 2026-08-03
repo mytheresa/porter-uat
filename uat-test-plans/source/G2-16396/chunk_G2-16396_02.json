@@ -1,0 +1,86 @@
+{
+  "epic_key": "G2-16396",
+  "batch_id": 2,
+  "stories": [
+    {
+      "issue_key": "G2-19105",
+      "summary": "FE | Create/Edit WL nav menu icons",
+      "status": "Done",
+      "ui_testable": true,
+      "ac_summary": "Navigation affordances for create/edit/remove are visible and usable.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    },
+    {
+      "issue_key": "G2-19106",
+      "summary": "FE | Rename & Add modal",
+      "status": "Closed",
+      "ui_testable": true,
+      "ac_summary": "Rename/add modal behavior and visual states.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    },
+    {
+      "issue_key": "G2-19107",
+      "summary": "FE | Remove WL Modal (UI only)",
+      "status": "Done",
+      "ui_testable": true,
+      "ac_summary": "Remove modal copy, controls, and confirmation flow.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    },
+    {
+      "issue_key": "G2-20842",
+      "summary": "FE | WL | Login with Multiple WLs",
+      "status": "Closed",
+      "ui_testable": true,
+      "ac_summary": "Auth/login gating preserves intended multi-WL action after login.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    },
+    {
+      "issue_key": "G2-21293",
+      "summary": "FE | MiniPDP | Make the 'Wishlist' button a dropdown when the user has more than one WL",
+      "status": "Done",
+      "ui_testable": true,
+      "ac_summary": "MiniPDP shows WL dropdown variant when user has multiple lists.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    }
+  ]
+}

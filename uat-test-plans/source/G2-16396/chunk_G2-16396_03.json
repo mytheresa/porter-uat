@@ -1,0 +1,86 @@
+{
+  "epic_key": "G2-16396",
+  "batch_id": 3,
+  "stories": [
+    {
+      "issue_key": "G2-22343",
+      "summary": "FE | WL - Add text truncation (…) for wishlist titles in 'View List' | Collapse 'View List' on bp1, bp2",
+      "status": "Done",
+      "ui_testable": true,
+      "ac_summary": "View List truncation and responsive collapse behavior.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    },
+    {
+      "issue_key": "G2-22969",
+      "summary": "FE | Delete product from multiple wishlists",
+      "status": "Done",
+      "ui_testable": true,
+      "ac_summary": "Delete from all-items view removes item from selected/all wishlists correctly.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    },
+    {
+      "issue_key": "G2-23030",
+      "summary": "FE | Undo product from multiple wishlists",
+      "status": "Done",
+      "ui_testable": true,
+      "ac_summary": "Undo restore returns previously deleted wishlist-product associations.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    },
+    {
+      "issue_key": "G2-23523",
+      "summary": "FE | WL | User with only one wishlist should be redirected to this wishlist from navigation menu",
+      "status": "Closed",
+      "ui_testable": true,
+      "ac_summary": "Single-WL user redirect from nav points directly to the only wishlist.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    },
+    {
+      "issue_key": "G2-23730",
+      "summary": "FE | MRP |  Create/Rename WL modal: handle BE error message",
+      "status": "Done",
+      "ui_testable": true,
+      "ac_summary": "MRP create/rename modal surfaces backend error state and recovery.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    }
+  ]
+}

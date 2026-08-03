@@ -15,6 +15,14 @@
       "env": {
         "JIRA_HOST": "jira.mytheresa.com"
       }
+    },
+    "github": {
+      "type": "stdio",
+      "command": "zsh",
+      "args": [
+        "-lc",
+        "source ~/.mcp/github.env && npx -y @modelcontextprotocol/server-github"
+      ]
     }
   }
 }

@@ -1,0 +1,195 @@
+{
+  "EPIC_KEY": "G2-16151",
+  "EPIC_SLUG": "pdp-be-foundation",
+  "OUTPUT_PATH": "uat-test-plans/G2-16151-pdp-be-foundation.xlsx",
+  "PLAN_TITLE": "G2-16151 UAT — PDP BE Foundation",
+  "GENERATED_DATE": "2026-08-03",
+  "EPIC_SUMMARY": "PDP | BE | foundation",
+  "EPIC_STATUS": "Closed",
+  "EPIC_CREATED_BY": "Kozlova, Nika || External",
+  "COMPONENT": "D3",
+  "TARGET_URLS": "TBD — specify target environment URL before UAT execution",
+  "TIMEBOX": "15–20 minutes",
+  "COVERAGE_SUMMARY": "2 BE stories (G2-16715, G2-17313) with observable PDP outcomes mapped to 6 outcome-based checklist checks. All 5 evaluation/spike tickets excluded. UAT verifies end-user observable results of the BE API foundation.",
+  "STORIES_IN_SCOPE": "G2-16715 | BE | PDP API | Product details | Closed — outcome observable: product name, brand, price on PDP\nG2-17313 | PDP BE | Tapir | Generate image URLs from NAP template in Tapir | Closed — outcome observable: product images on PDP",
+  "STORIES_EXCLUDED": "G2-16766 | [SPIKE] BE | PDP API | Decide between URL slug or ID | Evaluation | Architecture decision spike — no user-facing deliverable\nG2-16767 | [SPIKE] PDP API | Validate critical path build | Evaluation | Internal validation spike — no user-facing deliverable\nG2-16838 | [SPIKE] PDP API | Dependency mapping | Evaluation | Dependency analysis spike — no user-facing deliverable\nG2-18479 | [SPIKE] BE | PDP Architecture review | Evaluation | Architecture review spike — outcome documented internally\nG2-18590 | [SPIKE] BE | Data for PDP details/accordions | Evaluation | Data investigation spike — editorial notes, size & fit, details & care data not yet exposed in API",
+  "OUT_OF_SCOPE": "PDP accordion data (Editorial Notes, Size & Fit, Details & Care, Delivery and Returns) — under investigation in G2-18590, not yet available in API\nBadges, shipping restrictions, PS messaging, colour linking, recommendations, segmentation, size charts, analytics, promo — second iteration scope per epic definition\nAkamai Image Manager — explicitly out of scope for critical path; image URLs use imagesphere format with hardcoded width and quality until Akamai IM is formalised\nAPI-level verification (endpoint responses, schema validation) — developer concern, not business UAT",
+  "DEV_EVIDENCE": "G2-17313 (Image URLs): 3 PRs merged in mytheresa/tapir — #6380 [G2-17313] add porter image host; #6423 [G2-17313] add porter image path provider brand based solution; #6479 [G2-17313] add porter image host — Status: Available\nG2-16715 (Product details API): No dedicated GitHub PR found; Jira comment confirms 'Already completed' — Status: Available via Jira comment fallback\nNote: G2-17313 has a security issue flagged in a Jira comment — flagged for Tapir team to fix",
+  "GAPS_SUMMARY": "G2-16715: No GitHub PR found; implementation confirmed via Jira comment ('Already completed') but no code-level evidence trail\nG2-17313: Security issue flagged in Jira comment (Tapir side) — verify status of fix before UAT\nG2-18590: PDP accordion sections (Editorial Notes, Size & Fit, Details & Care) not yet served by API — verify which sections are populated at time of UAT\nStock availability and sizes were noted as out of scope in G2-16715 AC — confirm what stock/size data is actually served at time of UAT",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Product Information",
+      "Check": "PDP displays correct product name and designer/brand",
+      "How to Verify": "Navigate to a product detail page for a NAP or MRP product. Verify the product name and designer/brand name are displayed correctly and match the product.",
+      "Pass Criteria": "The product name is displayed and is non-empty.\nThe designer/brand name is displayed as a single string and is correct for the product."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Product Information",
+      "Check": "PDP displays the correct product price",
+      "How to Verify": "Navigate to a product detail page. Verify the price is displayed and matches the expected price for that product.",
+      "Pass Criteria": "A non-empty price is displayed on the PDP.\nThe price matches the expected value for the product."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Stock & Sizes",
+      "Check": "PDP displays product sizes with stock availability",
+      "How to Verify": "Navigate to a product detail page that has multiple sizes. Verify all available sizes are listed and unavailable/out-of-stock sizes are clearly indicated.",
+      "Pass Criteria": "All expected sizes for the product are displayed.\nSizes that are out of stock are visually distinguished from available sizes."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Stock & Sizes",
+      "Check": "PDP correctly reflects overall stock availability status",
+      "How to Verify": "Navigate to a product that is in stock and one that is out of stock. Verify the stock status is reflected correctly on each PDP.",
+      "Pass Criteria": "In-stock products allow size selection and add-to-bag action.\nOut-of-stock products display an appropriate unavailability indicator."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Product Images",
+      "Check": "PDP displays product images without broken image states",
+      "How to Verify": "Navigate to a product detail page. Verify that product images load correctly for at least two shot types (e.g. front-on and back).",
+      "Pass Criteria": "Product images load without broken image placeholders.\nAt least two image shot types are displayed (e.g. 'in' and 'ou' shots)."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Product Images",
+      "Check": "Product images load from the expected image host domain",
+      "How to Verify": "Inspect the image URLs on a NAP PDP and an MRP PDP. Verify the domain matches the expected host (www.net-a-porter.com for NAP, www.mrporter.com for MRP).",
+      "Pass Criteria": "NAP product images are served from www.net-a-porter.com.\nMRP product images are served from www.mrporter.com.\nNo images are served from unexpected or placeholder domains."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-16715",
+      "AC Ref": "AC1",
+      "Capability": "PDP API returns designer/brand name as a single, unique string",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "No GitHub PR found; Jira comment: 'Already completed' — implementation confirmed via Jira fallback",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-16715",
+      "AC Ref": "AC2",
+      "Capability": "PDP API returns non-empty product description",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Implementation confirmed via Jira comment fallback",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Story AC explicitly marks stock/sizes/shipping restrictions as out of scope — confirm what is actually served at time of UAT"
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-16715",
+      "AC Ref": "Epic-AC",
+      "Capability": "PDP API returns price for the product",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Price is in epic AC scope; not explicitly listed in G2-16715 story AC — inferred from epic definition",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Price is in epic scope but not explicitly called out in G2-16715 story AC — gap to confirm"
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-16715",
+      "AC Ref": "Epic-AC",
+      "Capability": "PDP API returns sizes with availability/stock level per size",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003, UAT-004",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Sizes and stock are in epic AC scope; G2-16715 story AC explicitly marks these as out of scope for that story",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "G2-16715 story AC marks sizes/stock as out of scope — dependency on G2-16675 (stock availability epic, Done). Verify sizes and stock are served at time of UAT."
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-17313",
+      "AC Ref": "AC1",
+      "Capability": "Tapir adapts image URL logic for YNAP images using imagesphere URL format",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-005, UAT-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "3 PRs merged in mytheresa/tapir: #6380, #6423, #6479 — all closed",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Security issue flagged in Jira comment (Tapir side) — verify fix status before UAT. Width and quality are hardcoded until Akamai IM is implemented."
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-17313",
+      "AC Ref": "AC2",
+      "Capability": "Image URLs use correct domain per brand (NAP vs MRP)",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PR #6479 'add porter image host' and #6423 'brand based solution' directly address domain-per-brand logic",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Image URL format uses imagesphere pattern; will change when Akamai IM is formalised — test plan may need updating post-Akamai implementation"
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "AC Gap",
+      "Jira Source": "G2-17313",
+      "Summary": "Security issue flagged on Tapir image URL implementation",
+      "How to Validate": "Check with the BE team whether the security issue flagged in G2-17313 Jira comment has been resolved. If resolved, verify no unexpected image URL exposure or path traversal is possible.",
+      "Expected Observation": "The security issue has been resolved and image URLs are served safely without exposing unintended paths or data.",
+      "Impact": "High — security concern on a core product data endpoint",
+      "Linked Coverage IDs": "COV-005, COV-006",
+      "Evidence Notes": "Jira comment on G2-17313: 'security issue that needs to be fixed on Tapir side'"
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "AC Gap",
+      "Jira Source": "G2-18590",
+      "Summary": "PDP accordion sections missing data — Editorial Notes, Size & Fit, Details & Care",
+      "How to Validate": "Navigate to a PDP and inspect the accordion sections (Editorial Notes, Size & Fit, Details & Care, Delivery & Returns). Observe which sections are populated.",
+      "Expected Observation": "Sections with no data source yet (per G2-18590 spike) may appear empty or absent. This is expected for the current iteration. No unhandled error state should be shown.",
+      "Impact": "Medium — incomplete PDP content for customers until spike outcome is implemented",
+      "Linked Coverage IDs": "COV-002",
+      "Evidence Notes": "G2-18590 is a spike to investigate data sources — outcome not yet implemented at time of this UAT"
+    },
+    {
+      "Observation ID": "EXP-003",
+      "Source Type": "Exploratory",
+      "Jira Source": "G2-16715",
+      "Summary": "Second iteration PDP API data — badges, shipping restrictions, recommendations not yet served",
+      "How to Validate": "Navigate to a PDP and verify that second-iteration features (badges, shipping restriction warnings, product recommendations, promo messages) are either absent or show graceful empty states.",
+      "Expected Observation": "No broken or error states where second-iteration data is expected but not yet served. Absence of these features is expected for the critical path iteration.",
+      "Impact": "Low — known descope for this iteration",
+      "Linked Coverage IDs": "COV-002",
+      "Evidence Notes": "Epic scope explicitly lists these as second iteration: badges, shipping restrictions, PS messaging, colour linking, recommendations, segmentation, size charts, analytics, promo"
+    },
+    {
+      "Observation ID": "EXP-004",
+      "Source Type": "Exploratory",
+      "Jira Source": "G2-17313",
+      "Summary": "Image URL hardcoded width and quality — verify no broken images at different viewport sizes",
+      "How to Validate": "Open a PDP on desktop and mobile viewport sizes. Verify product images display at an acceptable quality and are not pixelated or oversized at either breakpoint.",
+      "Expected Observation": "Images display acceptably at all tested viewport sizes. Hardcoded w2000_q60 values are sufficient for current viewports.",
+      "Impact": "Low — will be addressed when Akamai IM implementation is formalised",
+      "Linked Coverage IDs": "COV-005",
+      "Evidence Notes": "PR #6479 hardcodes width and quality; AC notes this will change with Akamai IM"
+    }
+  ]
+}

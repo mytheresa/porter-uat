@@ -1,0 +1,333 @@
+{
+  "EPIC_KEY": "G2-16396",
+  "EPIC_SLUG": "wishlist-multiple-wl",
+  "OUTPUT_PATH": "uat-test-plans/G2-16396-wishlist-multiple-wl.xlsx",
+  "PLAN_TITLE": "G2-16396 UAT — Wishlist Multiple WL",
+  "GENERATED_DATE": "2026-08-03",
+  "EPIC_SUMMARY": "Wishlist | Multiple WL",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+  "COMPONENT": "D3",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "20-30 minutes",
+  "COVERAGE_SUMMARY": "15 UI-testable child stories mapped to 10 business-journey checklist checks; 16 non-UI/technical or spike stories excluded from business execution scope.",
+  "STORIES_IN_SCOPE": "G2-18231 | FE | Create/Rename WL Modal (UI only) | Done\nG2-18232 | FE | Rename WL API Integration | Done\nG2-18233 | FE | Multiple WL Query integration with BE (all items, all WLs) | Done\nG2-18746 | FE | WL | Remove WL API Integration | Done\nG2-18799 | FE | Create WL API Integration | Done\nG2-19105 | FE | Create/Edit WL nav menu icons | Done\nG2-19106 | FE | Rename & Add modal | Closed\nG2-19107 | FE | Remove WL Modal (UI only) | Done\nG2-20842 | FE | WL | Login with Multiple WLs | Closed\nG2-21293 | FE | MiniPDP | Make the 'Wishlist' button a dropdown when the user has more than one WL | Done\nG2-22343 | FE | WL - Add text truncation (…) for wishlist titles in 'View List' | Collapse 'View List' on bp1, bp2 | Done\nG2-22969 | FE | Delete product from multiple wishlists | Done\nG2-23030 | FE | Undo product from multiple wishlists | Done\nG2-23523 | FE | WL | User with only one wishlist should be redirected to this wishlist from navigation menu | Closed\nG2-23730 | FE | MRP |  Create/Rename WL modal: handle BE error message | Done",
+  "STORIES_EXCLUDED": "G2-16512 | [SPIKE] Multiple Wishlists | Evaluation | Spike/research ticket; no direct user-facing acceptance flow.\nG2-16802 | Wishlist Bootstrap | Technical Story | Bootstrap/technical foundation; not directly business-UAT executable.\nG2-18224 | BE | TAPIR | Rename WL | Technical Story | Backend-only implementation.\nG2-18225 | BE | HYENA | Rename WL | Technical Story | Backend-only implementation.\nG2-18226 | BE | TAPIR | Remove WL | Technical Story | Backend-only implementation.\nG2-18227 | BE | HYENA | Remove WL | Technical Story | Backend-only implementation.\nG2-18228 | BE | TAPIR | A2W | Technical Story | Backend-only implementation.\nG2-18229 | BE | HYENA | A2W | Technical Story | Backend-only implementation.\nG2-18334 | BE | Tapir | Use new multi brand implementation for Create named wishlist | Technical Story | Backend-only implementation.\nG2-19109 | BE | HYENA | Return all items, all WL | Technical Story | Backend query implementation only.\nG2-19110 | BE | TAPIR | Return all items, all WL | Technical Story | Backend query implementation only.\nG2-22856 | BE | Return default wishlist_id on login, instead of the last created | Task | Backend login payload behavior.\nG2-22888 | BE | TAPIR | Delete product from multiple wishlists | Technical Story | Backend-only implementation.\nG2-22889 | BE | HYENA | Delete product from multiple wishlists | Technical Story | Backend-only implementation.\nG2-23031 | BE | TAPIR | 'UNDO' product from multiple wishlists | Technical Story | Backend-only implementation.\nG2-23032 | BE | HYENA | UNDO product from multiple wishlists | Technical Story | Backend-only implementation.",
+  "OUT_OF_SCOPE": "Backend-only implementation verification (Tapir/Hyena internals), API schema validation, load/performance testing, and non-functional deep diagnostics not executable as quick business UAT checks.",
+  "DEV_EVIDENCE": "GitHub/commit evidence basis checked via Jira fallback sources (description/comments/issuelinks) for each in-scope story. No explicit PR/commit URLs were found; matrix entries marked Evidence Unavailable.",
+  "GAPS_SUMMARY": "Multiple in-scope stories provide limited structured AC text, requiring summary-driven validation. No direct PR/commit URLs discovered in retrieved Jira metadata/comments. Wishlist limit behavior is marked configurable/TBC and should be validated exploratorily.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Wishlist Creation",
+      "Check": "Create a new custom wishlist from the wishlist page",
+      "How to Verify": "Open the wishlist page and use the + action to create a new named wishlist. Confirm it appears in the wishlist selector/navigation.",
+      "Pass Criteria": "A new wishlist is created with the entered name.\nThe new list is selectable immediately."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Wishlist Rename",
+      "Check": "Rename an existing custom wishlist",
+      "How to Verify": "From the wishlist navigation, trigger rename/edit for a custom list, submit a new name, and refresh the page.",
+      "Pass Criteria": "The new wishlist name persists after save.\nNo stale name appears after refresh."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Wishlist Removal",
+      "Check": "Remove a custom wishlist using the remove modal flow",
+      "How to Verify": "Open remove action from wishlist navigation, confirm deletion in modal, and verify list is no longer available.",
+      "Pass Criteria": "The selected wishlist is removed.\nUser remains in a stable post-delete state without UI errors."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Wishlist Navigation",
+      "Check": "Use wishlist navigation controls/icons to switch or manage lists",
+      "How to Verify": "Verify create/edit/remove controls are visible in expected contexts and switch between all-items and single-list views.",
+      "Pass Criteria": "Controls are visible in the correct context.\nNavigation updates content for the selected view."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "PDP & MiniPDP Add-to-Wishlist",
+      "Check": "Add item to wishlist from PDP or MiniPDP when user has multiple lists",
+      "How to Verify": "On PDP and MiniPDP, open add-to-wishlist control and choose a specific wishlist. Then verify item appears in chosen list.",
+      "Pass Criteria": "Control exposes wishlist choice when multiple lists exist.\nItem is added to the intended wishlist."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "All Items Query & Rendering",
+      "Check": "Validate all-items view and per-list filtering behavior",
+      "How to Verify": "Open wishlist all-items view, then filter to specific lists and compare item counts/list membership.",
+      "Pass Criteria": "All-items view renders combined entries.\nFiltering isolates expected list items without stale data."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Auth Continuity",
+      "Check": "Ensure login flow preserves multi-wishlist intent",
+      "How to Verify": "While logged out, attempt a wishlist action that requires auth; complete login and verify intended wishlist action can be completed.",
+      "Pass Criteria": "After login, user is returned to a valid wishlist context.\nAction can be completed without losing intent."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Single-WL Redirect",
+      "Check": "Validate redirect behavior for users with exactly one wishlist",
+      "How to Verify": "Login with a single-wishlist account and enter wishlist via navigation entry point.",
+      "Pass Criteria": "User lands directly on the only wishlist.\nNo unnecessary list selector step is shown."
+    },
+    {
+      "Check ID": "UAT-009",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Delete Item Across Lists",
+      "Check": "Delete an item from multiple wishlists context and verify effect",
+      "How to Verify": "From all-items view, delete a product associated with multiple wishlists and review list states.",
+      "Pass Criteria": "Deletion applies to the intended multi-list context.\nRemoved item no longer appears where expected."
+    },
+    {
+      "Check ID": "UAT-010",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Undo Item Removal & Error Handling",
+      "Check": "Undo a multi-wishlist item removal and validate modal/API error handling",
+      "How to Verify": "Trigger item deletion and immediate undo; also force/observe backend error path for create/rename on MRP to validate user message.",
+      "Pass Criteria": "Undo restores the item associations correctly.\nError message is clear and user can recover/retry."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-18231",
+      "AC Ref": "AC1",
+      "Capability": "Create/rename modal UI flow is rendered with expected controls and states",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-002",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-18232",
+      "AC Ref": "AC1",
+      "Capability": "Rename wishlist mutation integrates correctly and persists name",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-18233",
+      "AC Ref": "AC1",
+      "Capability": "All-items and all-wishlists query integration supports FE rendering",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-18746",
+      "AC Ref": "AC1",
+      "Capability": "Remove wishlist mutation integrates with FE modal confirmation flow",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-18799",
+      "AC Ref": "AC1",
+      "Capability": "Create wishlist mutation integrates and creates selectable list",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-19105",
+      "AC Ref": "AC1",
+      "Capability": "Create/edit/remove nav icon affordances are present in wishlist navigation",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "UX",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-19106",
+      "AC Ref": "AC1",
+      "Capability": "Rename/add modal behavior and visual interaction remain consistent",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-002",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "UX",
+      "Inconsistencies": "Story has limited structured AC text; validation relies on summary/context and linked behavior tickets."
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-19107",
+      "AC Ref": "AC1",
+      "Capability": "Remove modal presents clear confirm/cancel behavior for custom lists",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "UX",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-009",
+      "Jira Source": "G2-20842",
+      "AC Ref": "AC1",
+      "Capability": "Auth/login flow supports multi-wishlist add flow continuity",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Story has limited structured AC text; validation relies on summary/context and linked behavior tickets."
+    },
+    {
+      "Coverage ID": "COV-010",
+      "Jira Source": "G2-21293",
+      "AC Ref": "AC1",
+      "Capability": "MiniPDP wishlist control becomes dropdown when user has >1 wishlist",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-005",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-011",
+      "Jira Source": "G2-22343",
+      "AC Ref": "AC1",
+      "Capability": "Wishlist title truncation and responsive collapse on bp1/bp2",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "UX",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-012",
+      "Jira Source": "G2-22969",
+      "AC Ref": "AC1",
+      "Capability": "Delete product action works from multiple-wishlist context",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-009",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-013",
+      "Jira Source": "G2-23030",
+      "AC Ref": "AC1",
+      "Capability": "Undo restores product after multi-wishlist deletion",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-010",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-014",
+      "Jira Source": "G2-23523",
+      "AC Ref": "AC1",
+      "Capability": "Single-wishlist users are redirected directly to their only wishlist",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-008",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-015",
+      "Jira Source": "G2-23730",
+      "AC Ref": "AC1",
+      "Capability": "Create/rename modal displays BE error message correctly on MRP",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-010",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Checked Jira description/comments/issuelinks for PR/commit URLs; none found.",
+      "Evidence Availability": "Evidence Unavailable",
+      "Case Type": "Resilience",
+      "Inconsistencies": ""
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "Scope Risk",
+      "Jira Source": "G2-16396",
+      "Summary": "Wishlist limits (max lists/items) are noted as configurable/TBC in epic scope text.",
+      "How to Validate": "Create additional wishlists and add items until configured cap is approached; observe any threshold message or hard block behavior.",
+      "Expected Observation": "System enforces configured limits gracefully with user-readable messaging and no broken state.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-001,COV-005,COV-011",
+      "Evidence Notes": "Epic scope text references configurable list limits and TBC implementation details."
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Cross-Brand Variant",
+      "Jira Source": "G2-23730",
+      "Summary": "MRP-specific backend error-message behavior for create/rename requires explicit cross-brand check.",
+      "How to Validate": "Execute create/rename in MRP acceptance with an error-triggering condition and compare UX against NAP baseline behavior.",
+      "Expected Observation": "Error copy is actionable and behavior is consistent with brand expectations without trapping the user.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-015",
+      "Evidence Notes": "Task explicitly calls out MRP-only mismatch scenario."
+    },
+    {
+      "Observation ID": "EXP-003",
+      "Source Type": "Flow Continuity",
+      "Jira Source": "G2-20842",
+      "Summary": "Auth handoff during wishlist actions may regress with session transitions.",
+      "How to Validate": "Start add-to-wishlist while logged out, authenticate, then verify target wishlist selection/action remains coherent post-login.",
+      "Expected Observation": "No dropped intent, no duplicated actions, and user remains in correct wishlist context.",
+      "Impact": "High",
+      "Linked Coverage IDs": "COV-009,COV-010",
+      "Evidence Notes": "Story targets adaptation of prior single-WL auth behavior to multi-WL."
+    }
+  ]
+}

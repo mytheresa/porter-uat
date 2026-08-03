@@ -2,11 +2,11 @@
 
 Lightweight toolkit for generating simplified manual UAT test plans for **Net-a-Porter** and **Mr Porter** from Jira Epic evidence — no test management licence required.
 
-An AI agent (GitHub Copilot) reads the Epic and linked stories directly from Jira via MCP, extracts Acceptance Criteria, and produces:
+A hardened GitHub Copilot agent reads Epics and linked stories directly from Jira via MCP, extracts Acceptance Criteria, and produces:
 
-- A **Simplified Business Checklist** (xlsx) ready to hand to a business tester
-- A **Canonical Coverage Matrix** (markdown) for traceability
-- A **Simplified Flows** narrative (markdown)
+- A **Business Checklist** (xlsx) ready to hand to a Business User
+- A **Coverage Matrix** for AC-to-test traceability
+- A **Exploratory Scenarios** sheet for evidence-backed observations
 
 ---
 
@@ -32,9 +32,12 @@ cd porter-uat
 
 ### 2. Python dependencies
 
+Create and activate a virtual environment (required on macOS due to PEP 668):
+
 ```sh
 python3 -m venv /tmp/xlsx-venv
-/tmp/xlsx-venv/bin/pip install -r .github/scripts/requirements.txt
+source /tmp/xlsx-venv/bin/activate
+pip install -r .github/scripts/requirements.txt
 ```
 
 ### 3. Atlassian MCP tokens
@@ -56,37 +59,99 @@ JIRA_API_TOKEN=your-jira-token
 CONFLUENCE_API_TOKEN=your-confluence-token
 ```
 
+### 4. GitHub MCP token
+
+Store your GitHub personal access token (PAT) for the MCP package:
+
+```sh
+~/.github-mcp/github.env
+```
+
+Example:
+
+```sh
+# github.env
+GITHUB_TOKEN=your-github-pat
+```
+
+The token is used to extract PR/commit evidence for development traceability.
+
 ---
 
 ## Generating a Test Plan
 
-### Single Epic
+### Batch Mode (Multiple Epics)
 
-1. Open this repo in VS Code with GitHub Copilot Agent mode enabled.
-2. Open Copilot Chat and attach the prompt template:
+Queue Epics in `epics_queue.txt` (one key per line), then run the batch processor:
 
-```
-@workspace Use .github/prompts/atlassian-mcp-test-plan-template.md
-Generate test plan for https://jira.mytheresa.com/browse/<EPIC_KEY>
-```
+```sh
+cat > epics_queue.txt << EOF
+G2-19278
+G2-19500
+G2-20100
+EOF
 
-### Multiple Epics
-
-Pass a comma-separated list — the agent processes each Epic independently and produces a separate output folder per Epic:
-
-```
-@workspace Use .github/prompts/atlassian-mcp-test-plan-template.md
-Generate test plans for G2-19278, G2-19500, G2-20100
+python3 auto_copilot.py
 ```
 
-Each Epic gets its own folder under `uat-test-plans/` with all three artifacts.
+The batch processor will:
+- Open VS Code with Copilot Chat
+- Automatically feed each Epic to the agent
+- Wait for workbook generation on disk
+- Track successes in `epics_processed.txt` and failures in `epics_failed.txt`
+- Handle timeouts, context resets, and graceful shutdown (Ctrl+C or move mouse to top-left corner)
 
-3. The agent will:
-   - Read each Epic and its linked stories from Jira
-   - Extract GitHub development evidence (PRs/commits)
-   - Build one canonical coverage matrix per Epic
-   - Generate the simplified checklist per Epic
-   - Produce and save all output files to `uat-test-plans/<EPIC_KEY>/`
+**Instructions:**
+1. Focus Copilot Chat input box before starting
+2. Move mouse to top-left corner at any time to safely abort (restores in-flight Epic to queue)
+
+### Single Epic (Manual / Debugging)
+
+For one-off generation or debugging:
+
+1. Open a fresh Copilot chat thread (or type `/clear`)
+2. Paste the following prompt, replacing `<EPIC_KEY>` with your target:
+
+```
+Read .github/prompts/uat-test-plan-template.md and strictly follow the Mandatory Orchestration Workflow for Epic '<EPIC_KEY>'. 
+Generate the payload at /tmp/data_payload_<EPIC_KEY>.json and execute the python generator script.
+```
+
+3. Wait for workbook generation (`uat-test-plans/<EPIC_KEY>-<slug>.xlsx`)
+4. Type `/clear` before processing another Epic
+
+---
+
+## Troubleshooting
+
+### Copilot terminal asks for approval during batch runs
+
+If Copilot pauses on helper commands (for example `jq` over local chat resource JSON files, or Python/openpyxl generator commands), add command-line auto-approve rules to your VS Code user settings under `chat.tools.terminal.autoApprove`.
+
+Example rule:
+
+```json
+"chat.tools.terminal.autoApprove": {
+   "python3": true,
+   "jq": true,
+   "/^jq '\\.data\\.issues \\| length' \"\/Users\/jordi\\.sans\/Library Application Support\/Code\/User\/workspaceStorage\/[^\"]+\/GitHub\\.copilot-chat\/chat-session-resources\/[^\"]+\/[^\"]+\/content\\.json\"$/": {
+      "approve": true,
+      "matchCommandLine": true
+   },
+   "/^python3 -c \"import openpyxl([; ].*)?\"$/": {
+      "approve": true,
+      "matchCommandLine": true
+   },
+   "/^python3 \/Users\/jordi\\.sans\/porter-uat\/.github\/scripts\/generate-test-plan-xlsx\\.py --validate \/tmp\/data_payload_[A-Z0-9-]+\\.json$/": {
+      "approve": true,
+      "matchCommandLine": true
+   }
+}
+```
+
+Notes:
+- Keep regex rules narrow and read-only to avoid over-broad approval bypass.
+- If a new rule does not apply immediately, run `Developer: Reload Window` once.
 
 ---
 
@@ -94,75 +159,87 @@ Each Epic gets its own folder under `uat-test-plans/` with all three artifacts.
 
 ```
 uat-test-plans/
-└── <EPIC_KEY>/
-    ├── <slug>.simplified-flows.md       # Narrative checklist with steps
-    ├── <slug>.coverage-matrix.md        # Canonical traceability matrix
-    └── <slug>.simplified-flows.xlsx     # Business checklist workbook
+└── <EPIC_KEY>-<slug>.xlsx            # Business checklist workbook
 ```
 
 ### Workbook sheets
 
-| Sheet                      | Purpose                                                                      |
-| -------------------------- | ---------------------------------------------------------------------------- |
-| Checklist                  | 8-column business checklist — Result and Notes left blank for tester        |
-| Overview                   | Epic metadata, scope, dev evidence, gaps                                     |
-| Coverage Matrix            | AC-to-check traceability (no Status column — tracking is done in Checklist) |
-| Exploratory and Design Obs | Evidence-backed non-AC observations                                          |
+| Sheet                    | Purpose                                                                      |
+| ------------------------ | ---------------------------------------------------------------------------- |
+| Overview                 | Epic metadata, scope, dev evidence, gaps                                     |
+| Checklist                | Business UAT checklist — Result and Notes columns blank for tester           |
+| Coverage Matrix          | AC-to-check traceability with Inconsistencies field                         |
+| Exploratory Scenarios    | Evidence-backed non-AC observations and design notes                         |
 
 ---
 
 ## How It Works
 
+### Workflow Architecture
+
+1. **Epic Map & Categorization:** Agent invokes `evidence-context` skill to extract Epic metadata and categorize child stories (UI-testable vs. backend-only).
+
+2. **Chunked Evidence Gathering (Map-Reduce):** 
+   - Groups UI-testable stories into batches (max 5 per chunk)
+   - Iteratively invokes `evidence-context` per story with minimal field retrieval
+   - Writes intermediate state to `/tmp/chunk_<EPIC_KEY>_<batch_id>.json` files to prevent context overflow
+
+3. **Plan Synthesis & Payload Generation:** 
+   - `test-plan-generator` skill reads all chunks and synthesizes final JSON payload
+   - Payload written to `/tmp/data_payload_<EPIC_KEY>.json`
+
+4. **Validation & XLSX Generation:**
+   - Runs `generate-test-plan-xlsx.py --validate` for quick-fail preflight checks
+   - On pass, runs `generate-test-plan-xlsx.py` to generate final workbook
+   - Cleans up temporary `/tmp` files on completion
+
+### Data Flow
+
 ```
-Jira Epic
+Jira Epic (via MCP)
+    │
+    ├── Metadata: creator, status, components
     │
     ├── Linked Stories (UI-testable only)
-    │       └── Acceptance Criteria → Coverage Matrix rows → Checklist checks
+    │   └─→ AC + Comments → Chunked Evidence Files → Coverage Matrix rows → Checklist checks
     │
     ├── Development Evidence (GitHub PRs via MCP)
-    │       └── Evidence Availability: Available / Evidence Unavailable
+    │   └─→ Availability status (Available / Unavailable)
     │
     └── Comments / Attachments
-            └── Exploratory observations (Sheet 4)
+        └─→ Exploratory observations (Sheet 4)
 ```
 
-Key rules enforced automatically:
+### Key Rules
 
-- Backend-only stories (no UI-reproducible AC) are **excluded** from scope and listed separately
-- Brand coverage (NAP/MRP) is a scope note — no separate "repeat on MRP" check
-- Result and Notes columns are always blank
-- Confluence is only read when the Epic has explicit doc links
+- Backend-only stories (no UI-reproducible AC) are **excluded** from scope
+- Brand coverage (NAP/MRP) is noted as scope context — no separate repeat checks
+- Result and Notes columns are always left blank for tester input
+- Confluence is only queried when Epic has explicit doc links
+- Token efficiency enforced: minimal initial retrieval, selective deep-dives only
 
 ---
 
-## Skills Reference
+## File Structure
 
-| Skill                                 | File                                                              | Purpose                            |
-| ------------------------------------- | ----------------------------------------------------------------- | ---------------------------------- |
-| atlassian-test-plans                  | `.github/skills/atlassian-test-plans/SKILL.md`                  | Orchestrates plan generation       |
-| atlassian-development-evidence-github | `.github/skills/atlassian-development-evidence-github/SKILL.md` | Extracts GitHub PR/commit evidence |
-
----
-
-## XLSX Script
-
-The canonical xlsx generator lives at `.github/scripts/generate-test-plan-xlsx.py`.
-
-The agent fills in the `── AGENT: FILL ──` sections with Epic-specific data and runs:
-
-```sh
-/tmp/xlsx-venv/bin/python3 .github/scripts/generate-test-plan-xlsx.py
-```
-
-The script enforces all formatting rules (styling, column structure, auto-fit) and cannot be overridden without updating the skill.
+| File / Folder                     | Purpose                                           |
+| --------------------------------- | ------------------------------------------------- |
+| `auto_copilot.py`                 | Batch processor — automation loop, queue mgmt    |
+| `.github/prompts/uat-test-plan-template.md` | Mandatory orchestration workflow for agents |
+| `.github/scripts/generate-test-plan-xlsx.py` | XLSX generator with enforced formatting rules |
+| `.github/scripts/requirements.txt` | Python dependencies (openpyxl, pyautogui, etc.)  |
+| `epics_queue.txt`                 | Queue of Epic keys (one per line) for batch mode |
+| `epics_processed.txt`             | Log of successfully generated Epics              |
+| `epics_failed.txt`                | Log of timeouts/failures for manual review       |
 
 ---
 
 ## Contributing
 
-To change output format or checklist rules, update **both**:
+To change output format or checklist rules:
 
-1. `.github/skills/atlassian-test-plans/SKILL.md` — agent behaviour
-2. `.github/scripts/generate-test-plan-xlsx.py` — xlsx output rules
+1. **Generator Script:** `.github/scripts/generate-test-plan-xlsx.py` — Update sheet structure, column definitions, and styling
+2. **Template Workflow:** `.github/prompts/uat-test-plan-template.md` — Update the Mandatory Orchestration Workflow if skill invocation or payload structure changes
+3. **Test Generation:** Generate a test plan and validate output structure
 
-Keep them in sync. The script header lists all enforced rules.
+Keep the template and script in sync. The script header documents all enforced rules.

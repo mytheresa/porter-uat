@@ -1,0 +1,78 @@
+---
+name: evidence-context
+description: Standardize extraction of full ticket context, Jira metadata, Confluence/doc links, and GitHub development evidence by orchestrating Jira, Confluence, and GitHub MCP servers. Handles Epic-to-Story hierarchy resolution.
+user-invocable: true
+---
+# Evidence & Context Extractor
+
+## Purpose
+
+Create a consistent evidence, documentation, and metadata snapshot per Jira issue by orchestrating cross-platform discovery via MCP servers. This skill acts purely as a data-gathering engine to feed downstream test plan generators.
+
+## Input
+
+- Single Jira issue key (Iteratively called per story by Orchestrator)
+- Target Environment URLs (passed from Orchestrator)
+- Optional depth (`issue-only`, `issue-and-linked`, `issue-linked-and-subtasks`)
+
+## Token Efficiency Rules
+
+- Use a two-pass strategy: classify with minimal fields first, then enrich only for in-scope UI stories.
+- Avoid requesting large text blobs unless required for AC mapping or conflict resolution.
+- Return normalized summaries (ids/keys/status/links) instead of raw payload dumps.
+
+## Output Contract
+
+For each processed issue (Epic or Child), return one standardized JSON block containing:
+
+1. **Metadata & Context**
+   - `EPIC_KEY`: Primary Jira Key
+   - `TARGET_URLS`: Target Environment URLs
+   - `EPIC_SUMMARY`: Summary / Title
+   - `EPIC_STATUS`: Current status
+   - `EPIC_CREATED_BY`: Formatted creator string
+   - `COMPONENT`: Exact Jira component names
+2. **Hierarchy Map (If Epic)**
+   - **Child Issues Resolved**: Categorized UI-testable vs. non-UI-testable keys.
+3. **Documentation Links**
+   - Extracted general documentation URLs (e.g., Confluence, Figma, external wikis) with BDD-filtered content summaries.
+4. **Development Evidence Snapshot**
+   - **Status**: `Available` | `Evidence Unavailable`
+   - **PR/Commit Links**: Grouped by child key.
+   - **Fallback Sources**: Key comments or attachments.
+
+## Mandatory MCP Orchestration Workflow
+
+1. **Jira Fetch (`atlassian-jira-dc` MCP):**
+   - Pass 1 (minimal): call Jira MCP with targeted fields for scope decisions (`expand="names,schema"`): `summary,description,issuelinks,parent,status,issuetype,creator,components`.
+   - Pass 2 (enrichment): request `comment,attachment` only for UI-testable in-scope stories or when AC ambiguity requires it.
+   - Resolve remote issue links (`remotelink` endpoint) in addition to text body links to ensure full documentation discovery.
+   - If resolving an Epic, resolve parent/child links to list child stories.
+
+2. **Doc Extraction (Confluence MCP & General Links):**
+   - Scan descriptions first, then comments/remote links only if needed for missing AC context.
+   - If a recognized Confluence URL is detected, dynamically execute Confluence MCP lookup tools to pull document body content.
+   - **BDD Filter Rules:** Extract only sections matching "Requirements", "Acceptance Criteria", or explicit "Given/When/Then" specifications. Discard historical revision logs and author notes.
+
+3. **GitHub Fetch & BDD Extraction (`@modelcontextprotocol/server-github` MCP):**
+   - **NEVER call `jira_getIssueDevelopmentInfo`** — the Jira instance is linked to a self-hosted Bitbucket (`git.mytheresa.com`) that returns `unauthorized`. It does not expose GitHub data. Skip it entirely and go directly to GitHub MCP.
+   - Perform repository-scoped search using the Jira story key across PR titles and metadata first; fetch body/comment detail only when required to map ambiguous AC.
+   - **Smart BDD Extraction & Filtering Rules:**
+     - *Ignore Bots:* Strip automated CI/CD comments (Jenkins, Dependabot, SonarQube, GitHub Actions).
+     - *Target BDD Context:* Extract *only* PR Title, main summary, and sections labeled "How to Test", "Testing Notes", "Impact", or explicit state-change steps. Retain comments containing feature flag toggles or testing workarounds.
+     - *Strip Raw Code:* Exclude all raw code diffs, patch files, JSON bodies, and stack traces.
+
+3b. **Jira-Link Evidence Fallback (Mandatory before marking unavailable):**
+   - For each in-scope UI story, scan Jira `description`, `comments`, `issuelinks`, and remote links for GitHub PR/commit URLs or commit SHA references.
+   - Treat these URLs/references as valid development evidence even when direct GitHub MCP search by Jira key returns no hits.
+   - Capture matched links under the story's development evidence list with source type (`jira-description`, `jira-comment`, `jira-remotelink`, `jira-issuelink`).
+
+4. **Status Determination:**
+   - Mark `Available` if explicit PR/commit evidence was found via GitHub MCP **or** via Jira-link evidence fallback.
+   - If GitHub MCP lookup fails (tool/server/auth/transient error), continue with Jira-link fallback and record outcome in the existing evidence format.
+   - Mark `Evidence Unavailable` only after both checks are performed and no PR/commit evidence is found.
+
+## Deterministic Rules
+
+- AC remains the primary source of truth for scenario intent. Dev evidence enriches but never overrides AC intent.
+- Process strictly one story per execution call to guarantee maximum token efficiency.

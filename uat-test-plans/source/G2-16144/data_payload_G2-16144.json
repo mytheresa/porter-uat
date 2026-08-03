@@ -1,0 +1,316 @@
+{
+  "EPIC_KEY": "G2-16144",
+  "EPIC_SLUG": "country-language-location-selector",
+  "OUTPUT_PATH": "uat-test-plans/G2-16144-country-language-location-selector.xlsx",
+  "PLAN_TITLE": "G2-16144 UAT — Country, Language & Location Selector",
+  "GENERATED_DATE": "2026-08-03",
+  "EPIC_SUMMARY": "NAP | MRP | Country, Language & Location Selector",
+  "EPIC_STATUS": "Closed",
+  "EPIC_CREATED_BY": "Sane, Sridevi Mayuresh || LuxExperience",
+  "COMPONENT": "D2",
+  "TARGET_URLS": "TBD — specify target environment URL before UAT execution",
+  "TIMEBOX": "25–35 minutes",
+  "COVERAGE_SUMMARY": "3 UI-testable stories (G2-17736, G2-17738, G2-19617) with 10 checklist checks covering 12 AC points across country selection, language selection, search, suggested country and footer display.",
+  "STORIES_IN_SCOPE": "G2-17736 | NAP | Build & Set-up Country Language Selector & Services | Closed\nG2-17738 | MRP | Build & Set-up Country Language Selector | Closed\nG2-19617 | NAP | MRP | Manage selected and suggested countries in Country Selector | Closed",
+  "STORIES_EXCLUDED": "G2-17733 | Locale Management, Navigations & Geolocation | Technical Story | Closed; team deprioritised — new tickets to be opened in future when relevant\nG2-18187 | Investigate Currency Config on Country-Language Selector | Technical Story | Investigation complete; currency exposed via useCountries() hook\nG2-19159 | Manage Flags Icon For Country Selector | Technical Story | Implementation approach TBD; AC not finalised at story level\nG2-20361 | Grey divider icon bug in footer | Bug | Visual fix included in MRP selector delivery; no standalone AC\nG2-20413 | Remove Hardcoded Suggested Country | Bug | Bug fix confirmed by QA (Sridevi, 2026-02-18); covered by G2-19617 scenarios\nG2-20711 | QA Country & Language selector E2E testing | Task | Internal QA task; testing complete per Pardip Gahir (2026-02-24)",
+  "OUT_OF_SCOPE": "Multiple language options (3+) — not supported for migration per QA confirmation\nSafari-specific rendering variations\nAPI-level verification of country or currency data\nGeo-location via Akamai infrastructure configuration\nFlag exceptions for HK, MO, TW — pending legal decision",
+  "DEV_EVIDENCE": "G2-17736 (NAP): 2 PRs merged — #238 [G2-17736] country language selector WIP; #251 [G2-17736] Country selector [NAP] — Status: Available\nG2-17738 (MRP): No dedicated GitHub PR found; implementation bundled with shared NAP/MRP codebase (Jira-link fallback: caused bug G2-20361 which is fixed) — Status: Available via Jira-link fallback\nG2-19617 (Selected & Suggested): 2 PRs merged — #325, #332 [G2-19617] selected and suggested country; related bug fix PR #355 [G2-20413] removed cookie geo — Status: Available",
+  "GAPS_SUMMARY": "G2-17738 (MRP): No dedicated GitHub PR; functional parity with NAP selector assumed based on shared codebase\nFlag display for HK, MO, TW: legal decision was TBC at time of writing — verify current behaviour during UAT\nMultiple language support (3+) explicitly descoped for migration; re-evaluate post-migration if required",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Footer Entry Point",
+      "Check": "Country selector modal opens and closes via footer trigger",
+      "How to Verify": "On any page, locate the country/flag indicator in the footer. Click it to open the country selector modal. Verify the modal opens. Close it using the close action.",
+      "Pass Criteria": "The country selector modal opens immediately on click of the footer country/flag indicator.\nThe modal closes correctly and the footer restores to its previous state."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Country Selection",
+      "Check": "Selecting a country with a single language updates the site and shows no language selector",
+      "How to Verify": "Open the country selector modal. Select a country that supports only one language (e.g. France). Confirm the selection. Verify the site switches to that country and no language selector is shown.",
+      "Pass Criteria": "The site switches to the selected single-language country.\nNo language selector is displayed for single-language countries.\nThe footer updates to show the selected country name and applied currency."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Country Selection",
+      "Check": "Selecting a country with two language options displays the language selector",
+      "How to Verify": "Open the country selector modal. Select a country that supports two languages (e.g. Switzerland). Confirm the language selector appears. Select a language and confirm.",
+      "Pass Criteria": "The language selector is visible and selectable for multi-language countries.\nAfter confirming, the site reflects the chosen language.\nThe footer updates to show the selected country name, language and currency."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Language Selection",
+      "Check": "Changing language on a multi-language country updates the site language",
+      "How to Verify": "Open the country selector while already on a multi-language country. Change the selected language. Confirm the selection.",
+      "Pass Criteria": "The site content and navigation update to reflect the newly selected language.\nThe footer updates to show the correct language."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Search",
+      "Check": "Country search by name returns correct results",
+      "How to Verify": "Open the country selector modal. Type part of a country name in the search field (e.g. 'Ger' for Germany). Verify matching countries appear in the list.",
+      "Pass Criteria": "Matching countries appear in the list as the user types.\nSelecting a result from the list switches the site to that country."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Search",
+      "Check": "Country search by ISO code returns the correct country",
+      "How to Verify": "Open the country selector modal. Type an ISO code in the search field (e.g. 'DE'). Verify the corresponding country (Germany) appears in the list.",
+      "Pass Criteria": "The correct country matching the ISO code is returned in the search results.\nSelecting the result switches the site to that country."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Suggested Country",
+      "Check": "Currently selected country appears as the first option in the top section of the modal",
+      "How to Verify": "Open the country selector modal. Verify that the top section of the modal shows the currently active country as the first listed option.",
+      "Pass Criteria": "The currently active country is shown as the first option in the top section of the country selector modal."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Suggested Country",
+      "Check": "Suggested country appears in top section only when browsing from a different country",
+      "How to Verify": "Access the site from a browser location different from the currently selected country site (ensure browser location permissions are enabled). Open the country selector modal. Verify the top section shows the geo-located home country as a suggested option.",
+      "Pass Criteria": "The suggested country (based on browser/device geo-location) appears as the second option in the top section when browsing from a different country.\nNo suggested country is shown when the browsing country matches the selected country."
+    },
+    {
+      "Check ID": "UAT-009",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Bag Rectifier",
+      "Check": "Bag rectifier appears when switching country with items in the bag",
+      "How to Verify": "Add one or more items to the bag. Open the country selector modal and switch to a different country. Confirm the selection.",
+      "Pass Criteria": "Upon country change with items in bag, the bag rectifier modal or notification appears.\nThe customer is informed of any item adjustments due to the country change."
+    },
+    {
+      "Check ID": "UAT-010",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Footer Display",
+      "Check": "Footer displays correct country flag, country name and language/currency after selection",
+      "How to Verify": "After changing country and language, check the footer. Verify the correct country flag, country name, language link (if multi-language) and applied currency are displayed.",
+      "Pass Criteria": "The footer reflects the correct country flag (or no flag for HK, MO, TW if applicable), country name, language selector link and applied currency after any country change."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-17736",
+      "AC Ref": "AC1",
+      "Capability": "Country selector configuration — country name, flag, currency, ISO code, default language",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002, UAT-003, UAT-010",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PR #251 [G2-17736] Country selector [NAP] — merged",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Flag exceptions for HK, MO, TW pending legal decision — behaviour at time of UAT should be verified"
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-17736",
+      "AC Ref": "AC2",
+      "Capability": "Build FE country and language selector with placeholder copy",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001, UAT-002, UAT-003, UAT-004",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PR #238 (WIP) and #251 (final) — both merged in mytheresa/atelier",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-17736",
+      "AC Ref": "AC3",
+      "Capability": "Default language is set per country (not based on device settings)",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-002, UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PR #251; currency/locale data confirmed via useCountries() hook (G2-18187 technical investigation)",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-17736",
+      "AC Ref": "AC4",
+      "Capability": "Language selector shown only for multi-language countries; single-language countries show no language selector",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002, UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Confirmed in PR #251; Confluence scenario matrix validates this for NAP desktop and mobile",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "3+ language countries descoped for migration — only single and dual language scenarios tested per QA (G2-20711)"
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-17736",
+      "AC Ref": "AC5",
+      "Capability": "Search country by name and by ISO code",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-005, UAT-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PR #251 — search implemented in country selector component",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-17736",
+      "AC Ref": "AC6",
+      "Capability": "Country name in footer; clicking country or flag opens country selector",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001, UAT-010",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PR #251; Confluence scenario: 'Country flag, country name and language appear in footer'",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-17738",
+      "AC Ref": "AC1",
+      "Capability": "MRP: Country selector configuration — country name, flag, currency, ISO, default language",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002, UAT-003, UAT-010",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "No dedicated GitHub PR for G2-17738; Jira-link fallback: G2-17738 caused bug G2-20361 (grey divider, fixed). Implementation shared with NAP codebase.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "No dedicated MRP PR identified; functional parity with NAP assumed — verify MRP explicitly during UAT"
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-17738",
+      "AC Ref": "AC4",
+      "Capability": "MRP: Language selector displayed only for multi-language countries",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002, UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Confluence test matrix confirms scenario tested for MRP desktop and mobile",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "3+ language countries descoped for migration on MRP as well"
+    },
+    {
+      "Coverage ID": "COV-009",
+      "Jira Source": "G2-17738",
+      "AC Ref": "AC5-6",
+      "Capability": "MRP: Search by country name and ISO code; footer country/flag trigger",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-005, UAT-006, UAT-001, UAT-010",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Confluence test matrix confirms search and footer scenarios for MRP",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-010",
+      "Jira Source": "G2-19617",
+      "AC Ref": "AC1-2",
+      "Capability": "New top section in country selector modal showing currently selected country as first option",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PRs #325 and #332 [G2-19617] selected and suggested country — merged in mytheresa/atelier",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-011",
+      "Jira Source": "G2-19617",
+      "AC Ref": "AC3",
+      "Capability": "Suggested country shown as second option only when browsing from a different country",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-008",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PRs #325, #332; bug fix PR #355 [G2-20413] removed hardcoded USA cookie geo — QA confirmed working (Sridevi, 2026-02-18)",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Previously hardcoded to USA — fixed in PR #355; browser geo-location permissions must be enabled for this scenario"
+    },
+    {
+      "Coverage ID": "COV-012",
+      "Jira Source": "G2-16144",
+      "AC Ref": "Epic-AC",
+      "Capability": "Bag rectifier appears on country change with items in bag",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-009",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "In epic scope ('Show bag rectifier upon country change'); no specific GitHub PR identified for bag rectifier behaviour",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Bag rectifier behaviour during active checkout not explicitly defined — verify with team"
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "AC Gap",
+      "Jira Source": "G2-17733",
+      "Summary": "Geo-location fallback — unsupported or failed location",
+      "How to Validate": "Simulate a geo-location failure or set device location to an unsupported country. Access the site. Observe what country/language is applied.",
+      "Expected Observation": "The site falls back to a default locale when geo-location fails or returns an unsupported country, without crashing or showing an error to the user.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-007",
+      "Evidence Notes": "G2-17733 AC references: 'Given geolocation fails or returns unsupported, server redirects to default locale' — ticket closed; verify fallback is still in place"
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "AC Gap",
+      "Jira Source": "G2-17736 / G2-17738",
+      "Summary": "Flag display for HK, MO, TW — political flag exception",
+      "How to Validate": "Open the country selector and select or search for Hong Kong (HK), Macau (MO), or Taiwan (TW). Observe whether a flag icon is displayed.",
+      "Expected Observation": "No national flag is displayed for HK, MO, and TW per the legal decision noted in the Epic scope. A placeholder or neutral icon appears instead.",
+      "Impact": "Medium — legal/compliance risk if a flag is shown",
+      "Linked Coverage IDs": "COV-001, COV-007",
+      "Evidence Notes": "Epic description: 'check any exceptions apply, e.g.: HK, MO, TW' — legal decision TBC at ticket creation"
+    },
+    {
+      "Observation ID": "EXP-003",
+      "Source Type": "Exploratory",
+      "Jira Source": "G2-17736 / G2-17738",
+      "Summary": "Country search edge case — accented characters and partial ISO code",
+      "How to Validate": "In the country selector search, type an accented country name (e.g. 'Österreich' for Austria) and a partial ISO (e.g. 'AT'). Observe results.",
+      "Expected Observation": "Search handles accented characters gracefully and partial ISO codes return relevant results without showing an empty state or error.",
+      "Impact": "Low",
+      "Linked Coverage IDs": "COV-005, COV-009",
+      "Evidence Notes": "No specific AC for character encoding in search — exploratory edge case"
+    },
+    {
+      "Observation ID": "EXP-004",
+      "Source Type": "Exploratory",
+      "Jira Source": "G2-19617",
+      "Summary": "Suggested country persistence — does the suggested country update if browser location changes mid-session?",
+      "How to Validate": "Start a session with geo-location set to country A. Open the country selector and note the suggested country. Simulate a location change to country B without reloading. Re-open the selector.",
+      "Expected Observation": "Suggested country reflects the initial session geo-location value consistently, or updates gracefully, without errors.",
+      "Impact": "Low",
+      "Linked Coverage IDs": "COV-011",
+      "Evidence Notes": "PR #355 resolved hardcoded suggested country; dynamic geo behaviour not fully specified in AC"
+    },
+    {
+      "Observation ID": "EXP-005",
+      "Source Type": "QA Note",
+      "Jira Source": "G2-20711",
+      "Summary": "Multiple language options (3+) — descoped for migration; confirm no broken state",
+      "How to Validate": "If any country in the selector is configured with 3+ languages, observe whether the selector displays correctly or breaks.",
+      "Expected Observation": "Either only 1 or 2 language options are presented to the user, or the selector handles 3+ gracefully without error. No unhandled error state.",
+      "Impact": "Medium — if backend configures 3+ languages the FE may show unexpected behaviour",
+      "Linked Coverage IDs": "COV-004, COV-008",
+      "Evidence Notes": "Pardip Gahir (QA, 2026-02-24): '3+ language support not included for migration go live'"
+    }
+  ]
+}

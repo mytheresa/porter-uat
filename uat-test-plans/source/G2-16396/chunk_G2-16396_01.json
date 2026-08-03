@@ -1,0 +1,86 @@
+{
+  "epic_key": "G2-16396",
+  "batch_id": 1,
+  "stories": [
+    {
+      "issue_key": "G2-18231",
+      "summary": "FE | Create/Rename WL Modal (UI only)",
+      "status": "Done",
+      "ui_testable": true,
+      "ac_summary": "UI modal for create/rename wishlist interactions.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    },
+    {
+      "issue_key": "G2-18232",
+      "summary": "FE | Rename WL API Integration",
+      "status": "Done",
+      "ui_testable": true,
+      "ac_summary": "Rename action persists and surfaces backend/API responses.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    },
+    {
+      "issue_key": "G2-18233",
+      "summary": "FE | Multiple WL Query integration with BE (all items, all WLs)",
+      "status": "Done",
+      "ui_testable": true,
+      "ac_summary": "Wishlist page consumes all-items/all-lists query contract.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    },
+    {
+      "issue_key": "G2-18746",
+      "summary": "FE | WL | Remove WL API Integration",
+      "status": "Done",
+      "ui_testable": true,
+      "ac_summary": "Remove wishlist action integrated with API and expected confirmations.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    },
+    {
+      "issue_key": "G2-18799",
+      "summary": "FE | Create WL API Integration",
+      "status": "Done",
+      "ui_testable": true,
+      "ac_summary": "Create wishlist modal submits and receives API response.",
+      "development_evidence": {
+        "status": "Evidence Unavailable",
+        "sources_checked": [
+          "jira-description",
+          "jira-comment",
+          "jira-issuelink"
+        ],
+        "links": []
+      }
+    }
+  ]
+}
