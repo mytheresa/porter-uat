@@ -25,9 +25,12 @@ QUEUE_FILE = "epics_queue.txt"
 FAILED_LOG_FILE = "epics_failed.txt"
 PROCESSED_LOG_FILE = "epics_processed.txt"
 OUTPUT_DIR_TEMPLATE = "uat-test-plans"
+ARTIFACTS_DIR = os.path.join(OUTPUT_DIR_TEMPLATE, "source")
 MAX_WAIT_SECONDS = 600  # 10 minutes max per Epic
 POST_COMPLETION_GRACE_SECONDS = int(os.environ.get("POST_COMPLETION_GRACE_SECONDS", "45"))  # wait for Copilot to finish rendering before /clear
 SKIP_IF_EXISTS = os.environ.get("SKIP_IF_EXISTS", "1") != "0"
+PERSIST_JSON_ARTIFACTS = os.environ.get("PERSIST_JSON_ARTIFACTS", "1") != "0"
+PERSIST_CHUNK_ARTIFACTS = os.environ.get("PERSIST_CHUNK_ARTIFACTS", "0") != "0"
 
 # Detect OS modifier key for clipboard paste
 MODIFIER_KEY = "command" if platform.system() == "Darwin" else "ctrl"
@@ -42,35 +45,42 @@ def extract_jira_key(epic_ref):
     return match.group(1) if match else epic_ref.strip()
 
 
-def archive_temp_files(epic_key=None):
+def cleanup_temp_files(epic_key=None):
     """
-    Moves /tmp chunk and payload JSON files into uat-test-plans/source/<EPIC_KEY>/.
-    If epic_key is None, archives all UAT artifacts into uat-test-plans/source/startup/.
+    Handles /tmp chunk and payload JSON files.
+    Payload files can be persisted for re-generation; chunk files are temp-only by default.
+    If epic_key is None, applies to all UAT temp artifacts.
     """
     if epic_key:
         patterns = [
             f"/tmp/chunk_{epic_key}_*.json",
             f"/tmp/data_payload_{epic_key}.json"
         ]
-        dest_dir = os.path.join(OUTPUT_DIR_TEMPLATE, "source", epic_key)
+        persist_dir = os.path.join(ARTIFACTS_DIR, epic_key)
     else:
         patterns = [
             "/tmp/chunk_*.json",
             "/tmp/data_payload_*.json"
         ]
-        dest_dir = os.path.join(OUTPUT_DIR_TEMPLATE, "source", "startup")
+        persist_dir = os.path.join(ARTIFACTS_DIR, "startup")
 
-    archived_count = 0
+    handled_count = 0
     for pattern in patterns:
         for file_path in glob.glob(pattern):
+            file_name = os.path.basename(file_path)
+            is_chunk = file_name.startswith("chunk_")
+            should_persist = PERSIST_JSON_ARTIFACTS and (not is_chunk or PERSIST_CHUNK_ARTIFACTS)
             try:
-                os.makedirs(dest_dir, exist_ok=True)
-                dest = os.path.join(dest_dir, os.path.basename(file_path))
-                os.replace(file_path, dest)
-                archived_count += 1
+                if should_persist:
+                    os.makedirs(persist_dir, exist_ok=True)
+                    destination = os.path.join(persist_dir, file_name)
+                    os.replace(file_path, destination)
+                else:
+                    os.remove(file_path)
+                handled_count += 1
             except OSError:
                 pass
-    return archived_count
+    return handled_count
 
 
 def get_remaining_epics(queue_file):
@@ -183,7 +193,7 @@ def handle_shutdown(sig, frame):
     """Graceful interrupt handler — epic stays in queue since it was never removed."""
     print("\n\n[WARNING] Process interrupted by user!")
     if CURRENT_PROCESSING_EPIC:
-        archive_temp_files(extract_jira_key(CURRENT_PROCESSING_EPIC))
+        cleanup_temp_files(extract_jira_key(CURRENT_PROCESSING_EPIC))
     sys.exit(0)
 
 
@@ -203,10 +213,11 @@ def main():
     print("3. Move mouse to top-left corner at ANY time to abort.")
     print("=" * 60)
 
-    # Startup Cleanup: Archive any stale payload/chunk files from previous runs
-    initial_archived = archive_temp_files()
+    # Startup Cleanup: Persist/remove stale payload/chunk files from previous runs
+    initial_archived = cleanup_temp_files()
     if initial_archived > 0:
-        print(f"🧹 Pre-flight Cleanup: Archived {initial_archived} stale temporary file(s) to uat-test-plans/source/startup/.")
+        action = "Persisted/cleaned" if PERSIST_JSON_ARTIFACTS else "Removed"
+        print(f"🧹 Pre-flight Cleanup: {action} {initial_archived} stale temporary file(s).")
 
     for i in range(5, 0, -1):
         print(f" Starting in {i} seconds... (Switch to VS Code now)")
@@ -225,8 +236,8 @@ def main():
             bare_key = extract_jira_key(epic_key)
             print(f"\n Processing Epic: {bare_key} ({remaining_count} remaining in queue)")
 
-            # Archive any old temp files for this specific Epic key before starting
-            archive_temp_files(bare_key)
+            # Remove any old temp files for this specific Epic key before starting
+            cleanup_temp_files(bare_key)
 
             # Optional hard guard: skip epics that already produced output.
             if SKIP_IF_EXISTS and epic_has_existing_output(bare_key):
@@ -269,8 +280,8 @@ def main():
                 log_failure(bare_key, f"Timed out after {MAX_WAIT_SECONDS}s without producing XLSX")
                 remove_epic_from_queue(QUEUE_FILE, epic_key)
 
-            # Post-Epic Cleanup: Archive temporary files generated for this Epic
-            archive_temp_files(bare_key)
+            # Post-Epic Cleanup: Remove temporary files generated for this Epic
+            cleanup_temp_files(bare_key)
 
             # 5. Clear context window
             clear_chat_context()
@@ -285,14 +296,14 @@ def main():
             print("\n\n[FAILSAFE] PyAutoGUI failsafe triggered (Mouse in top-left corner)!")
             if CURRENT_PROCESSING_EPIC:
                 # Epic was never removed from queue, so it will retry on next run
-                archive_temp_files(extract_jira_key(CURRENT_PROCESSING_EPIC))
+                cleanup_temp_files(extract_jira_key(CURRENT_PROCESSING_EPIC))
             clear_chat_context()
             break
         except Exception as e:
             print(f"\n[ERROR] Unexpected loop crash: {e}")
             if CURRENT_PROCESSING_EPIC:
                 # Epic was never removed from queue, so it will retry on next run
-                archive_temp_files(extract_jira_key(CURRENT_PROCESSING_EPIC))
+                cleanup_temp_files(extract_jira_key(CURRENT_PROCESSING_EPIC))
             clear_chat_context()
             break
 

@@ -160,7 +160,17 @@ Notes:
 ```
 uat-test-plans/
 └── <EPIC_KEY>-<slug>.xlsx            # Business checklist workbook
+
+uat-test-plans/source/
+└── <EPIC_KEY>/
+   └── data_payload_<EPIC_KEY>.json  # Persisted payload for XLSX regeneration
 ```
+
+Intermediate chunk files are temporary by default and are cleaned from `/tmp`.
+
+Artifact behavior is controlled by environment variables:
+- `PERSIST_JSON_ARTIFACTS=1` (default): persist payload JSON files under `uat-test-plans/source/<EPIC_KEY>/`
+- `PERSIST_CHUNK_ARTIFACTS=0` (default): do not persist chunk JSON files
 
 ### Workbook sheets
 
@@ -191,7 +201,8 @@ uat-test-plans/
 4. **Validation & XLSX Generation:**
    - Runs `generate-test-plan-xlsx.py --validate` for quick-fail preflight checks
    - On pass, runs `generate-test-plan-xlsx.py` to generate final workbook
-   - Cleans up temporary `/tmp` files on completion
+   - Cleanup phase persists payload JSON to `uat-test-plans/source/<EPIC_KEY>/` (default)
+   - Chunk files are cleaned from `/tmp` unless `PERSIST_CHUNK_ARTIFACTS=1`
 
 ### Data Flow
 
@@ -202,6 +213,9 @@ Jira Epic (via MCP)
     │
     ├── Linked Stories (UI-testable only)
     │   └─→ AC + Comments → Chunked Evidence Files → Coverage Matrix rows → Checklist checks
+   │
+   ├── Persisted Payloads (for regeneration)
+   │   └─→ uat-test-plans/source/<EPIC_KEY>/data_payload_<EPIC_KEY>.json
     │
     ├── Development Evidence (GitHub PRs via MCP)
     │   └─→ Availability status (Available / Unavailable)
