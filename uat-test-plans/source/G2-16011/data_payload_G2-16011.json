@@ -1,0 +1,176 @@
+{
+  "EPIC_KEY": "G2-16011",
+  "EPIC_SLUG": "view-of-the-customer-customer-information",
+  "OUTPUT_PATH": "uat-test-plans/G2-16011-view-of-the-customer-customer-information.xlsx",
+  "PLAN_TITLE": "G2-16011 UAT — View of the Customer Customer Information",
+  "GENERATED_DATE": "2026-08-05",
+  "EPIC_SUMMARY": "View of the Customer | Customer Information",
+  "EPIC_STATUS": "New",
+  "EPIC_CREATED_BY": "Sohail, Katherine || LuxExperience",
+  "COMPONENT": "EIP",
+  "TARGET_URLS": "TBD — specify target environment URL before UAT execution",
+  "TIMEBOX": "25–35 minutes",
+  "COVERAGE_SUMMARY": "1 UI story (G2-20728) mapped to 8 business checks and 5 AC coverage rows. 1 evaluation spike (G2-25652) excluded from executable UAT scope.",
+  "STORIES_IN_SCOPE": "G2-20728 | Display parentUrn in Customer Profile within Tapir | New — UI-verifiable parentUrn visibility and copy/paste behavior",
+  "STORIES_EXCLUDED": "G2-25652 | [Spike] BE - Proposal for building the customer profile | Evaluation | Discovery/proposal spike with no executable business UI acceptance path",
+  "OUT_OF_SCOPE": "Data engineering delivery of parentUrn into Tapir (upstream dependency). Backend-only technical implementation details and API payload/schema verification. Non-customer-profile enhancements not covered by G2-20728 AC.",
+  "DEV_EVIDENCE": "G2-20728: No direct PR/commit evidence found via Jira-link fallback scan in description/comments/issuelinks. Jira-first path retained because no trigger flags fired. Status: Evidence Unavailable.",
+  "GAPS_SUMMARY": "Upstream dependency: parentUrn availability from Customer Data Team must be confirmed before UAT. No code-level delivery evidence linked from Jira story; test execution should include a go/no-go check for parentUrn population.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Preconditions",
+      "Check": "parentUrn data is present for a known customer profile",
+      "How to Verify": "Open Tapir using a customer account known to include parentUrn data. Access the customer profile and confirm a parentUrn value is available before performing functional checks.",
+      "Pass Criteria": "A non-empty parentUrn value is available for the selected customer.\nTesting can proceed without data substitution workarounds."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Customer Profile",
+      "Check": "parentUrn is displayed on the customer profile",
+      "How to Verify": "Navigate to the customer profile page in Tapir and locate the parentUrn field in the profile details area.",
+      "Pass Criteria": "The parentUrn field is visible on the customer profile.\nThe displayed value is not truncated or hidden by layout issues."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Customer Profile",
+      "Check": "parentUrn remains visible after profile refresh/reopen",
+      "How to Verify": "Close and reopen the same customer profile, then refresh the page and confirm the parentUrn field still appears consistently.",
+      "Pass Criteria": "The parentUrn field remains visible after reopen and refresh.\nNo intermittent disappearance is observed."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Access & Roles",
+      "Check": "Authorized users can view the parentUrn field",
+      "How to Verify": "Using an account for a Personal Shopper or reservation-creating role, open a customer profile and confirm parentUrn visibility.",
+      "Pass Criteria": "The parentUrn field is visible for the authorized role.\nNo permission warning blocks read access for intended users."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Access & Roles",
+      "Check": "No unintended masking of parentUrn for business users",
+      "How to Verify": "Repeat profile access with another business user role responsible for reservation creation and verify parentUrn is shown in the same area.",
+      "Pass Criteria": "The field is consistently visible across intended reservation-related roles.\nField placement and readability are consistent."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Copy Behavior",
+      "Check": "User can copy parentUrn from the customer profile",
+      "How to Verify": "Select and copy the displayed parentUrn value using keyboard or UI copy interaction if available.",
+      "Pass Criteria": "Copy action succeeds without errors.\nClipboard contains a value matching the displayed parentUrn."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Concierge Handover",
+      "Check": "Copied parentUrn pastes into Concierge input without format problems",
+      "How to Verify": "Paste the copied parentUrn into the target Concierge field used during reservation creation and review the pasted value.",
+      "Pass Criteria": "Pasted value matches the copied parentUrn exactly.\nNo extra spaces, line breaks, or altered characters are introduced."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Concierge Handover",
+      "Check": "End-to-end copy/paste flow is repeatable",
+      "How to Verify": "Repeat the copy from Tapir and paste into Concierge for a second customer profile to confirm consistency.",
+      "Pass Criteria": "Second execution behaves the same as first run.\nNo inconsistent formatting or paste failures are observed across repetitions."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-20728",
+      "AC Ref": "Pre-requisite",
+      "Capability": "parentUrn is available in Tapir from upstream Customer Data Team delivery",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Story pre-requisite requires upstream data availability before functional validation",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Dependency",
+      "Inconsistencies": "No linked implementation evidence in Jira for upstream data readiness"
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-20728",
+      "AC Ref": "AC1",
+      "Capability": "parentUrn is displayed in Customer Profile",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002, UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Acceptance criteria and Given/When/Then scenario both require visible parentUrn in profile",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-20728",
+      "AC Ref": "AC2",
+      "Capability": "parentUrn is visible to Personal Shoppers and reservation-creating users",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004, UAT-005",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Role-focused AC coverage for reservation-creation users",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Story does not enumerate a complete role matrix; validate with business if additional roles are expected"
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-20728",
+      "AC Ref": "AC3",
+      "Capability": "User can copy parentUrn from Customer Profile",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Directly mapped to copy action acceptance criterion",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-20728",
+      "AC Ref": "AC4",
+      "Capability": "Copied parentUrn pastes into Concierge without formatting issues",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-007, UAT-008",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Directly mapped to copy/paste outcome in Concierge",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "No explicit constraints documented for allowed character formats in parentUrn"
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "Dependency Risk",
+      "Jira Source": "G2-20728",
+      "Summary": "Upstream data dependency may block functional validation if parentUrn is not populated",
+      "How to Validate": "Before starting full UAT, sample at least two customer profiles expected to have parentUrn and confirm data is present.",
+      "Expected Observation": "At least one testable profile has a populated parentUrn and allows full execution of visibility/copy/paste checks.",
+      "Impact": "High — blocks all downstream AC checks if dependency is unmet",
+      "Linked Coverage IDs": "COV-001",
+      "Evidence Notes": "Pre-requisite in story AC explicitly states dependency on Customer Data Team availability"
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Exploratory",
+      "Jira Source": "G2-20728",
+      "Summary": "Role interpretation for 'other users responsible for creating reservations' may vary across teams",
+      "How to Validate": "Validate with business owner which exact user roles should be included beyond Personal Shoppers, then sample one user from each role.",
+      "Expected Observation": "Approved reservation-related roles can view and copy parentUrn consistently.",
+      "Impact": "Medium — access mismatch could cause operational blockers",
+      "Linked Coverage IDs": "COV-003",
+      "Evidence Notes": "AC references role group but does not provide explicit role list"
+    }
+  ]
+}

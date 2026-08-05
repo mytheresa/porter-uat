@@ -1,0 +1,281 @@
+{
+  "EPIC_KEY": "G2-16258",
+  "EPIC_SLUG": "fe-plp-content-blocks",
+  "OUTPUT_PATH": "uat-test-plans/G2-16258-fe-plp-content-blocks.xlsx",
+  "PLAN_TITLE": "G2-16258 UAT — FE PLP Content Blocks",
+  "GENERATED_DATE": "2026-08-05",
+  "EPIC_SUMMARY": "FE: PLP | content blocks",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Kozlova, Nika || External",
+  "COMPONENT": "D1",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "35-45 minutes",
+  "COVERAGE_SUMMARY": "11 UI-testable stories mapped to 10 business checklist checks and 11 coverage rows. 10 linked BO/QA/hub stories/tasks were excluded as non-customer-facing capability scope.",
+  "STORIES_IN_SCOPE": "G2-21080 | Story | FE: PLP | Content stories | Closed\nG2-21082 | Story | FE: PLP | Content replacement - 2 tile | Closed\nG2-21083 | Story | FE: PLP | Parallax content | Closed\nG2-21084 | Story | FE: PLP | DLP content | Closed\nG2-21085 | Story | FE: PLP | Designer bio | Closed\nG2-21087 | Story | FE: PLP | Exit gates | Closed\nG2-22043 | Story | FE: PLP | Text quote | Closed\nG2-22080 | Story | FE: PLP Orphan items | Closed\nG2-23000 | Story | FE: Align linkText to text in Mochi content blocks | Closed\nG2-23127 | Story | FE: PLP | Content stories updates | Closed\nG2-23132 | Story | FE: PLP | Hyena | Content stories update | Closed",
+  "STORIES_EXCLUDED": "G2-21276 | Story | FE: PLP | BO | Content stories | Closed | BO authoring capability; not customer-facing storefront validation.\nG2-21278 | Story | FE: PLP | BO | PID replacement 2 tiles | Closed | BO authoring capability; excluded from shopper-flow execution.\nG2-21279 | Story | FE: PLP | BO | Text quotes | Closed | BO authoring capability; storefront behavior covered by FE ticket.\nG2-21280 | Story | FE: PLP | BO | Parallax video | Closed | BO setup path; customer runtime covered by FE parallax story.\nG2-21281 | Story | FE: PLP | BO | DLP content | Closed | BO setup path; storefront behavior covered by FE DLP story.\nG2-21282 | Story | FE: PLP | BO | Exit gates | Closed | BO setup path; storefront behavior covered by FE exit-gates story.\nG2-22075 | Story | FE: PLP | BO | Designer bio | Closed | BO setup path; storefront behavior covered by FE designer-bio story.\nG2-23119 | Story | FE: PLP | BO | Content stories updates | Closed | BO update path; storefront update behavior covered by FE stories.\nG2-21896 | Task | Hub | Designers not visible | Closed | Hub/platform support task; not a PLP customer interaction check.\nG2-23844 | Task | QA | PLP Content | Parallax video scroll | Closed | QA execution task; no additional product capability.",
+  "OUT_OF_SCOPE": "CMS back-office authoring flows, non-customer technical diagnostics, and QA operational tasks not directly visible in storefront customer journeys.",
+  "DEV_EVIDENCE": "GitHub MCP commit evidence found for all 11 in-scope stories across mytheresa/atelier, mytheresa/mochi, and mytheresa/hyena. Jira comment fallback also contains a direct hyena PR URL for G2-21080.",
+  "GAPS_SUMMARY": "G2-23000 has no explicit Jira AC body and relies on implementation evidence and QA note for expected outcome. G2-21085 AC text references quote placement while story title references designer bio, requiring business confirmation of intended naming/behavior semantics.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Content Stories Carousel",
+      "Check": "Content stories carousel works across desktop and mobile with valid navigation outcomes",
+      "How to Verify": "Open a PLP with content stories on NAP and MRP in desktop and mobile views. Validate cover behavior, slide progression, and redirections from carousel interactions.",
+      "Pass Criteria": "Carousel supports up to configured product items and renders consistently on desktop and mobile.\nDesktop title click opens linked PLP while product click opens PDP.\nMobile interactions follow expected tap/autoplay behavior without broken navigation."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Grid Replacement",
+      "Check": "Two-tile replacement block obeys placement and navigation rules",
+      "How to Verify": "Locate a PLP containing the two-tile replacement content block on desktop and mobile. Confirm row position and click-through behavior.",
+      "Pass Criteria": "Block replaces two product tiles and does not render on the last row.\nOverlay/link routes to intended editorial or PLP destination.\nBehavior is consistent across NAP and MRP storefronts."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Parallax Experience",
+      "Check": "Parallax content transitions correctly by viewport and asset type",
+      "How to Verify": "On PLP desktop, observe parallax section through scrolling and breakpoint resizing. On mobile, verify fallback behavior and muted video default when video is used.",
+      "Pass Criteria": "Desktop parallax remains pinned for expected range then rejoins scroll flow.\nAt smaller breakpoint behavior falls back to non-parallax replacement mode.\nVideo is muted by default and content remains legible with expected opacity treatment."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "DLP Hero Content",
+      "Check": "DLP content blocks render at top with expected responsive and filter behavior",
+      "How to Verify": "Open designer listing pages with configured DLP content on desktop and mobile. Apply filters and verify persistence/removal behavior based on result availability.",
+      "Pass Criteria": "Desktop shows two content blocks and mobile shows one where configured.\nContent is positioned at DLP top across supported pages.\nFilter outcomes follow AC expectations when result count reaches zero."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Designer Bio & Quote Blocks",
+      "Check": "Designer-bio and quote-style content blocks follow permitted placement",
+      "How to Verify": "Inspect PLPs where designer bio/text quote blocks are configured. Confirm location constraints and visual integration in product grid.",
+      "Pass Criteria": "Configured quote/bio content sits inside PLP grid and respects row-position restrictions.\nRendering does not break surrounding product tiles.\nCross-brand behavior is consistent at desktop and mobile breakpoints."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Exit Gates",
+      "Check": "Exit gates appear below pagination and navigate correctly",
+      "How to Verify": "Navigate to PLPs with exit-gate configuration and scroll below pagination. Open links from exit-gate assets in both brands.",
+      "Pass Criteria": "Exit gates are displayed below pagination on intended pages.\nLinks route to expected destination content without broken paths.\nImage-only constraint is respected for configured assets."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Orphan Item Handling",
+      "Check": "PLP avoids orphaned final-row products when content blocks alter grid",
+      "How to Verify": "Use PLPs with content blocks and paginate/scroll to trigger data prefetch. Validate row-fill behavior on desktop and mobile across at least one filtering scenario.",
+      "Pass Criteria": "Final rows are completed using calculated padding items from next-page data where applicable.\nBehavior adapts to column count differences across breakpoints.\nOnly last absolute page may retain orphan items when no further data exists."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Content Block Text Binding",
+      "Check": "Mochi content block text/link field alignment is preserved in storefront output",
+      "How to Verify": "Validate a content block configured with text in CMS and confirm matching text/link rendering in PLP components that consume Mochi payload.",
+      "Pass Criteria": "Rendered call-to-action text matches configured CMS text field semantics.\nNo legacy field mismatch causes missing or incorrect link labels."
+    },
+    {
+      "Check ID": "UAT-009",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Content Stories Extended Assets",
+      "Check": "Content stories support optional middle and closing cover assets",
+      "How to Verify": "On configured PLPs, verify carousel with mandatory cover and optional middle/closing covers. Confirm optionality behavior when secondary assets are absent.",
+      "Pass Criteria": "Mandatory cover always renders.\nOptional middle and closing covers render only when provided and do not break carousel flow.\nDesktop and mobile behavior remains stable."
+    },
+    {
+      "Check ID": "UAT-010",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Cross-Service Propagation",
+      "Check": "New cover assets propagate from CMS source to storefront consumer services",
+      "How to Verify": "Publish updated content stories assets and verify downstream storefront consumption path reflects new assets for both brands.",
+      "Pass Criteria": "Published assets are propagated and rendered in expected consumer flow.\nNo stale asset payload appears after publish/update cycle."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-21080",
+      "AC Ref": "AC-Content-Stories-Core",
+      "Capability": "PLP content stories carousel interactions and redirects",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Commit 9eefe98 in mytheresa/atelier; Jira comment references hyena PR #2486.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-21082",
+      "AC Ref": "AC-Replacement-2Tile",
+      "Capability": "Two-tile content replacement position and destination behavior",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Commit 4d49d2c in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-21083",
+      "AC Ref": "AC-Parallax-Viewport",
+      "Capability": "Parallax block behavior across viewport and scroll phases",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Commit 3e584ca in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-21084",
+      "AC Ref": "AC-DLP-Top-Content",
+      "Capability": "DLP content hero blocks placement and responsive count",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Commit d69752e in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-21085",
+      "AC Ref": "AC-Designer-Bio-Placement",
+      "Capability": "Designer-bio content block placement semantics in PLP",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-005",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Commit dab625d in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "UX",
+      "Inconsistencies": "Story title references designer bio while AC text references quote-last-row constraints."
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-21087",
+      "AC Ref": "AC-Exit-Gates",
+      "Capability": "Exit-gate placement below pagination and content navigation",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Commit a0f9bf6 in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-22043",
+      "AC Ref": "AC-Text-Quote-Placement",
+      "Capability": "Text quote block placement inside PLP grid",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-005",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Commit ca6cc8e in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "UX",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-22080",
+      "AC Ref": "AC-Orphan-Item-Resolution",
+      "Capability": "Row completion via dynamic padding products from subsequent result page",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Commit ec4754a in mytheresa/atelier; Confluence G2-19378 design notes reviewed.",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-009",
+      "Jira Source": "G2-23000",
+      "AC Ref": "AC-LinkText-Alignment",
+      "Capability": "Mochi linkText/text field alignment for content-block labels",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-008",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Commits 6ffd3aa and d02298f in mytheresa/mochi.",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": "No explicit acceptance criteria are present in Jira description."
+    },
+    {
+      "Coverage ID": "COV-010",
+      "Jira Source": "G2-23127",
+      "AC Ref": "AC-Stories-Optional-Covers",
+      "Capability": "Support optional middle/closing covers in content stories carousel",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-009",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Commit 03e5ff0 in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-011",
+      "Jira Source": "G2-23132",
+      "AC Ref": "AC-Propagation-Hyena",
+      "Capability": "Propagation of additional cover assets through Hyena consumer path",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-010",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Commits 0a89c2d and 7e52e5d in mytheresa/hyena.",
+      "Evidence Availability": "Available",
+      "Case Type": "Integration",
+      "Inconsistencies": ""
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "AC Ambiguity",
+      "Jira Source": "G2-21085",
+      "Summary": "Designer bio story naming and AC wording use mixed quote/bio terminology.",
+      "How to Validate": "Confirm with product/design whether designer bio and quote patterns are separate capabilities or one reused component variant.",
+      "Expected Observation": "Single agreed taxonomy for content block variants is documented and reflected in Jira AC wording.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-005,COV-007",
+      "Evidence Notes": "Title indicates designer bio; AC states quote placement constraints."
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Confluence Note",
+      "Jira Source": "G2-22080",
+      "Summary": "Orphan-item strategy depends on dynamic viewport column calculations and next-page prefetch assumptions.",
+      "How to Validate": "Compare desktop/mobile grid completion under layout switches and confirm no visual glitches during scroll/pagination transitions.",
+      "Expected Observation": "Row-fill behavior remains stable when breakpoints change and no duplicate/disorienting product jumps appear.",
+      "Impact": "High",
+      "Linked Coverage IDs": "COV-008",
+      "Evidence Notes": "Confluence page G2-19378 discusses dynamic padding approach and trade-offs."
+    },
+    {
+      "Observation ID": "EXP-003",
+      "Source Type": "Evidence Gap",
+      "Jira Source": "G2-23000",
+      "Summary": "Behavior expectations rely on commit metadata because Jira story body lacks AC text.",
+      "How to Validate": "Capture explicit business acceptance examples for text/link label mapping and verify against CMS-authored scenarios.",
+      "Expected Observation": "Documented acceptance examples remove ambiguity for future regression checks.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-009",
+      "Evidence Notes": "Commit messages indicate field rename from linkText to text without Jira AC detail."
+    }
+  ]
+}

@@ -1,0 +1,279 @@
+{
+  "EPIC_KEY": "G2-16480",
+  "EPIC_SLUG": "shipping-options-new-provider",
+  "OUTPUT_PATH": "uat-test-plans/G2-16480-shipping-options-new-provider.xlsx",
+  "PLAN_TITLE": "G2-16480 UAT - Shipping Options New Provider",
+  "GENERATED_DATE": "2026-08-05",
+  "EPIC_SUMMARY": "Shipping Options - New Provider",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Cavazzuti, Matilde || LuxExperience",
+  "COMPONENT": "CA",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "35-45 minutes",
+  "COVERAGE_SUMMARY": "7 UI-testable stories mapped to 10 business checks and 10 coverage rows. 14 backend-only/spike/setup stories are excluded from direct business execution.",
+  "STORIES_IN_SCOPE": "G2-17592 | BE: Multiple Shipment Functionality Brand dependent | Done\nG2-20488 | BE: Implement Shipping Method Selection Endpoint (Tapir) | Done\nG2-20492 | BE: Remove default shipment logic | Done\nG2-20496 | BE: Implement a new endpoint for fetching available shipping methods (Tapir) | Done\nG2-20657 | BE: Implement Shipping Method Selection GraphQL Mutation (Hyena) | Done\nG2-20660 | BE: Implement a new query for fetching available shipping methods (Hyena) | Done\nG2-21737 | FE Spike | NAP & MRP Shipping Options Display and Selection | Done",
+  "STORIES_EXCLUDED": "G2-17594 | BE: Multiple Shipment Data Model | Backend-only data model work.\nG2-17595 | BE: Multiple Shipment Logic for Order assignment | Backend assignment logic not directly UI-executable.\nG2-17929 | BE Spike | Falcon integration setup | Discovery/setup spike.\nG2-17930 | BE: Falcon Proxy | Integration plumbing story.\nG2-19116 | BE: Tapir making aggregate dynamic for items search allignment | Backend defect unrelated to direct business UAT path.\nG2-19415 | BE: Mock Falcon via Mockoon | Mock infrastructure ticket.\nG2-19416 | BE: Create Falcon Client in Tapir | Marked in Jira as no direct QA testcase needed.\nG2-19417 | BE: Shipping Method provider creation | Provider abstraction implementation.\nG2-19725 | BE Spike | Shipping Options Implementations Details | Evaluation spike.\nG2-20180 | BE: Create new repository for Falcon and clone the code | Repository setup activity.\nG2-20212 | BE: Fix Falcon mock config | Mock service alignment ticket.\nG2-20477 | BE: Data Model Mapping for YNAP/Tapir Mismatch (ACL) | Integration mapping layer ticket.\nG2-20494 | BE: Split OrderShipmentProcessor by brand | Internal refactor ticket.\nG2-20721 | BE: Falcon Shipping Method provider creation | Backend provider implementation.",
+  "OUT_OF_SCOPE": "Fast checkout specific variants, carrier contract-dependent signature opt-out behavior, and deep API-internal implementation verification.",
+  "DEV_EVIDENCE": "Trigger summary: triggered stories=7/7; GitHub lookups executed=7 (3 successful, 4 rate-limited); Confluence lookups executed=2. Evidence source basis: GitHub MCP plus Jira description/comments/issuelinks fallback scan. Story evidence availability: 3 Available, 4 Evidence Unavailable.",
+  "GAPS_SUMMARY": "GitHub secondary rate limit prevented commit evidence retrieval for 4 triggered stories (G2-20496, G2-20657, G2-20660, G2-21737). Jira fallback scan found no explicit PR/commit URLs for those stories. Several acceptance criteria are technical and require business interpretation for UI outcomes.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Shipping Options Visibility",
+      "Check": "Available shipping options are shown during checkout for the active shipment",
+      "How to Verify": "Open checkout shipping step with a valid cart that has shippable items. Confirm options list is displayed for each shipment context.",
+      "Pass Criteria": "Shipping options are visible for the shipment context.\nNo blocking empty-state error is shown for valid carts."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Selection and Update",
+      "Check": "Customer can choose a shipping option and persist selection",
+      "How to Verify": "Select one method, continue, then return to shipping step and verify selected method remains.",
+      "Pass Criteria": "Selection is accepted and persisted.\nOrder summary reflects the selected method."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Default and Fallback",
+      "Check": "Default shipping option is applied when customer does not manually change it",
+      "How to Verify": "Proceed through shipping without changing the preselected method and review checkout summary and backend-visible result.",
+      "Pass Criteria": "A default method is applied and checkout can proceed.\nDefault behavior is consistent with epic AC intent."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Split Shipment Rule",
+      "Check": "Split-shipment behavior follows expected local and remote shipment option constraints",
+      "How to Verify": "Use a split cart scenario and verify local shipment has selectable methods while remote shipment behavior follows expected rule set.",
+      "Pass Criteria": "Local shipment offers selectable methods.\nRemote shipment rule application is consistent with configured behavior."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Cart State Lifecycle",
+      "Check": "Porter empty-cart flow does not fail before first item is added",
+      "How to Verify": "Create or use an empty cart, set address, then add first item and continue shipping flow.",
+      "Pass Criteria": "No blocker occurs while cart has no shipment yet.\nShipment-related flow initializes correctly after first item is added."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Validation and Error Handling",
+      "Check": "Invalid shipment or method inputs surface safe, user-facing errors",
+      "How to Verify": "Exercise invalid shipmentId/method/cart combinations via UI path and verify visible feedback while checkout stays stable.",
+      "Pass Criteria": "Errors are handled without breaking checkout.\nMessages are consistent and do not expose internal details."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Authorization",
+      "Check": "Shipping option access respects cart ownership and user context",
+      "How to Verify": "Run guest and logged-in paths and validate that cart access from another user context is not exploitable.",
+      "Pass Criteria": "Authorized user/guest flows work.\nCross-user access does not expose or mutate protected cart data."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Cross-Brand Compatibility",
+      "Check": "Porter and mytheresa-compatible behaviors coexist without regression",
+      "How to Verify": "Execute core shipping-option checks on both target storefronts and compare expected behavior deltas.",
+      "Pass Criteria": "Brand-specific behavior is respected.\nNo regression blocks the existing mytheresa-like flow."
+    },
+    {
+      "Check ID": "UAT-009",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Checkout Summary Reflection",
+      "Check": "Chosen shipping option is reflected in checkout summary consistently",
+      "How to Verify": "Select methods in each scenario and inspect checkout summary presentation before final confirmation step.",
+      "Pass Criteria": "Summary reflects selected option per shipment context.\nDisplayed value remains consistent after navigation."
+    },
+    {
+      "Check ID": "UAT-010",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Device and Performance",
+      "Check": "Core shipping options behavior is consistent on desktop and mobile checkout",
+      "How to Verify": "Repeat critical checks on desktop and mobile viewport for NAP and MRP acceptance storefronts.",
+      "Pass Criteria": "Core flow is usable on both form factors.\nNo visible performance blocker in loading options list."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-17592",
+      "AC Ref": "AC-G2-17592-FF",
+      "Capability": "Brand-dependent multiple shipment toggle and transparent behavior switch",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-008",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "GitHub commits found via MCP for G2-17592 in tapir and tapir-deployment",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": "Story AC is technical; business validation inferred through cross-brand behavior checks."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-20488",
+      "AC Ref": "AC-G2-20488-SEL",
+      "Capability": "Shipment-level method selection endpoint behavior",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002,UAT-006,UAT-007",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "GitHub commit evidence found; Jira QA comment confirms EXPRESS/STANDARD and guest/logged-in tests",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Acceptance text references API-level tests; mapped to business-level outcomes."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-20492",
+      "AC Ref": "AC-G2-20492-EMPTYCART",
+      "Capability": "No default shipment/method on porter empty cart with safe lifecycle",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-005,UAT-008",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "GitHub commit evidence found for default shipment logic removal",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": "Detailed technical AC requires business interpretation of expected UX transitions."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-20496",
+      "AC Ref": "AC-G2-20496-FETCH",
+      "Capability": "Retrieve available methods through new porter-oriented endpoint",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-004,UAT-006",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "GitHub lookup attempt failed due secondary rate limit; Jira fallback scan found no explicit PR/commit URL",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Jira comment indicates cross-user cart returns 200 empty list; potential policy ambiguity versus stricter forbidden response expectations."
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-20657",
+      "AC Ref": "AC-G2-20657-MUT",
+      "Capability": "GraphQL mutation for selecting shipment shipping method",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002,UAT-006,UAT-007",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "GitHub lookup attempt failed due secondary rate limit; Jira fallback scan found no explicit PR/commit URL",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Mutation acceptance is API-centric; UAT maps to observable checkout effects."
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-20660",
+      "AC Ref": "AC-G2-20660-QUERY",
+      "Capability": "GraphQL query for shipment shipping methods retrieval",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-006,UAT-007",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "GitHub lookup attempt failed due secondary rate limit; Jira fallback scan found no explicit PR/commit URL",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Stolen cart behavior accepted as 200 empty list in Jira notes; monitor as potential authorization semantics gap."
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-21737",
+      "AC Ref": "AC-G2-21737-FE",
+      "Capability": "Display and selection UX for NAP and MRP shipping options",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-002,UAT-004,UAT-009",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Confluence scenario page retrieved (ID 186978245); GitHub lookup attempt rate-limited; Jira fallback had no PR/commit URL",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Story itself is a spike-style statement; scenario details sourced from Confluence clarification page."
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-16480",
+      "AC Ref": "AC-EPIC-001",
+      "Capability": "Customers can see and choose shipping options based on location and timing",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-002,UAT-010",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Epic AC plus story-level synthesis; Confluence Shipping Options page used for context",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Country matrix still marked as not fully confirmed in Confluence context page."
+    },
+    {
+      "Coverage ID": "COV-009",
+      "Jira Source": "G2-16480",
+      "AC Ref": "AC-EPIC-002",
+      "Capability": "Option cost and conditions are visible and understandable",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-001,UAT-009",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Epic AC and FE scenario clarifications from Confluence",
+      "Evidence Availability": "Available",
+      "Case Type": "Usability",
+      "Inconsistencies": "Exact wording and placement may vary by design scenario and shipment type."
+    },
+    {
+      "Coverage ID": "COV-010",
+      "Jira Source": "G2-16480",
+      "AC Ref": "AC-EPIC-003",
+      "Capability": "Default option handling when customer skips manual selection",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003,UAT-004",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Epic AC plus backend lifecycle stories G2-20492 and G2-20496",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": "Default behavior differs by shipment scenario and brand rules; validate scenario coverage explicitly."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "OBS-001",
+      "Source Type": "Jira Comment",
+      "Jira Source": "G2-20496",
+      "Summary": "Cross-user cart token attempt returned 200 with empty list and was accepted as aligned behavior",
+      "How to Validate": "Repeat with a known non-owned cart token and observe response behavior in shipping methods flow",
+      "Expected Observation": "No shipping options leakage or mutation for unauthorized cart context",
+      "Impact": "Security/authorization semantics",
+      "Linked Coverage IDs": "COV-004,COV-006",
+      "Evidence Notes": "Captured from Jira QA comment thread"
+    },
+    {
+      "Observation ID": "OBS-002",
+      "Source Type": "Confluence",
+      "Jira Source": "G2-21737",
+      "Summary": "Scenario 2 requires FE-side sorting logic for remote shipment option based on local selection",
+      "How to Validate": "In split shipment setup, switch local shipment method and verify remote method default/rule transition",
+      "Expected Observation": "Remote shipment option follows documented rule set without manual conflict",
+      "Impact": "Business rule consistency",
+      "Linked Coverage IDs": "COV-007,COV-010",
+      "Evidence Notes": "Confluence page 186978245"
+    },
+    {
+      "Observation ID": "OBS-003",
+      "Source Type": "Confluence",
+      "Jira Source": "G2-16480",
+      "Summary": "Country matrix confirmation is pending in Shipping Options documentation",
+      "How to Validate": "Run smoke checks across key countries used for NAP/MRP acceptance test scope",
+      "Expected Observation": "No unexpected missing options due to unresolved matrix setup",
+      "Impact": "Coverage confidence",
+      "Linked Coverage IDs": "COV-008,COV-009",
+      "Evidence Notes": "Confluence page 168302384"
+    },
+    {
+      "Observation ID": "OBS-004",
+      "Source Type": "Jira Comment",
+      "Jira Source": "G2-20488",
+      "Summary": "Local testing evidence references code-freeze constraints on acceptance deployment",
+      "How to Validate": "Reconfirm key selection scenarios directly on acceptance environments in this UAT cycle",
+      "Expected Observation": "Observed behavior matches prior local validation results",
+      "Impact": "Release confidence",
+      "Linked Coverage IDs": "COV-002,COV-005",
+      "Evidence Notes": "Jira comments mention reliance on local instance during freeze"
+    }
+  ]
+}

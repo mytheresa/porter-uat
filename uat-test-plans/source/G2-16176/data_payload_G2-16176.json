@@ -1,0 +1,281 @@
+{
+  "EPIC_KEY": "G2-16176",
+  "EPIC_SLUG": "site-header-set-up",
+  "OUTPUT_PATH": "uat-test-plans/G2-16176-site-header-set-up.xlsx",
+  "PLAN_TITLE": "G2-16176 UAT — Site Header Set-up",
+  "GENERATED_DATE": "2026-08-05",
+  "EPIC_SUMMARY": "NAP | MRP | Site Header Set-up",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Sane, Sridevi Mayuresh || LuxExperience",
+  "COMPONENT": "D2",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "35-45 minutes",
+  "COVERAGE_SUMMARY": "11 UI-testable stories/bugs mapped to 10 business checklist checks and 11 coverage rows. 2 QA execution tasks excluded as non-product-capability items.",
+  "STORIES_IN_SCOPE": "G2-16829 | Story | Build Site Header for Guest users | Closed\nG2-17249 | Story | Build Site Header for Logged-in Users (FE) | Done\nG2-17283 | Technical Story | Icon Set-up | Closed\nG2-17898 | Story | Build Site Header for Guest users - Part 2 (PR) | Closed\nG2-18613 | Bug | Header incorrect styling | Closed\nG2-18672 | Bug | Vite plugin includes MRP SVGs in NAP build | Closed\nG2-19001 | Bug | Incorrect Header border | Closed\nG2-20997 | Story | Remove Sticky Header On Up-scroll on PDP | Done\nG2-22132 | Bug | Fix animation when logout | Closed\nG2-22476 | Bug | Customer Name Clipped on Mobile | Closed\nG2-22702 | Bug | Customer Name in Header Clipped on Desktop | Closed",
+  "STORIES_EXCLUDED": "G2-20577 | Task | QA | Header E2E testing (Logged out) | Done | QA execution task; no new product behavior.\nG2-20868 | Task | QA | Header E2E testing (Logged in) | Done | QA execution task; no new product behavior.",
+  "OUT_OF_SCOPE": "Backend implementation internals, CI pipeline behavior, and non-business technical diagnostics beyond user-observable header behavior.",
+  "DEV_EVIDENCE": "GitHub MCP lookups in repo mytheresa/atelier returned direct PR evidence for 10/11 in-scope stories. G2-22702 is marked Available via Jira issuelink fallback to G2-22708 PR #824. G2-17898 remains Evidence Unavailable after GitHub + Jira fallback checks.",
+  "GAPS_SUMMARY": "G2-17898 has no direct PR/commit evidence in GitHub MCP and no Jira PR URL fallback. AC language around hide/show scroll behavior overlaps with G2-20997 and should be reconfirmed per page type/device.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Header Navigation (Guest)",
+      "Check": "Guest header shows core quick links with correct guest behavior",
+      "How to Verify": "Open NAP and MRP as guest user on desktop. Verify My Account routes to sign-in and service icons (bag, wishlist, search) are visible.",
+      "Pass Criteria": "My Account redirects to sign-in for guest users.\nBag icon is visible without authenticated counter state.\nWishlist icon is visible without authenticated alert state."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Header Navigation (Logged-in)",
+      "Check": "Logged-in header routes correctly and shows account-specific states",
+      "How to Verify": "Log in on NAP and MRP. Verify My Account route, wishlist alerts behavior, and bag counter behavior in both empty and non-empty bag states.",
+      "Pass Criteria": "My Account links to account area for logged-in users.\nBag counter state updates correctly when cart has items.\nWishlist alert state is shown only when applicable."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Branding & Layout",
+      "Check": "Brand header identity and border styling match expected design",
+      "How to Verify": "Compare NAP and MRP header top area against approved UX reference for logo/brand treatment and border styling on desktop and mWeb.",
+      "Pass Criteria": "Correct brand identity is shown for each site.\nHeader border is visually correct and consistent with design references."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Icon Rendering",
+      "Check": "Header icons render correctly per brand without cross-brand leakage",
+      "How to Verify": "Inspect header icons on NAP and MRP in desktop and mobile views. Confirm icon style/assets belong to the active brand and load without broken states.",
+      "Pass Criteria": "All required header icons render without missing or broken glyphs.\nNAP and MRP show the correct brand-specific icon assets."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Search & Meganav",
+      "Check": "Search entry point and meganav host placeholder are present",
+      "How to Verify": "On NAP and MRP, verify search icon/entry point is available and the header area reserves space for meganav hosting behavior.",
+      "Pass Criteria": "Search entry point is visible and actionable.\nMeganav host area is present without layout breakage."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Responsive Behavior",
+      "Check": "Header works across desktop and mobile web including hamburger menu",
+      "How to Verify": "Test NAP and MRP on desktop and mobile breakpoints. Validate hamburger behavior on mobile and core header action availability at each breakpoint.",
+      "Pass Criteria": "Core header actions remain accessible on all tested breakpoints.\nMobile hamburger navigation appears and functions as expected."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Scroll Behavior",
+      "Check": "PDP desktop no longer shows sticky header on up-scroll",
+      "How to Verify": "Open a PDP on desktop and scroll down then up. Confirm the sticky header does not reappear and obscure product content.",
+      "Pass Criteria": "Header does not become sticky on PDP up-scroll for desktop.\nPDP content remains unobstructed during scroll interactions."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Auth Transition Animation",
+      "Check": "Header animation is stable during logout/login transitions",
+      "How to Verify": "Perform login and logout flows on NAP/MRP and observe header brand/name animation behavior during transition moments.",
+      "Pass Criteria": "No header flicker or broken animation appears during auth transitions.\nLogo/name animation remains smooth and readable."
+    },
+    {
+      "Check ID": "UAT-009",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Name Clipping (Mobile)",
+      "Check": "Customer name is not clipped in mobile header animation",
+      "How to Verify": "On iOS Safari mobile (or simulator), log in and observe header animation where customer name appears.",
+      "Pass Criteria": "Customer name text remains fully visible during animation.\nNo vertical clipping is visible in the header greeting area."
+    },
+    {
+      "Check ID": "UAT-010",
+      "Contact": "Sane, Sridevi Mayuresh || LuxExperience",
+      "Section": "Name Clipping (Desktop)",
+      "Check": "Customer name is not clipped on Windows desktop browsers",
+      "How to Verify": "On Windows Chrome, log in to NAP/MRP and observe the rolling customer name in header.",
+      "Pass Criteria": "Customer name is fully visible in header greeting area.\nNo clipping occurs at top or bottom of text line."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-16829",
+      "AC Ref": "AC-Guest-Links",
+      "Capability": "Guest header quick links route correctly (account, bag, wishlist)",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PR #146 [G2-16829] in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-17249",
+      "AC Ref": "AC-LoggedIn-Links",
+      "Capability": "Logged-in header account, bag counter, wishlist alerts, and loyalty styling",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PR #483 [G2-17249] in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-17283",
+      "AC Ref": "AC-Icon-Ingestion",
+      "Capability": "Header icon set ingestion and rendering",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PR #147 [G2-17283] in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-17898",
+      "AC Ref": "AC-Header-Platform-Scope",
+      "Capability": "Expanded guest header scope across search, meganav host area, and platform variants",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-005,UAT-006",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "No direct PR hit found in mytheresa/atelier for G2-17898; Jira fallback scan found no PR/commit URL.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "AC item for hide/show on scroll is broad while PDP-specific behavior is separately implemented in G2-20997."
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-18613",
+      "AC Ref": "Bugfix-Styling",
+      "Capability": "MRP header visual styling aligns to design",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PR #187 [G2-18613] in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "UX",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-18672",
+      "AC Ref": "Bugfix-Brand-Assets",
+      "Capability": "Vite plugin isolates brand SVG assets per build",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PR #195 [G2-18672] in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-19001",
+      "AC Ref": "Bugfix-Border",
+      "Capability": "Header border rendering corrected across brands",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PR #219 [G2-19001] in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "UX",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-20997",
+      "AC Ref": "AC-PDP-Scroll",
+      "Capability": "Remove sticky header on PDP up-scroll (desktop)",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PRs #521 and #541 [G2-20997] in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-009",
+      "Jira Source": "G2-22132",
+      "AC Ref": "Bugfix-Logout-Animation",
+      "Capability": "Logout header animation stability",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-008",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PRs #525 and #526 [G2-22132] in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-010",
+      "Jira Source": "G2-22476",
+      "AC Ref": "Bugfix-Mobile-Name-Clip",
+      "Capability": "Customer name rendering without clipping on mobile",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-009",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "PR #602 [G2-22476] in mytheresa/atelier.",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-011",
+      "Jira Source": "G2-22702",
+      "AC Ref": "Bugfix-Desktop-Name-Clip",
+      "Capability": "Customer name rendering without clipping on Windows desktop",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-010",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "No direct PR hit for G2-22702; related Jira link points to G2-22708 with PR #824.",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": "Evidence is indirect via linked bug ticket; direct implementation linkage should be confirmed in Jira history."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "AC Ambiguity",
+      "Jira Source": "G2-17898",
+      "Summary": "Scroll hide/show requirement wording overlaps with separate PDP sticky-header removal story",
+      "How to Validate": "Verify header behavior matrix by page type (homepage/category/PDP) and device breakpoint with product and design stakeholders.",
+      "Expected Observation": "Behavior is consistent with latest agreed design and no unexpected sticky behavior remains on PDP desktop.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-004,COV-008",
+      "Evidence Notes": "G2-17898 AC includes generic hide/show statement; G2-20997 scopes PDP desktop removal."
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Cross-brand Risk",
+      "Jira Source": "G2-18672",
+      "Summary": "Brand asset leakage risk across NAP/MRP builds",
+      "How to Validate": "Run visual spot checks on critical icon set after deployment for both NAP and MRP, including guest and logged-in states.",
+      "Expected Observation": "No MRP-only assets appear on NAP and vice versa.",
+      "Impact": "High",
+      "Linked Coverage IDs": "COV-003,COV-006",
+      "Evidence Notes": "Bug ticket explicitly states MRP SVGs were included in NAP build prior to fix."
+    },
+    {
+      "Observation ID": "EXP-003",
+      "Source Type": "Browser Specific",
+      "Jira Source": "G2-22476,G2-22702",
+      "Summary": "Header name clipping defects are platform-specific (iOS Safari and Windows Chrome)",
+      "How to Validate": "Execute focused browser/device matrix for customer-name animation after login/logout across iOS Safari and Windows Chrome.",
+      "Expected Observation": "No clipping or baseline alignment defects appear in either environment.",
+      "Impact": "High",
+      "Linked Coverage IDs": "COV-010,COV-011",
+      "Evidence Notes": "Both bug tickets include reproduction steps and screenshots tied to specific platforms."
+    }
+  ]
+}

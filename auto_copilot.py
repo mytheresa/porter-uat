@@ -3,6 +3,7 @@ import re
 import sys
 import time
 import glob
+import random
 import signal
 import platform
 
@@ -27,10 +28,14 @@ PROCESSED_LOG_FILE = "epics_processed.txt"
 OUTPUT_DIR_TEMPLATE = "uat-test-plans"
 ARTIFACTS_DIR = os.path.join(OUTPUT_DIR_TEMPLATE, "source")
 MAX_WAIT_SECONDS = 600  # 10 minutes max per Epic
-POST_COMPLETION_GRACE_SECONDS = int(os.environ.get("POST_COMPLETION_GRACE_SECONDS", "45"))  # wait for Copilot to finish rendering before /clear
+POST_COMPLETION_GRACE_SECONDS = int(os.environ.get("POST_COMPLETION_GRACE_SECONDS", "20"))  # wait for Copilot to finish rendering before /clear
 SKIP_IF_EXISTS = os.environ.get("SKIP_IF_EXISTS", "1") != "0"
 PERSIST_JSON_ARTIFACTS = os.environ.get("PERSIST_JSON_ARTIFACTS", "1") != "0"
 PERSIST_CHUNK_ARTIFACTS = os.environ.get("PERSIST_CHUNK_ARTIFACTS", "0") != "0"
+SEND_RETRIES = int(os.environ.get("SEND_RETRIES", "3"))
+RATE_LIMIT_RETRY_MAX = int(os.environ.get("RATE_LIMIT_RETRY_MAX", "2"))
+RATE_LIMIT_RETRY_BASE_SECONDS = int(os.environ.get("RATE_LIMIT_RETRY_BASE_SECONDS", "5"))
+RATE_LIMIT_RETRY_CAP_SECONDS = int(os.environ.get("RATE_LIMIT_RETRY_CAP_SECONDS", "180"))
 
 # Detect OS modifier key for clipboard paste
 MODIFIER_KEY = "command" if platform.system() == "Darwin" else "ctrl"
@@ -168,21 +173,99 @@ def log_failure(epic_key, reason):
         f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {epic_key}: {reason}\n")
 
 
+def detect_secondary_rate_limit(epic_key, since_epoch=None):
+    """
+    Detects GitHub secondary rate-limit errors emitted into the generated payload.
+    Returns: (detected, retry_after_seconds, source_path)
+    """
+    candidate_paths = [
+        f"/tmp/data_payload_{epic_key}.json",
+        os.path.join(ARTIFACTS_DIR, epic_key, f"data_payload_{epic_key}.json"),
+    ]
+
+    for path in candidate_paths:
+        if not os.path.exists(path):
+            continue
+
+        if since_epoch is not None:
+            try:
+                if os.path.getmtime(path) < since_epoch:
+                    continue
+            except OSError:
+                continue
+
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                content = f.read()
+        except OSError:
+            continue
+
+        if "secondary rate limit exceeded" not in content.lower():
+            continue
+
+        retry_after_match = re.search(r"retry after\s*(\d+)s", content, flags=re.IGNORECASE)
+        retry_after_seconds = int(retry_after_match.group(1)) if retry_after_match else 45
+        return True, retry_after_seconds, path
+
+    return False, None, None
+
+
+def compute_rate_limit_retry_delay(retry_after_seconds, attempt_number):
+    """Computes cooldown with exponential backoff and small jitter."""
+    exponential_backoff = RATE_LIMIT_RETRY_BASE_SECONDS * (2 ** max(0, attempt_number - 1))
+    jitter = random.randint(0, 5)
+    return min(retry_after_seconds + exponential_backoff + jitter, RATE_LIMIT_RETRY_CAP_SECONDS)
+
+
 def send_to_copilot(text):
-    """Pastes text via system clipboard to avoid pyautogui typing corruption."""
-    pyperclip.copy(text)
-    time.sleep(0.1)
-    pyautogui.hotkey(MODIFIER_KEY, "v")
-    time.sleep(0.2)
-    pyautogui.press("enter")
+    """Paste and verify text before submit to avoid partial sends (e.g. lone 'v')."""
+    expected = text.strip()
+    original_clipboard = None
+    try:
+        original_clipboard = pyperclip.paste()
+    except Exception:
+        # Clipboard read failures should not block prompt sending.
+        pass
+
+    sent = False
+    for attempt in range(1, SEND_RETRIES + 1):
+        pyperclip.copy(text)
+        time.sleep(0.3)  # allow focus to settle before pasting
+        pyautogui.hotkey(MODIFIER_KEY, "a")
+        time.sleep(0.1)
+        pyautogui.hotkey(MODIFIER_KEY, "v")
+        time.sleep(0.2)
+
+        # Verify what is in the input before pressing Enter.
+        pyautogui.hotkey(MODIFIER_KEY, "a")
+        time.sleep(0.1)
+        pyautogui.hotkey(MODIFIER_KEY, "c")
+        time.sleep(0.1)
+        observed = pyperclip.paste().strip()
+        if observed == expected:
+            pyautogui.press("enter")
+            sent = True
+            break
+
+        print(f" [WARN] Prompt verification failed on attempt {attempt}/{SEND_RETRIES}.")
+        time.sleep(0.2)
+
+    if original_clipboard is not None:
+        try:
+            pyperclip.copy(original_clipboard)
+        except Exception:
+            pass
+
+    return sent
 
 
 def clear_chat_context():
     """Attempts to clear Copilot chat context without crashing the loop."""
     try:
-        time.sleep(3)
+        time.sleep(5)  # give VS Code time to re-focus the chat input after workbook generation
         print(" Clearing chat context window...")
-        send_to_copilot("/clear")
+        if not send_to_copilot("/clear"):
+            print(" [WARN] Could not verify /clear command before submit.")
     except pyautogui.FailSafeException:
         print(" [WARN] Failsafe triggered while attempting /clear.")
     except Exception as e:
@@ -249,36 +332,103 @@ def main():
                 continue
 
             # 2. Formulate explicit prompt
-            prompt = f"Run .github/prompts/uat-test-plan-template.md for Epic '{epic_key}' and generate /tmp/data_payload_{bare_key}.json before executing the Python generator script."
+            prompt = (
+                f"Read .github/prompts/uat-test-plan-template.md and strictly follow the Mandatory Orchestration Workflow for Epic {bare_key}. "
+                f"Create /tmp/data_payload_{bare_key}.json. "
+                f"Validate then generate with .github/scripts/generate-test-plan-xlsx.py using /tmp/data_payload_{bare_key}.json. "
+                "Batch mode: do not render final chat output."
+            )
 
-            baseline_workbooks = list_valid_workbooks(bare_key)
-
-            # 3. Paste prompt and execute
-            print(f" Sending prompt to Copilot for {bare_key}...")
-            send_to_copilot(prompt)
-
-            # 4. Poll file system until .xlsx file is created
-            start_time = time.time()
             completed = False
+            attempt = 1
+            max_attempts = RATE_LIMIT_RETRY_MAX + 1
+            while attempt <= max_attempts:
+                baseline_workbooks = list_valid_workbooks(bare_key)
 
-            while (time.time() - start_time) < MAX_WAIT_SECONDS:
-                if is_workbook_generated(bare_key, start_time, baseline_workbooks):
-                    elapsed = int(time.time() - start_time)
-                    print(f" Success! Excel workbook detected for {bare_key} ({elapsed}s elapsed).")
-                    print(f" Waiting {POST_COMPLETION_GRACE_SECONDS}s for Copilot to finish rendering before /clear...")
-                    time.sleep(POST_COMPLETION_GRACE_SECONDS)
-                    log_processed(bare_key, elapsed)
+                # 3. Paste prompt and execute
+                print(f" Sending prompt to Copilot for {bare_key} (attempt {attempt}/{max_attempts})...")
+                if not send_to_copilot(prompt):
+                    print(f" ERROR: Could not reliably send prompt for {bare_key}.")
+                    log_failure(bare_key, "Prompt send verification failed")
                     remove_epic_from_queue(QUEUE_FILE, epic_key)
-                    completed = True
+                    cleanup_temp_files(bare_key)
+                    clear_chat_context()
+                    CURRENT_PROCESSING_EPIC = None
+                    time.sleep(2)
                     break
 
-                time.sleep(3)
+                # 4. Poll file system until .xlsx file is created
+                start_time = time.time()
+                retry_scheduled = False
+                while (time.time() - start_time) < MAX_WAIT_SECONDS:
+                    # Detect known rate-limit failures as soon as they are written to payload artifacts.
+                    rate_limited, retry_after_seconds, source_path = detect_secondary_rate_limit(
+                        bare_key,
+                        since_epoch=start_time,
+                    )
+                    if rate_limited and attempt < max_attempts:
+                        retry_delay = compute_rate_limit_retry_delay(retry_after_seconds, attempt)
+                        print(
+                            f" [WARN] Secondary rate limit detected in {source_path}. "
+                            f"Retrying {bare_key} after {retry_delay}s cooldown..."
+                        )
+                        cleanup_temp_files(bare_key)
+                        clear_chat_context()
+                        time.sleep(retry_delay)
+                        attempt += 1
+                        retry_scheduled = True
+                        break
 
-            # Handle Timeout Failsafe
-            if not completed:
-                print(f" ERROR: Timeout ({MAX_WAIT_SECONDS}s) reached for {bare_key}. Logging to epics_failed.txt...")
-                log_failure(bare_key, f"Timed out after {MAX_WAIT_SECONDS}s without producing XLSX")
-                remove_epic_from_queue(QUEUE_FILE, epic_key)
+                    if is_workbook_generated(bare_key, start_time, baseline_workbooks):
+                        elapsed = int(time.time() - start_time)
+                        print(f" Success! Excel workbook detected for {bare_key} ({elapsed}s elapsed).")
+                        print(f" Waiting {POST_COMPLETION_GRACE_SECONDS}s for Copilot to finish rendering before /clear...")
+                        time.sleep(POST_COMPLETION_GRACE_SECONDS)
+
+                        rate_limited, retry_after_seconds, source_path = detect_secondary_rate_limit(
+                            bare_key,
+                            since_epoch=start_time,
+                        )
+                        if rate_limited and attempt < max_attempts:
+                            retry_delay = compute_rate_limit_retry_delay(retry_after_seconds, attempt)
+                            print(
+                                f" [WARN] Secondary rate limit detected in {source_path}. "
+                                f"Retrying {bare_key} after {retry_delay}s cooldown..."
+                            )
+                            cleanup_temp_files(bare_key)
+                            clear_chat_context()
+                            time.sleep(retry_delay)
+                            attempt += 1
+                            retry_scheduled = True
+                            break
+
+                        processed_note = None
+                        if rate_limited:
+                            print(" [WARN] Secondary rate limit persisted after max retries. Keeping generated output.")
+                            processed_note = "WARNING: secondary rate limit persisted after max retries"
+
+                        log_processed(bare_key, elapsed, note=processed_note)
+                        remove_epic_from_queue(QUEUE_FILE, epic_key)
+                        completed = True
+                        break
+
+                    time.sleep(3)
+
+                if completed:
+                    break
+
+                if retry_scheduled:
+                    continue
+
+                # Timeout for this attempt
+                if (time.time() - start_time) >= MAX_WAIT_SECONDS:
+                    print(f" ERROR: Timeout ({MAX_WAIT_SECONDS}s) reached for {bare_key}. Logging to epics_failed.txt...")
+                    log_failure(bare_key, f"Timed out after {MAX_WAIT_SECONDS}s without producing XLSX")
+                    remove_epic_from_queue(QUEUE_FILE, epic_key)
+                    break
+
+                # Reached here only when a rate-limit retry was scheduled.
+                continue
 
             # Post-Epic Cleanup: Remove temporary files generated for this Epic
             cleanup_temp_files(bare_key)

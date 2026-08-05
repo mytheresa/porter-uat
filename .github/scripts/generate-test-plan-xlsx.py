@@ -31,7 +31,7 @@ REQUIRED_TOP_LEVEL_KEYS = [
     "EXPLORATORY_ROWS",
 ]
 
-CHECKLIST_REQUIRED_FIELDS = ["Check ID", "Section", "Check", "How to Verify", "Pass Criteria"]
+CHECKLIST_REQUIRED_FIELDS = ["Check ID", "Contact", "Section", "Check", "How to Verify", "Pass Criteria"]
 MATRIX_REQUIRED_FIELDS = [
     "Coverage ID",
     "Jira Source",
@@ -56,6 +56,10 @@ EXPLORATORY_REQUIRED_FIELDS = [
     "Linked Coverage IDs",
     "Evidence Notes",
 ]
+
+EVIDENCE_AVAILABILITY_ALLOWED = {"Available", "Unavailable"}
+AC_FIDELITY_ALLOWED = {"Full", "Partial", "Inferred"}
+PRIORITY_ALLOWED = {"High", "Medium", "Low"}
 
 
 def error_and_exit(message: str) -> None:
@@ -98,7 +102,7 @@ def validate_row_schema(section_name: str, rows: list[Any], required_fields: lis
             error_and_exit(f"{section_name} row {idx} must be a dict or list.")
 
 
-def validate_output_path(output_path: Any, epic_key: str) -> None:
+def validate_output_path(output_path: Any, epic_key: str, epic_slug: str) -> None:
     if not output_path:
         error_and_exit("OUTPUT_PATH must be provided and non-empty.")
     output_path_str = str(output_path)
@@ -118,6 +122,12 @@ def validate_output_path(output_path: Any, epic_key: str) -> None:
         error_and_exit(
             f"OUTPUT_PATH filename must start with '{epic_key}-'. Got '{file_name}'."
         )
+    if epic_slug:
+        expected_file_name = f"{epic_key}-{epic_slug}.xlsx"
+        if file_name != expected_file_name:
+            error_and_exit(
+                f"OUTPUT_PATH filename must match EPIC_KEY/EPIC_SLUG. Expected '{expected_file_name}', got '{file_name}'."
+            )
     if not normalized.endswith(".xlsx"):
         error_and_exit("OUTPUT_PATH must end with .xlsx")
 
@@ -179,6 +189,46 @@ def validate_parity(checklist_rows: list[Any], matrix_rows: list[Any]) -> None:
         error_and_exit("No AC references found in MATRIX_ROWS.")
 
 
+def validate_checklist_contact_consistency(checklist_rows: list[Any], created_by: str) -> None:
+    expected_contact = str(created_by).strip()
+    if not expected_contact:
+        error_and_exit("EPIC_CREATED_BY must be non-empty for Checklist Contact normalization.")
+
+    for idx, row in enumerate(checklist_rows, start=1):
+        contact = get_field(row, CHECKLIST_REQUIRED_FIELDS, "Contact")
+        if not contact:
+            error_and_exit(f"CHECKLIST_ROWS row {idx} has empty 'Contact'.")
+        if contact != expected_contact:
+            error_and_exit(
+                f"CHECKLIST_ROWS row {idx} has Contact '{contact}' but expected EPIC_CREATED_BY '{expected_contact}'."
+            )
+
+
+def validate_matrix_enums(matrix_rows: list[Any]) -> None:
+    for idx, row in enumerate(matrix_rows, start=1):
+        evidence_availability = get_field(row, MATRIX_REQUIRED_FIELDS, "Evidence Availability")
+        ac_fidelity = get_field(row, MATRIX_REQUIRED_FIELDS, "AC Fidelity")
+        priority = get_field(row, MATRIX_REQUIRED_FIELDS, "Priority")
+
+        if evidence_availability not in EVIDENCE_AVAILABILITY_ALLOWED:
+            error_and_exit(
+                f"MATRIX_ROWS row {idx} has invalid 'Evidence Availability': '{evidence_availability}'. "
+                f"Allowed values: {', '.join(sorted(EVIDENCE_AVAILABILITY_ALLOWED))}."
+            )
+
+        if ac_fidelity not in AC_FIDELITY_ALLOWED:
+            error_and_exit(
+                f"MATRIX_ROWS row {idx} has invalid 'AC Fidelity': '{ac_fidelity}'. "
+                f"Allowed values: {', '.join(sorted(AC_FIDELITY_ALLOWED))}."
+            )
+
+        if priority not in PRIORITY_ALLOWED:
+            error_and_exit(
+                f"MATRIX_ROWS row {idx} has invalid 'Priority': '{priority}'. "
+                f"Allowed values: {', '.join(sorted(PRIORITY_ALLOWED))}."
+            )
+
+
 def load_payload_or_exit(payload_path: str) -> dict[str, Any]:
     if not os.path.exists(payload_path):
         error_and_exit(f"Payload file not found at {payload_path}")
@@ -201,8 +251,9 @@ def run_preflight_validations(data: dict[str, Any]) -> tuple[list[Any], list[Any
     validate_top_level_schema(data)
 
     epic_key: str = str(data.get("EPIC_KEY", "EPIC-KEY"))
+    epic_slug: str = str(data.get("EPIC_SLUG", "")).strip()
     output_path: Any = data.get("OUTPUT_PATH")
-    validate_output_path(output_path, epic_key)
+    validate_output_path(output_path, epic_key, epic_slug)
 
     raw_checklist = data.get("CHECKLIST_ROWS", [])
     raw_matrix = data.get("MATRIX_ROWS", [])
@@ -212,6 +263,8 @@ def run_preflight_validations(data: dict[str, Any]) -> tuple[list[Any], list[Any
     validate_row_schema("MATRIX_ROWS", raw_matrix, MATRIX_REQUIRED_FIELDS)
     validate_row_schema("EXPLORATORY_ROWS", raw_exploratory, EXPLORATORY_REQUIRED_FIELDS)
     validate_parity(raw_checklist, raw_matrix)
+    validate_checklist_contact_consistency(raw_checklist, str(data.get("EPIC_CREATED_BY", "")))
+    validate_matrix_enums(raw_matrix)
 
     return raw_checklist, raw_matrix, raw_exploratory
 

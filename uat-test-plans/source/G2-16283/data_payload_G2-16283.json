@@ -1,0 +1,226 @@
+{
+  "EPIC_KEY": "G2-16283",
+  "EPIC_SLUG": "colour-linking",
+  "OUTPUT_PATH": "uat-test-plans/G2-16283-colour-linking.xlsx",
+  "PLAN_TITLE": "G2-16283 UAT - Colour linking",
+  "GENERATED_DATE": "2026-08-05",
+  "EPIC_SUMMARY": "Colour linking",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Kozlova, Nika || External",
+  "COMPONENT": "D3",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "35-45 minutes",
+  "COVERAGE_SUMMARY": "4 UI-testable child stories mapped to 8 business checklist checks and 8 coverage rows. 8 child items were excluded as backend-only, spike, or technical non-business execution scope.",
+  "STORIES_IN_SCOPE": "G2-18020 | Technical Story | FE | WL | MiniPDP Colour Selection Component | Closed\nG2-18366 | Story | FE | Mini PDP Color Variants | Done\nG2-19715 | Technical Story | FE | UI Implement alternativeColours on PDP | Done\nG2-21838 | Story | FE | PDP | Colour picker scroll | Done",
+  "STORIES_EXCLUDED": "G2-16519 | Evaluation | [SPIKE] BE | Colour swatches gaps analysis | Done | Research spike; not a direct storefront UAT execution item.\nG2-19161 | Technical Story | BE | TAPIR | Create Alternative Colours Porter endpoint | Done | Backend-only endpoint work.\nG2-19162 | Technical Story | BE | HYENA | Create alternativeColours Porter query | Done | Backend-only query work.\nG2-19369 | Technical Story | FE | Implement alternativeColours graphql query | Done | FE integration plumbing without direct business acceptance path.\nG2-20887 | Technical Story | BE | Optimize Alternative Color Payload for PDP Swatch Rendering | Done | Performance/internal backend optimization.\nG2-21051 | Evaluation | [SPIKE] FE | Investigate Global state manager solution | Done | Architectural investigation.\nG2-21632 | Task | BE | HYENA | Refactor alternative colors resolver for xProduct | Done | Backend refactor task.\nG2-21642 | Task | FE | PDP | Optimize Alternative Color Product Loading | Done | Technical performance task, not business-step validation.",
+  "OUT_OF_SCOPE": "Backend resolver internals, GraphQL schema-level validation, low-level performance profiling, and non-functional refactor acceptance not executable as business quick checks.",
+  "DEV_EVIDENCE": "Available for 3/4 in-scope stories via GitHub commit search (mytheresa/atelier). G2-18020 has no direct PR/commit hit after GitHub org-wide search and Jira-link fallback scan, so it remains Evidence Unavailable.",
+  "GAPS_SUMMARY": "G2-18020 includes high-level AC and comments indicating completion in prior tickets, but direct development evidence keyed to G2-18020 was not found. Confluence page 131311901 was reachable but is mostly backend flow context and not a direct AC source for MiniPDP/PDP color-interaction behavior.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Section": "MiniPDP Entry",
+      "Check": "Open MiniPDP from wishlist and confirm preselected color variant",
+      "How to Verify": "From wishlist, open MiniPDP for an item with multiple colors and inspect initial state before interaction.",
+      "Pass Criteria": "MiniPDP opens successfully from wishlist item.\nCurrent item color is preselected by default.\nNo unexpected size preselection occurs.",
+      "Contact": "Kozlova, Nika || External"
+    },
+    {
+      "Check ID": "UAT-002",
+      "Section": "Color Switching",
+      "Check": "Switch MiniPDP color swatches and verify image and size-state updates",
+      "How to Verify": "In MiniPDP, choose a different color swatch and observe image refresh and size availability state changes.",
+      "Pass Criteria": "Selected swatch updates the active product image.\nSize availability reflects selected color state.\nMiniPDP remains open during color switching.",
+      "Contact": "Kozlova, Nika || External"
+    },
+    {
+      "Check ID": "UAT-003",
+      "Section": "A2B and A2W",
+      "Check": "Validate add-to-bag and add-to-wishlist actions after color change",
+      "How to Verify": "After selecting a new color and size, add to bag; repeat add-to-wishlist into selected list and observe duplicate handling.",
+      "Pass Criteria": "Add-to-bag succeeds for available size.\nAdd-to-wishlist applies to selected list.\nDuplicate-add attempt displays expected warning without state corruption.",
+      "Contact": "Kozlova, Nika || External"
+    },
+    {
+      "Check ID": "UAT-004",
+      "Section": "PDP Swatch Rendering",
+      "Check": "Verify alternative color selector renders on PDP",
+      "How to Verify": "Open PDP items with one, two, and many colors; verify swatch list visibility and selected-state indicator.",
+      "Pass Criteria": "Alternative color selector is visible for applicable items.\nSelected swatch has clear active indicator.\nSingle-color and multi-color cases render consistently.",
+      "Contact": "Kozlova, Nika || External"
+    },
+    {
+      "Check ID": "UAT-005",
+      "Section": "Horizontal Scroll",
+      "Check": "Use vertical mouse wheel to horizontally scroll color picker on desktop",
+      "How to Verify": "On desktop PDP where swatches overflow viewport width, use vertical wheel while pointer is over swatch rail.",
+      "Pass Criteria": "Swatch rail moves horizontally with vertical wheel input.\nUser can reach off-screen swatches without auxiliary devices.\nInteraction remains smooth without freeze.",
+      "Contact": "Kozlova, Nika || External"
+    },
+    {
+      "Check ID": "UAT-006",
+      "Section": "Cross-Brand Behavior",
+      "Check": "Confirm color-selection behavior parity on NAP and MRP acceptance",
+      "How to Verify": "Repeat key MiniPDP/PDP swatch flows on both brand acceptance environments and compare outcomes.",
+      "Pass Criteria": "Core color interaction behavior is equivalent across brands.\nNo brand-specific blocker appears in basic selection flow.",
+      "Contact": "Kozlova, Nika || External"
+    },
+    {
+      "Check ID": "UAT-007",
+      "Section": "Responsive Behavior",
+      "Check": "Validate desktop/mobile interaction expectations for color picker",
+      "How to Verify": "Run MiniPDP and PDP color checks in desktop and mobile breakpoints; confirm desktop wheel behavior and mobile swipe fallback.",
+      "Pass Criteria": "Desktop supports wheel-driven horizontal navigation where specified.\nMobile supports touch swipe navigation for swatches.\nNo critical interaction regression across breakpoints.",
+      "Contact": "Kozlova, Nika || External"
+    },
+    {
+      "Check ID": "UAT-008",
+      "Section": "Data Robustness",
+      "Check": "Exercise products with different color-count datasets",
+      "How to Verify": "Use acceptance products covering one, two, three, and many-color scenarios from Jira test notes; execute core color-switch journey.",
+      "Pass Criteria": "All sample datasets are navigable.\nNo broken swatch state appears for higher color counts.\nJourney remains stable for color and size selection.",
+      "Contact": "Kozlova, Nika || External"
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-18020",
+      "AC Ref": "AC-MINIPDP-COMPONENT",
+      "Capability": "MiniPDP colour selection component baseline behavior",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-002",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Jira AC present; comments indicate implementation completed via prior tickets. No direct commit/PR hit for G2-18020 after GitHub and Jira-link fallback scans.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Story references prior-ticket completion; direct traceability requires linked implementation key confirmation."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-18366",
+      "AC Ref": "AC-MINIPDP-COLOR-VARIANTS",
+      "Capability": "MiniPDP color variant selection and image update",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-002,UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "GitHub commit: https://github.com/mytheresa/atelier/commit/1d5f496b67f05e4a2fae3e31cf0ccca78b7a6e05",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-18366",
+      "AC Ref": "AC-MINIPDP-A2B-A2W",
+      "Capability": "MiniPDP add-to-bag and add-to-wishlist continuity after color switch",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Derived from Jira AC scenarios and acceptance test comments.",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-19715",
+      "AC Ref": "AC-PDP-ALT-COLORS",
+      "Capability": "Alternative colours component visible on PDP",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "GitHub commit: https://github.com/mytheresa/atelier/commit/609388c47f7551469063e77bf8f417216462fe7d",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-21838",
+      "AC Ref": "AC-PDP-HSCROLL-WHEEL",
+      "Capability": "Horizontal swatch scroll with vertical wheel input on desktop",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-005",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "GitHub commit: https://github.com/mytheresa/atelier/commit/df1b2a394c27dcdf998b0eb79f0460d6442dab33",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-18366",
+      "AC Ref": "AC-CROSS-BRAND",
+      "Capability": "Cross-brand execution on NAP and MRP",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Jira AC explicitly references NAP and MRP.",
+      "Evidence Availability": "Available",
+      "Case Type": "Compatibility",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-18366,G2-21838",
+      "AC Ref": "AC-RESPONSIVE",
+      "Capability": "Desktop and mobile interaction parity for swatches",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Desktop/mobile notes in Jira AC and test comments; no dedicated mobile-specific implementation ticket surfaced in this epic map.",
+      "Evidence Availability": "Available",
+      "Case Type": "UX",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-19715,G2-21838",
+      "AC Ref": "AC-DATASET-ROBUSTNESS",
+      "Capability": "Color picker stability across variable color-count products",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-008",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Jira comments include acceptance test products with different color counts.",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": ""
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "Evidence Gap",
+      "Jira Source": "G2-18020",
+      "Summary": "Direct development evidence for G2-18020 is missing despite completed status.",
+      "How to Validate": "Trace linked or predecessor Jira keys and verify whether implementation was merged under a different ticket key.",
+      "Expected Observation": "A predecessor implementation key is identified and linked back for full traceability.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-001",
+      "Evidence Notes": "GitHub search by key in repo and org returned no hits; Jira comments indicate prior-ticket completion."
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Confluence Context",
+      "Jira Source": "G2-16283",
+      "Summary": "Confluence page 131311901 is accessible but mostly backend data-flow context, not direct UI acceptance guidance.",
+      "How to Validate": "Confirm if additional UI-focused Confluence documents exist for color linking behavior in MiniPDP/PDP.",
+      "Expected Observation": "Either a UI-focused doc is linked or Jira AC remains the canonical test source.",
+      "Impact": "Low",
+      "Linked Coverage IDs": "COV-004,COV-005",
+      "Evidence Notes": "Content title: Product bundles new flow activation."
+    },
+    {
+      "Observation ID": "EXP-003",
+      "Source Type": "Risk Note",
+      "Jira Source": "G2-19715",
+      "Summary": "Ticket comments mention temporary FE bugs until data cleanup task completion.",
+      "How to Validate": "Run color-switch checks on acceptance with known test products and capture any residual data anomalies.",
+      "Expected Observation": "UI remains stable with no critical blocker after cleanup dependencies are complete.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-004,COV-008",
+      "Evidence Notes": "Comment references dependency on G2-20655 data cleanup."
+    }
+  ]
+}

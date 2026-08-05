@@ -1,0 +1,242 @@
+{
+  "EPIC_KEY": "G2-16474",
+  "EPIC_SLUG": "promotions-management-within-checkout-flow",
+  "OUTPUT_PATH": "uat-test-plans/G2-16474-promotions-management-within-checkout-flow.xlsx",
+  "PLAN_TITLE": "G2-16474 UAT - Promotions Management within Checkout Flow",
+  "GENERATED_DATE": "2026-08-05",
+  "EPIC_SUMMARY": "Promotions management within Checkout flow",
+  "EPIC_STATUS": "In Progress",
+  "EPIC_CREATED_BY": "Cavazzuti, Matilde || LuxExperience",
+  "COMPONENT": "CA",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "35-45 minutes",
+  "COVERAGE_SUMMARY": "5 UI-testable promotion stories mapped to 10 business checks and 8 coverage rows. 3 non-UI/evaluation stories are excluded from direct business execution.",
+  "STORIES_IN_SCOPE": "G2-25007 | FE: Promotions totals display | Done\nG2-24502 | FE: Free Shipping Promotions | Closed\nG2-24259 | FE: Catalogue-level Promotions | Done\nG2-24257 | FE: Cart-level Promotions | Done\nG2-24255 | FE: France & California Discount Pricing | New",
+  "STORIES_EXCLUDED": "G2-25003 | BE: Spike | Promotions | Evaluation/backend-only discovery story\nG2-25000 | FE: Spike | Promotions | Evaluation and discovery notes without deterministic AC\nG2-24503 | BE: Free Shipping Promotions | Backend implementation story not directly executable by business users",
+  "OUT_OF_SCOPE": "Backend promotion-engine internals, promo rule authoring in admin tools, infrastructure integrations, and code-level diagnostics outside storefront business-user execution.",
+  "DEV_EVIDENCE": "GitHub key lookups were executed for all 5 in-scope stories (G2-25007, G2-24502, G2-24259, G2-24257, G2-24255) and returned no direct PR/commit hits. Jira-link fallback scans of description/comments/issuelinks found no GitHub PR/commit URLs. Evidence status: Evidence Unavailable for all in-scope stories.",
+  "GAPS_SUMMARY": "Most in-scope stories contain sparse or empty Acceptance Criteria sections and rely on story-goal prose; G2-24257 comment thread explicitly highlights open behavior questions (threshold ownership, segment eligibility, and placement). Regional legal rules in G2-24255 require explicit business confirmation for US vs California scope boundary.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Cart-Level Promotions",
+      "Check": "Order-level promotion discount is displayed in Shopping Bag",
+      "How to Verify": "Add eligible products to cart and trigger a cart-level promotion condition. Inspect order summary in Shopping Bag.",
+      "Pass Criteria": "Order-level discount appears with clear label and monetary impact.\nOrder total is reduced consistently with the applied promotion."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Catalog-Level Promotions",
+      "Check": "Line-item promotion details are visible for affected products",
+      "How to Verify": "Use a basket containing an item with catalog-level discount and inspect line item rows in Shopping Bag and Checkout.",
+      "Pass Criteria": "Original and discounted prices are distinguishable on affected items.\nPromotion labeling/message is visible on each affected line item."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Promo Code",
+      "Check": "Customer can apply a valid promo code and see confirmation",
+      "How to Verify": "Enter a valid promo code in Shopping Bag and submit. Continue into Checkout to confirm persisted state.",
+      "Pass Criteria": "Promo code applies successfully and confirmation state is visible.\nAdjusted total remains consistent after navigation to Checkout."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Promo Code",
+      "Check": "Customer can remove an applied promo code",
+      "How to Verify": "From a basket with an active promo code, use remove action and re-check totals and labels.",
+      "Pass Criteria": "Promo code is removed from visible applied state.\nTotals and promotion labels revert according to base pricing rules."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Validation",
+      "Check": "Invalid promo code shows a user-facing error without breaking flow",
+      "How to Verify": "Submit an invalid or expired code and observe cart-level behavior and messaging.",
+      "Pass Criteria": "Clear error feedback is shown to customer.\nCheckout/cart remains usable with no corrupted totals."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Free Shipping",
+      "Check": "Free-shipping promotions display FREE when shipping cost is zero",
+      "How to Verify": "Use a scenario where shipping method cost becomes zero after promotion eligibility and inspect Shopping Bag, Checkout, and confirmation pages.",
+      "Pass Criteria": "Shipping price displays FREE consistently when cost is zero.\nNo shipping promo element is shown when no shipping method is assigned."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Totals Consistency",
+      "Check": "Promotion-adjusted totals stay consistent through Shopping Bag, Checkout, and Order Confirmation",
+      "How to Verify": "Progress end-to-end from bag to order completion in a promoted basket and compare subtotal/discount/total amounts.",
+      "Pass Criteria": "No unexpected total drift is observed between pages.\nOrder Confirmation reflects the same applied promotion outcomes as checkout."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Regional Pricing",
+      "Check": "France and California discount display rules are honored",
+      "How to Verify": "Run representative discount scenarios for FR and CA contexts and inspect color/strikethrough behavior before and after sale-window boundaries.",
+      "Pass Criteria": "Display formatting matches documented regional rules for FR and CA.\nNo contradictory visual pricing state is shown for the tested context."
+    },
+    {
+      "Check ID": "UAT-009",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Cross-Brand Consistency",
+      "Check": "Core promotion behavior is consistent across both target storefronts",
+      "How to Verify": "Repeat critical promo-code and pricing checks on both acceptance URLs with equivalent baskets.",
+      "Pass Criteria": "Critical promotion outcomes are consistent across both brands.\nNo brand-specific blocker appears for core promotion flow."
+    },
+    {
+      "Check ID": "UAT-010",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Threshold and Eligibility",
+      "Check": "Minimum spend and customer-segment eligibility behaviors are user-visible and predictable",
+      "How to Verify": "Test one basket below threshold and one above threshold, including a segment-restricted code where available.",
+      "Pass Criteria": "Eligibility state changes are reflected clearly to the user.\nIneligible baskets do not silently apply restricted promotions."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-25007",
+      "AC Ref": "AC-Totals-Display",
+      "Capability": "Promotion information is reflected in order totals with consistent final amount calculation",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-007",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Story description confirms totals-display intent but has sparse AC detail.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Detailed acceptance wording is missing; business checks are inferred from Epic objective and story summary."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-24502",
+      "AC Ref": "AC-Free-Shipping-Display",
+      "Capability": "Free shipping is rendered as FREE when promotion yields zero shipping cost",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-006,UAT-007",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Story goal states expected FREE rendering behavior and no-display condition when shipping method is missing.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "AC section is empty, so the precise edge conditions are not explicitly enumerated."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-24259",
+      "AC Ref": "AC-Catalog-Line-Item-Display",
+      "Capability": "Catalog-level promotions are visible at line-item level in bag, checkout, and confirmation",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002,UAT-007",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Story goal and linked Confluence mapping page support field-level promotion display semantics.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Confluence is implementation-oriented; explicit business AC scenarios are not fully specified in Jira."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-24257",
+      "AC Ref": "AC-Promo-Code-Apply",
+      "Capability": "Customer can apply valid promo codes and see resulting discount state",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003,UAT-001",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Story goal includes promo-code entry and applied-state display intent.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Jira comment thread flags unresolved UX placement and eligibility ownership questions."
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-24257",
+      "AC Ref": "AC-Promo-Code-Remove-And-Errors",
+      "Capability": "Customer can remove applied promo code and receives error feedback for invalid codes",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004,UAT-005",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Story explicitly requires remove behavior and invalid-code error display.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "No detailed edge-case matrix is documented in AC section."
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-24257",
+      "AC Ref": "AC-Threshold-And-Segment-Eligibility",
+      "Capability": "Minimum spend and customer-segment eligibility constraints are surfaced predictably",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-010",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Story references threshold and customer-group constraints as requirements.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Integration",
+      "Inconsistencies": "Jira discussion suggests backend ownership ambiguity for eligibility checks."
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-24255",
+      "AC Ref": "AC-Regional-Discount-Formatting",
+      "Capability": "Region-specific discount formatting rules for FR and CA are correctly represented",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-008,UAT-009",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Story describes expected color and strikethrough behavior for FR and CA time-window cases.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Story asks to confirm whether California behavior should extend to broader US scope."
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-16474",
+      "AC Ref": "AC-Cross-Flow-Promo-Continuity",
+      "Capability": "Promotion outcomes remain coherent from cart through checkout and order confirmation",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-007,UAT-009",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Epic in-scope and acceptance statements require visible promotion continuity across core checkout journey.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "Story-level AC detail is uneven, so end-to-end continuity checks are anchored primarily on Epic acceptance intent."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "Jira Comment",
+      "Jira Source": "G2-24257",
+      "Summary": "Comment thread raises ambiguity on threshold/segment ownership and promo placement in checkout flow.",
+      "How to Validate": "Execute promo apply/remove journey while recording where users expect messaging in bag, checkout, and confirmation pages.",
+      "Expected Observation": "Placement is consistent and understandable for business users across steps.",
+      "Impact": "High",
+      "Linked Coverage IDs": "COV-004,COV-005,COV-006",
+      "Evidence Notes": "Based on Jira comment by Davide Oliveri on G2-24257."
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Confluence",
+      "Jira Source": "G2-24259",
+      "Summary": "Confluence mapping shows multiple price-field variants (original, markdown, promotion, adjusted).",
+      "How to Validate": "Compare rendered price elements in UI against expected transitions from original to markdown to promotion-adjusted values.",
+      "Expected Observation": "UI communicates price evolution clearly without conflicting labels or amounts.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-003,COV-001",
+      "Evidence Notes": "Derived from Confluence page Item-level promotion Display for Catalog-level promotions."
+    },
+    {
+      "Observation ID": "EXP-003",
+      "Source Type": "Jira AC Gap",
+      "Jira Source": "G2-25007",
+      "Summary": "Totals-display story provides intent but not explicit AC scenario set.",
+      "How to Validate": "Run multi-promotion basket combinations and verify subtotal, discount, and final total consistency on each checkout step.",
+      "Expected Observation": "Totals remain stable and transparent for customers under combined promotion conditions.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-001,COV-008",
+      "Evidence Notes": "Derived from sparse Jira description in G2-25007."
+    }
+  ]
+}

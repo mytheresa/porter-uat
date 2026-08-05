@@ -7,7 +7,7 @@ user-invocable: true
 
 ## Purpose
 
-Acts as the data transformation bridge between evidence extraction and the deterministic workbook script. It converts Acceptance Criteria (AC), metadata, docs, and PR evidence into a strict JSON payload consumed by `$(pwd)/.github/scripts/generate-test-plan-xlsx.py`.
+Bridge evidence extraction to the workbook script. Convert AC, metadata, docs, and PR evidence into the JSON payload consumed by `$(pwd)/.github/scripts/generate-test-plan-xlsx.py`.
 
 ## Evidence Priority Policy
 
@@ -15,7 +15,13 @@ Acts as the data transformation bridge between evidence extraction and the deter
 - Secondary evidence allowed: Jira comments, PRs/commits, and linked docs (Confluence/Figma/external docs).
 - Secondary evidence may refine or clarify reproduction steps and expected outcomes, but must never contradict or override AC intent.
 - If secondary evidence conflicts with AC, keep AC as canonical and record the conflict in gaps/inconsistencies.
-- Trigger-driven enrichment: treat Confluence/GitHub evidence as optional per-story enrichment based on upstream trigger flags, not as mandatory retrieval for every UI story.
+- Trigger-driven enrichment: Confluence/GitHub are optional per-story enrichments, not defaults.
+
+## Quick Wins
+
+- If the epic has no UI-testable stories, emit the minimal excluded-story payload and stop.
+- If no trigger fires, stay Jira-only and skip Confluence/GitHub.
+- If coverage is already obvious from AC, do not expand evidence just to fill space.
 
 ## Input
 
@@ -25,26 +31,23 @@ Acts as the data transformation bridge between evidence extraction and the deter
 
 1. **Scenario & Checklist Synthesizer:**
 
-   - Ingest all batched story chunks for the Epic.
-   - Parse UI-testable story AC first, then enrich with Confluence BDD notes, comments, and PR evidence as secondary context.
-   - Preserve Jira-first behavior for non-trigger stories; do not degrade Checklist coverage when PR/Confluence enrichment is absent by design.
-   - Map PRs/comments/test notes directly to AC scenarios as supporting evidence only.
-   - Formulate atomic verification checks for `CHECKLIST_ROWS` and map parity to `MATRIX_ROWS`.
-   - **Checklist Balance Rule (mandatory):** `CHECKLIST_ROWS` must be complete enough to avoid missing important business steps, while remaining practical for execution.
-   - Target **8–12 checks** for typical Epics; allow up to **15 checks** for high-complexity Epics with multiple high-risk flows.
-   - Cover critical business outcomes from AC and known risk context without forcing a fixed scenario template when a behavior is not applicable.
-   - Do not over-compress distinct user actions into one row when that would hide a meaningful verification outcome.
-   - Keep brand-specific names out of checklist wording and keep checks business-facing (no API-level or code-level steps). Put deep technical diagnostics in `MATRIX_ROWS` or `EXPLORATORY_ROWS`.
-   - Keep the checklist executable by a business user in one session (recommended **25–45 minutes**), prioritizing clarity and testability over minimum row count.
+   - Ingest all batched story chunks.
+   - Parse UI-testable AC first; use docs/comments/PRs only as secondary context.
+   - Keep Jira-first behavior for non-trigger stories.
+   - Map PRs/comments/test notes to AC scenarios only as supporting evidence.
+   - Build atomic checks for `CHECKLIST_ROWS` with parity to `MATRIX_ROWS`.
+   - Aim for **8–12 checks**; allow up to **15** for high-risk Epics.
+   - Keep wording business-facing and session-friendly; move technical diagnostics to `MATRIX_ROWS` or `EXPLORATORY_ROWS`.
 2. **Silent JSON Payload Generation (`/tmp/data_payload_<EPIC_KEY>.json`):**
 
    - Consolidate all transformed chunk rows into a single flat JSON file saved directly to disk at `/tmp/data_payload_<EPIC_KEY>.json`.
    - **Strict Token Rule:** Do NOT stream or render the JSON content in chat prose or tool call outputs. Write silently to file system.
 3. **Workbook Execution:**
 
-    - Ensure the venv and dependencies are ready before running any Python command:
+    - Ensure the workspace venv already exists and has dependencies installed before running any Python command:
        ```bash
-       source .venv/bin/activate 2>/dev/null || (python3 -m venv .venv && source .venv/bin/activate && pip install openpyxl -q)
+       source .venv/bin/activate 2>/dev/null || { echo 'Missing .venv; create it once during setup, then rerun.'; exit 1; }
+       python3 -c "import openpyxl,sys; print('NON_INTERACTIVE_OK', sys.executable)"
        ```
     - Execute preflight validation first (quick fail on bad payload):
        ```bash

@@ -1,0 +1,221 @@
+{
+  "EPIC_KEY": "G2-16314",
+  "EPIC_SLUG": "migrate-registered-user-data-from-wcs-to-tapir",
+  "OUTPUT_PATH": "uat-test-plans/G2-16314-migrate-registered-user-data-from-wcs-to-tapir.xlsx",
+  "PLAN_TITLE": "G2-16314 UAT - Migrate Registered User Data",
+  "GENERATED_DATE": "2026-08-05",
+  "EPIC_SUMMARY": "Migrate registered user data from WCS to Tapir",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Cobbe, Valentina || YOOX NET A PORTER",
+  "COMPONENT": "CD1",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "35-45 minutes",
+  "COVERAGE_SUMMARY": "4 UI-testable migration stories mapped to 9 business checks and 7 coverage rows. 9 non-UI stories and spikes are excluded from direct business execution.",
+  "STORIES_IN_SCOPE": "G2-16757 | Migration of registered user profile data from legacy | Done\nG2-18353 | Ant moves addresses to Tapir for bulk migration | Done\nG2-18354 | Tapir bulk migration of addresses | Done\nG2-21527 | Map WCS passwordHashed property correctly | Done",
+  "STORIES_EXCLUDED": "G2-16688 | Evaluation spike for cleansing-tool feasibility; no direct business UI acceptance path\nG2-17614 | Infrastructure/mapping spike; analysis-only outcome\nG2-17629 | Infrastructure provisioning task, not business-user executable\nG2-17674 | Ant splitter/mapper job internals, backend processing only\nG2-18316 | Monitoring dashboard wiring only\nG2-18352 | Queue monitoring and reporting tooling only\nG2-19083 | Tapir internal refactor and endpoint isolation hardening\nG2-19100 | Integration mode configuration (HTTP/QUEUE), technical setup\nG2-20057 | ParentURN mapping refactor technical follow-up",
+  "OUT_OF_SCOPE": "Backend implementation internals, queue metrics deep-dive, load/performance profiling, and direct DB table verification outside business-user UAT scope.",
+  "DEV_EVIDENCE": "GitHub key lookups were executed for all 4 in-scope stories and returned no direct PR matches. Jira-link fallback scans on description/comments/issuelinks/remotelinks also returned no PR or commit URLs. Status: Evidence Unavailable for G2-16757, G2-18353, G2-18354, G2-21527.",
+  "GAPS_SUMMARY": "Story-level AC is mostly technical and does not define storefront UI steps explicitly; checklist is derived from business outcomes (account continuity, address continuity, login continuity). No linked PR/commit URLs were discoverable via GitHub MCP or Jira fallback. Password hash encoder variants (bcrypt vs argon2i) are noted in Jira comments and should be explicitly smoke-tested with representative migrated users.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Account Continuity",
+      "Check": "Migrated registered user can sign in with existing credentials",
+      "How to Verify": "Use a migrated pre-cutover account on the target storefront login page. Authenticate without reset flow and continue to account area.",
+      "Pass Criteria": "Login succeeds with existing credentials.\nNo forced password reset appears for the migrated account."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Account Profile",
+      "Check": "Core profile fields are visible and accurate after migration",
+      "How to Verify": "Open account profile for migrated users and compare first name, last name, email, and date-of-birth values against legacy reference sample.",
+      "Pass Criteria": "Core fields are populated and match expected legacy values.\nNo corrupted or blank mandatory profile fields are observed."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Consent Continuity",
+      "Check": "Consent states are preserved during migration",
+      "How to Verify": "Review marketing/privacy/terms loyalty consent indicators in account settings for migrated users across both target brands.",
+      "Pass Criteria": "Consent states match expected pre-migration records.\nNo consent value is unexpectedly defaulted or lost."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Address Continuity",
+      "Check": "Shipping and billing addresses appear for migrated users",
+      "How to Verify": "Open address book for migrated accounts and validate at least one user with multiple addresses and one user with single address.",
+      "Pass Criteria": "Expected addresses are present and linked to the correct account.\nNo duplicate address cards are rendered for the same legacy address."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Address Defaults",
+      "Check": "Default billing and shipping address flags are correct",
+      "How to Verify": "For migrated users with historical defaults, inspect which address is marked default billing and default shipping after migration.",
+      "Pass Criteria": "Default flags are correctly assigned.\nOnly one default per type is active when expected by account data."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Non-auth Feature Reuse",
+      "Check": "Migrated customer data is usable in non-auth account features",
+      "How to Verify": "After login, navigate account sections that rely on migrated customer attributes and verify pages render without missing-customer-state errors.",
+      "Pass Criteria": "Account pages depending on migrated profile data render correctly.\nNo user-facing data integrity errors are shown."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Idempotency Outcome",
+      "Check": "Reprocessed migrated account set does not create visible duplicates",
+      "How to Verify": "Use post-rerun sample accounts agreed with operations and re-check profile/address pages for duplicate account identity or duplicated address entities.",
+      "Pass Criteria": "No duplicate account identity is visible.\nNo duplicate address entities are introduced by reprocessing."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Cross-brand Consistency",
+      "Check": "Migration outcomes are consistent across both acceptance storefronts",
+      "How to Verify": "Execute key checks on both target URLs with equivalent migrated-user samples and compare behavior.",
+      "Pass Criteria": "Critical migration outcomes are consistent across both environments.\nNo brand-specific blocker is found for account or address continuity."
+    },
+    {
+      "Check ID": "UAT-009",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Negative-path Sampling",
+      "Check": "Known problematic records are handled without storefront instability",
+      "How to Verify": "Use a sample of known invalid/incomplete legacy records identified by operations and confirm storefront account area remains stable for those users after migration handling.",
+      "Pass Criteria": "Invalid legacy records do not break storefront account flows.\nAny skipped record behavior is surfaced through expected business fallback state."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-16757",
+      "AC Ref": "AC-Profile-Migration",
+      "Capability": "Registered user profile migration excluding passwords preserves core account attributes",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002,UAT-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC and scenarios explicitly define profile-field mapping, consistency verification, and non-authentication data usage.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Story uses technical migration framing; business-facing UI verification steps are derived from expected outcomes."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-16757",
+      "AC Ref": "AC-No-Password-Transfer",
+      "Capability": "No raw authentication credential transfer while preserving usable login continuity",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Story excludes password transfer but Epic intent requires successful credential continuity post-migration.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "Credential continuity depends on dedicated password-hash mapping story and environment setup."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-16757",
+      "AC Ref": "AC-Idempotency-Update-Rules",
+      "Capability": "Migration reprocessing respects update-date logic and avoids duplicates",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Scenario 2 and 3 define no-duplicate behavior and conditional update logic based on export timing.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "Back-office logs are primary technical proof; business UAT uses visible duplicate checks only."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-16757",
+      "AC Ref": "AC-Consent-Integrity",
+      "Capability": "Customer consent information remains intact after migration",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003,UAT-008",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Epic and story scope include consent migration and completeness checks as key acceptance outcomes.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Consent-source parity must be cross-checked with business reference sample."
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-18353",
+      "AC Ref": "AC-Address-Queue-Split",
+      "Capability": "Address migration path is published independently from customer entities to support continuity",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-004,UAT-009",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "AC defines separate address queue behavior and non-blocking invalid-address handling.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Integration",
+      "Inconsistencies": "AC is queue-oriented; business UAT validates resulting address presence and stability rather than queue internals."
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-18354",
+      "AC Ref": "AC-Address-Linking-Retry",
+      "Capability": "Bulk address processor links addresses to the right customer and handles retries/default flags safely",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004,UAT-005",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Story AC and scenarios define customer-link lookup, retry behavior, create-vs-update handling, and default-flag management.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Comment indicates one scenario was initially ignored for bulk-only flow; follow-up indicates queue flow now covers ADD/UPDATE/DELETE."
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-21527",
+      "AC Ref": "AC-PasswordHash-Compatibility",
+      "Capability": "WCS passwordHashed mapping remains compatible with target encoder handling",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-008",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Task + Jira comment mention encoder-name variance (bcrypt vs argon2i), requiring representative login smoke checks.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "No explicit PR/commit link in Jira metadata for this story despite completion comments."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "Jira Comment",
+      "Jira Source": "G2-21527",
+      "Summary": "Password encoder-name variance was observed across migrated users (bcrypt vs argon2i).",
+      "How to Validate": "Run sign-in smoke tests using a mixed sample of migrated accounts known to carry different hash-encoder origins.",
+      "Expected Observation": "Both cohorts authenticate successfully without forced reset.",
+      "Impact": "High",
+      "Linked Coverage IDs": "COV-007,COV-002",
+      "Evidence Notes": "Derived from Jira comment by Yuri Reis on G2-21527."
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Jira Comment",
+      "Jira Source": "G2-18354",
+      "Summary": "Address flow discussion evolved from bulk-create-only assumption to full ADD/UPDATE/DELETE support in queue system.",
+      "How to Validate": "Sample migrated users with changed addresses and verify updates/deletes are reflected as expected in account address book.",
+      "Expected Observation": "Address update and delete outcomes are consistent with current implementation note.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-006",
+      "Evidence Notes": "Based on two Jira comments on G2-18354 clarifying scenario coverage."
+    },
+    {
+      "Observation ID": "EXP-003",
+      "Source Type": "Jira AC Gap",
+      "Jira Source": "G2-16757",
+      "Summary": "Story acceptance is heavily technical, with limited explicit storefront acceptance wording.",
+      "How to Validate": "Use agreed business-user migrated-account sample sheet and verify profile, consent, address, and login continuity end-to-end.",
+      "Expected Observation": "Business-outcome checks pass even when backend metrics are not directly inspected by business users.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-001,COV-003,COV-004",
+      "Evidence Notes": "Derived from AC wording and scenario framing in G2-16757."
+    }
+  ]
+}

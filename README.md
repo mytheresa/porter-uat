@@ -32,11 +32,11 @@ cd porter-uat
 
 ### 2. Python dependencies
 
-Create and activate a virtual environment (required on macOS due to PEP 668):
+Create and activate a repository virtual environment (required on macOS due to PEP 668):
 
 ```sh
-python3 -m venv /tmp/xlsx-venv
-source /tmp/xlsx-venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r .github/scripts/requirements.txt
 ```
 
@@ -115,6 +115,7 @@ For one-off generation or debugging:
 ```
 Read .github/prompts/uat-test-plan-template.md and strictly follow the Mandatory Orchestration Workflow for Epic '<EPIC_KEY>'. 
 Generate the payload at /tmp/data_payload_<EPIC_KEY>.json and execute the python generator script.
+Final chat output must include only Status, Workbook (when generated), Payload, and Reason (failure only).
 ```
 
 3. Wait for workbook generation (`uat-test-plans/<EPIC_KEY>-<slug>.xlsx`)
@@ -190,7 +191,7 @@ Artifact behavior is controlled by environment variables:
 1. **Epic Map & Categorization:** Agent invokes `evidence-context` skill to extract Epic metadata and categorize child stories (UI-testable vs. backend-only).
 
 2. **Chunked Evidence Gathering (Map-Reduce):** 
-   - Groups UI-testable stories into batches (max 5 per chunk)
+   - Groups UI-testable stories into batches (6-8 per chunk)
    - Iteratively invokes `evidence-context` per story with minimal field retrieval
    - Writes intermediate state to `/tmp/chunk_<EPIC_KEY>_<batch_id>.json` files to prevent context overflow
 

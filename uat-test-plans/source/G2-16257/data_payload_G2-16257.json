@@ -1,0 +1,281 @@
+{
+  "EPIC_KEY": "G2-16257",
+  "EPIC_SLUG": "vertex-search-porter",
+  "OUTPUT_PATH": "uat-test-plans/G2-16257-vertex-search-porter.xlsx",
+  "PLAN_TITLE": "G2-16257 UAT - Vertex Search - Porter",
+  "GENERATED_DATE": "2026-08-05",
+  "EPIC_SUMMARY": "Vertex search - Porter",
+  "EPIC_STATUS": "In Progress",
+  "EPIC_CREATED_BY": "Kozlova, Nika || External",
+  "COMPONENT": "D1",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "40-50 minutes",
+  "COVERAGE_SUMMARY": "11 UI-testable stories mapped to 10 business checklist checks and 11 coverage rows. 14 backend infrastructure, QA, task, and evaluation items excluded from direct business execution.",
+  "STORIES_IN_SCOPE": "G2-24514 | Story | FE: Search webview for app | Closed\nG2-24392 | Story | BE: Vertex | Landing Pages | Closed\nG2-24364 | Story | BE: Autocomplete | slug look up by name | Closed\nG2-24280 | Story | FE: Vertex Search | Internal redirect from search matches | Closed\nG2-24008 | Story | FE: Vertex Search | Filters | Closed\nG2-23706 | Story | FE: PLP | Vertex Autocomplete | Closed\nG2-23512 | Story | FE: Vertex Search | Build Search Results Page | Closed\nG2-23296 | Technical Story | BE: Vertex Search | Stop internal redirects to Manual/Custom PLP pages | Closed\nG2-21621 | Technical Story | BE: Vertex Search | Internal redirects to DLPs | Closed\nG2-20568 | Story | BE: Vertex Search | Autocomplete | Designer & Category | Closed\nG2-19629 | Story | BE: Vertex Search | Hyena | Integrate Mink Autocomplete into xsuggest | Closed",
+  "STORIES_EXCLUDED": "G2-25201 | Evaluation | BE: SPIKE | Vertex | Local inventories | Closed | Investigation only, no direct customer flow.\nG2-24366 | Story | BE: Vertex | Inventory update for non-default channels | In Progress | Inventory data plumbing, not directly testable in one business flow.\nG2-24360 | Technical Story | BE: Add facets in xSearch response | Closed | Backend contract support covered by FE filter validation stories.\nG2-24005 | Technical Story | BE: Vertex Search | Add images | Closed | Backend enrichment detail, validated indirectly via FE result pages.\nG2-23839 | Task | QA | Vertex search FE experience test | Closed | QA execution task, no standalone product capability.\nG2-23555 | Technical Story | BE: Vertex Search | Add data for facets | Closed | Backend support only.\nG2-23554 | Technical Story | BE: Vertex Search | Availability custom attribute: channel level inventory | Closed | Data model/internal feed concern.\nG2-23448 | Task | BE: Vertex Search | Add filters | Closed | Task-level implementation item without independent business AC.\nG2-23447 | Task | QA: Vertex Search | Mink Search Endpoint | Closed | QA execution ticket only.\nG2-21620 | Technical Story | BE: Vertex Search | Mink Search Endpoint | Closed | Service integration baseline, not a user-visible scenario alone.\nG2-21094 | Technical Story | BE: Vertex Search | Custom attributes - sale | Closed | Backend attribute support covered in downstream UI checks.\nG2-19726 | Technical Story | BE: Vertex search | Basic mink integration | Closed | Foundational integration, no direct business journey.\nG2-19581 | Task | BE: Vertex Search | Autocomplete | GCP configuration | Closed | Environment/configuration task only.\nG2-19192 | Evaluation | [SPIKE BE] Vertex search - category, designer and product autocomplete | Closed | Discovery spike; no direct UAT acceptance flow.",
+  "OUT_OF_SCOPE": "GCP catalog setup, API quota/rate limiting internals, analytics training flows, and backend diagnostics that are not directly observable in business UAT journeys.",
+  "DEV_EVIDENCE": "GitHub lexical lookups were executed for all 11 in-scope stories in mytheresa/atelier and returned empty/error responses. Jira fallback discovered one direct PR URL in story comments (G2-24364 -> https://github.com/mytheresa/atelier/pull/789). Remaining in-scope stories have no explicit Jira-hosted PR/commit URL evidence.",
+  "GAPS_SUMMARY": "PR/commit evidence is sparse for this epic when using key-based lookup and Jira-link fallback. AC wording for redirect precedence and autocomplete slug normalization spans FE and BE ownership, so final sign-off should confirm exact matching behavior and no false redirects across both brands.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Search Entry",
+      "Check": "App webview search-and-shop route opens correctly and is not publicly indexed",
+      "How to Verify": "From app context open the shop/search icon and land on the dedicated search-and-shop route; verify navigation back returns to prior app context.",
+      "Pass Criteria": "Search-and-shop route is reachable from app context.\nBack navigation returns user to expected prior context.\nRoute is configured with no-index behavior."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Search Results",
+      "Check": "Search results page renders product results for valid terms",
+      "How to Verify": "Submit multiple valid search terms and confirm dedicated results route, product grid rendering, and stable pagination/loading states.",
+      "Pass Criteria": "Search term submission always reaches the search results page.\nProduct grid renders without blocking errors.\nRepeated queries keep page responsive and consistent."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Filters",
+      "Check": "Key filters narrow search results correctly",
+      "How to Verify": "Apply and remove color, designer, category, and price filters on results page and observe product list updates.",
+      "Pass Criteria": "Filter selections update product results correctly.\nRemoving filters restores broader result sets.\nNo filter causes broken or empty-state errors when matching products exist."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Autocomplete",
+      "Check": "Autocomplete returns designer/category suggestions with valid destinations",
+      "How to Verify": "Type partial terms for designers and categories and select suggestions to validate navigation to correct DLP/PLP destinations.",
+      "Pass Criteria": "Suggestions appear while typing relevant terms.\nSelecting a designer/category suggestion opens a valid destination page.\nNo malformed slug or duplicate path fragment appears in URL."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Redirects",
+      "Check": "Configured redirect terms route to curated destinations instead of generic product search",
+      "How to Verify": "Search known configured redirect keywords and verify user lands on mapped curated pages instead of generic result listings.",
+      "Pass Criteria": "Configured redirect terms consistently navigate to curated destination URLs.\nUnconfigured terms continue to standard product search results.\nRedirect handoff does not produce blank/intermediate error pages."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Redirect Safety",
+      "Check": "Manual/custom PLP terms do not trigger unwanted redirects",
+      "How to Verify": "Search terms associated with manual/custom PLP rules and confirm search results remain in standard results flow where redirect exclusion is expected.",
+      "Pass Criteria": "Excluded manual/custom PLP terms do not redirect unexpectedly.\nSearch results are shown normally for excluded terms.\nBehavior is consistent across repeated attempts."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Internal Match Logic",
+      "Check": "Match-slug based internal redirects and FE consumption are consistent",
+      "How to Verify": "Test terms expected to produce match-slug behavior and confirm FE redirects correctly when match exists and remains on results when not matched.",
+      "Pass Criteria": "Matched terms trigger the intended redirect behavior.\nNon-matched terms remain on product results flow.\nNo redirect loop or partial load occurs."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Brand Coverage",
+      "Check": "Search behavior parity is maintained across NAP and MRP",
+      "How to Verify": "Run core search, filter, autocomplete, and redirect checks on both NAP and MRP acceptance environments.",
+      "Pass Criteria": "Core search flow works on both brands.\nKnown brand-specific datasets do not break shared behavior.\nNo cross-brand routing anomalies appear."
+    },
+    {
+      "Check ID": "UAT-009",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Navigation Continuity",
+      "Check": "Back and forward browser/app navigation remains coherent through search journey",
+      "How to Verify": "Perform multi-step journey (search entry -> autocomplete/submit -> results -> product/listing -> back/forward) and verify state continuity.",
+      "Pass Criteria": "Back navigation returns to expected previous screen/state.\nForward navigation replays route without broken context.\nSearch state does not reset unexpectedly unless intended."
+    },
+    {
+      "Check ID": "UAT-010",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Regression Sanity",
+      "Check": "Vertex-based search does not regress baseline discoverability behavior",
+      "How to Verify": "Run a short end-to-end journey from query to landing page/product page for several terms and verify outcomes remain relevant and actionable.",
+      "Pass Criteria": "Users can discover products or curated pages for representative terms.\nJourney completes without major UX regressions.\nFailure cases are limited to known documented gaps."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-24514",
+      "AC Ref": "AC-Webview-Route",
+      "Capability": "Dedicated app search-and-shop webview route with stable back navigation",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-009",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Jira AC defines dedicated route and navigation behavior for app webview.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Access-control for app-only route described as nice-to-have and may vary by implementation."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-23512",
+      "AC Ref": "AC-Search-Results-Page",
+      "Capability": "Dedicated search results page route and product grid rendering",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002,UAT-010",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Story context and AC define FE route and rendering over new endpoint.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "None."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-24008",
+      "AC Ref": "AC-Search-Filters",
+      "Capability": "Search results filtering by designer/category/color/price",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003,UAT-010",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC explicitly lists key filter dimensions on results page.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "None."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-20568",
+      "AC Ref": "AC-Autocomplete-Suggestions",
+      "Capability": "Autocomplete suggestions include categories and designers",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004,UAT-008",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Requirements specify category/designer suggestions and FE surfacing needs.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Suggestion quality/data duplicate concerns noted in Jira comments."
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-19629",
+      "AC Ref": "AC-Xsuggest-Integration",
+      "Capability": "Mapped autocomplete payload through xsuggest API contract",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004,UAT-010",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Backend integration story provides response mapping and tester sample scenarios.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Integration",
+      "Inconsistencies": "MRP coverage was noted as pending during original QA comments."
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-24364",
+      "AC Ref": "AC-Slug-Validity",
+      "Capability": "Autocomplete suggestion slug resolution to valid DLP/PLP",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004,UAT-007",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Jira comment includes PR link https://github.com/mytheresa/atelier/pull/789 for FE move to xsearchv2 and slug response handling.",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": "Comments mention known edge cases when multiple taxons share names."
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-24392",
+      "AC Ref": "AC-Landing-Page-Redirect",
+      "Capability": "Redirect keyword handling to curated landing pages via match.slug mapping",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-005,UAT-007",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Story AC states redirect URI mapping through Mink/Hyena integration.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "None."
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-21621",
+      "AC Ref": "AC-Internal-Redirect-DLP",
+      "Capability": "Internal redirect intercept logic for configured DLP terms",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-005,UAT-007",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Technical story defines redirect interception before normal result processing.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Potential overlap with other redirect-control stories requires coordinated validation."
+    },
+    {
+      "Coverage ID": "COV-009",
+      "Jira Source": "G2-23296",
+      "AC Ref": "AC-Exclude-Manual-PLP",
+      "Capability": "Exclusion of manual/custom PLP from redirect matching logic",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-006,UAT-007",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC defines exclusion behavior for manual PLP redirect rules.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "Commentary indicates interim data dependencies during rollout."
+    },
+    {
+      "Coverage ID": "COV-010",
+      "Jira Source": "G2-24280",
+      "AC Ref": "AC-FE-Match-Redirect-Consumption",
+      "Capability": "FE consumes match response and redirects from search results context",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-005,UAT-007,UAT-009",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Story AC references use of match response from redirect backend behavior.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Behavior boundaries with query expansion stories need confirmation."
+    },
+    {
+      "Coverage ID": "COV-011",
+      "Jira Source": "G2-23706",
+      "AC Ref": "AC-FE-Autocomplete-Connection",
+      "Capability": "FE wiring to xsuggest endpoint replacing mocked autocomplete data",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004,UAT-008,UAT-010",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Story AC calls for xsuggest integration and cleanup from mocked FE behavior.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Integration",
+      "Inconsistencies": "None."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "AC Ambiguity",
+      "Jira Source": "G2-24514",
+      "Summary": "App-only access control was marked nice-to-have and may not be strictly enforced yet.",
+      "How to Validate": "Probe route access outside app context and verify expected fallback/visibility behavior.",
+      "Expected Observation": "Route is either blocked outside app context or gracefully handled without SEO exposure.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-001",
+      "Evidence Notes": "AC lists app-only restriction as follow-up candidate."
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Data Quality Risk",
+      "Jira Source": "G2-24364",
+      "Summary": "Duplicate taxon names and slug normalization can still cause unexpected destination routing.",
+      "How to Validate": "Test ambiguous category names and compare resulting destination with current live-site expectation.",
+      "Expected Observation": "Selected suggestion resolves to stable, intended PLP/DLP destination without malformed URL.",
+      "Impact": "High",
+      "Linked Coverage IDs": "COV-006,COV-011",
+      "Evidence Notes": "Story comments cite historical ambiguity with similarly named taxons."
+    },
+    {
+      "Observation ID": "EXP-003",
+      "Source Type": "Cross-brand Risk",
+      "Jira Source": "G2-19629",
+      "Summary": "MRP autocomplete dataset readiness lag can create parity gaps vs NAP during validation windows.",
+      "How to Validate": "Run identical autocomplete terms on both acceptance brands and compare suggestion completeness and routing.",
+      "Expected Observation": "Both brands provide consistent suggestion behavior for shared catalogs, or variances are documented as known data lag.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-005,COV-011",
+      "Evidence Notes": "Jira comments referenced phased validation by brand availability."
+    }
+  ]
+}
