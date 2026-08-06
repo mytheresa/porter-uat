@@ -110,11 +110,11 @@ def validate_output_path(output_path: Any, epic_key: str, epic_slug: str) -> Non
         error_and_exit("OUTPUT_PATH must be relative, not absolute.")
 
     normalized = os.path.normpath(output_path_str)
-    expected_root = os.path.normpath("uat-test-plans")
+    allowed_roots = {os.path.normpath("uat-test-plans"), os.path.normpath("uat-test-plans-reduced30")}
     parent_dir = os.path.normpath(os.path.dirname(normalized))
-    if parent_dir != expected_root:
+    if parent_dir not in allowed_roots:
         error_and_exit(
-            f"OUTPUT_PATH must be directly inside '{expected_root}/'. Got '{normalized}'."
+            f"OUTPUT_PATH must be directly inside one of {sorted(allowed_roots)}/. Got '{normalized}'."
         )
 
     file_name = os.path.basename(normalized)
