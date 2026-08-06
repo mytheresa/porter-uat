@@ -1,8 +1,7 @@
 # UAT Reducer V2 Batch Summary
 
-Deterministic reducer with matrix-join scoring and hard constraints:
+Deterministic reducer with matrix-join scoring and hard constraint:
 - Preserve at least one checklist check per AC Ref.
-- Preserve at least one checklist check for each core case type present (functional/regression/integration).
 
 ## Batch KPI
 
@@ -32,18 +31,18 @@ Deterministic reducer with matrix-join scoring and hard constraints:
 
 ## Dropped Checks
 
-| Epic | Core case guardrails | Dropped checks (Check ID [Section]) |
-|---|---|---|
-| G2-16011 | functional | UAT-005 [Access & Roles], UAT-008 [Concierge Handover] |
-| G2-16144 | functional | UAT-004 [Language Selection], UAT-006 [Search], UAT-008 [Suggested Country] |
-| G2-16151 | functional | UAT-004 [Stock & Sizes] |
-| G2-16176 | functional, regression | UAT-005 [Search & Meganav], UAT-006 [Responsive Behavior] |
-| G2-16248 | functional, regression | UAT-002 [Mobile Navigation], UAT-003 [Flyout Templates], UAT-008 [Cross-Brand Variants] |
-| G2-16257 | functional, integration, regression | UAT-002 [Search Results], UAT-003 [Filters], UAT-006 [Redirect Safety] |
-| G2-16258 | functional, integration, regression | — |
-| G2-16283 | functional, regression | UAT-002 [Color Switching] |
-| G2-16314 | functional, integration, regression | UAT-006 [Non-auth Feature Reuse], UAT-009 [Negative-path Sampling] |
-| G2-16396 | functional | UAT-004 [Wishlist Navigation], UAT-006 [All Items Query & Rendering], UAT-007 [Auth Continuity], UAT-011 [Default Wishlist Guardrails] |
-| G2-16474 | functional, integration, regression | UAT-003 [Promo Code], UAT-006 [Free Shipping], UAT-008 [Regional Pricing] |
-| G2-16477 | functional, regression | UAT-009 [Trimming and Input Hygiene], UAT-011 [Cross-Brand/Desktop-Mobile] |
-| G2-16480 | functional, regression | UAT-005 [Cart State Lifecycle], UAT-009 [Checkout Summary Reflection], UAT-010 [Device and Performance] |
+| Epic | Dropped checks (Check ID [Section]) |
+|---|---|
+| G2-16011 | UAT-005 [Access & Roles], UAT-008 [Concierge Handover] |
+| G2-16144 | UAT-004 [Language Selection], UAT-006 [Search], UAT-008 [Suggested Country] |
+| G2-16151 | UAT-004 [Stock & Sizes] |
+| G2-16176 | UAT-005 [Search & Meganav], UAT-006 [Responsive Behavior] |
+| G2-16248 | UAT-001 [Desktop Main Navigation], UAT-003 [Flyout Templates], UAT-008 [Cross-Brand Variants] |
+| G2-16257 | UAT-002 [Search Results], UAT-003 [Filters], UAT-006 [Redirect Safety] |
+| G2-16258 | — |
+| G2-16283 | UAT-002 [Color Switching] |
+| G2-16314 | UAT-006 [Non-auth Feature Reuse], UAT-009 [Negative-path Sampling] |
+| G2-16396 | UAT-004 [Wishlist Navigation], UAT-006 [All Items Query & Rendering], UAT-007 [Auth Continuity], UAT-011 [Default Wishlist Guardrails] |
+| G2-16474 | UAT-005 [Validation], UAT-006 [Free Shipping], UAT-008 [Regional Pricing] |
+| G2-16477 | UAT-009 [Trimming and Input Hygiene], UAT-011 [Cross-Brand/Desktop-Mobile] |
+| G2-16480 | UAT-005 [Cart State Lifecycle], UAT-009 [Checkout Summary Reflection], UAT-010 [Device and Performance] |

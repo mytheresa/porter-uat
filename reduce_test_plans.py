@@ -27,18 +27,6 @@ PRIORITY_WEIGHT = {"High": 100, "Medium": 65, "Low": 35}
 FIDELITY_WEIGHT = {"Full": 35, "Partial": 22, "Inferred": 10}
 EVIDENCE_WEIGHT = {"Available": 0, "Unavailable": 8}
 
-CASE_TYPE_BONUS = {
-    "functional": 8,
-    "regression": 20,
-    "integration": 16,
-    "compatibility": 12,
-    "resilience": 12,
-    "dependency": 10,
-    "ux": 6,
-    "usability": 6,
-}
-
-CORE_CASE_TYPES = {"functional", "regression", "integration"}
 PRIORITY_LEVELS = ["High", "Medium", "Low"]
 
 
@@ -106,8 +94,7 @@ def score_matrix_row(row: dict[str, str]) -> int:
     priority_score = PRIORITY_WEIGHT.get(row.get("Priority", ""), 0)
     fidelity_score = FIDELITY_WEIGHT.get(row.get("AC Fidelity", ""), 0)
     evidence_score = EVIDENCE_WEIGHT.get(row.get("Evidence Availability", ""), 0)
-    case_score = CASE_TYPE_BONUS.get(row.get("Case Type", "").strip().lower(), 0)
-    return priority_score + fidelity_score + evidence_score + case_score
+    return priority_score + fidelity_score + evidence_score
 
 
 def update_matrix_rows(matrix_rows: list[Any], dropped_ids: set[str]) -> list[Any]:
@@ -190,11 +177,9 @@ def reduce_payload_v2(data: dict[str, Any]) -> tuple[dict[str, Any], dict[str, A
 
     check_to_rows: dict[str, list[dict[str, str]]] = defaultdict(list)
     check_to_acrefs: dict[str, set[str]] = defaultdict(set)
-    check_to_case_types: dict[str, set[str]] = defaultdict(set)
     ac_to_checks: dict[str, set[str]] = defaultdict(set)
     ac_priority_rank: dict[str, int] = {}
     ac_priority_label: dict[str, str] = {}
-    case_type_to_checks: dict[str, set[str]] = defaultdict(set)
 
     for mrow in matrix_meta:
         ac_ref = mrow["AC Ref"]
@@ -208,15 +193,10 @@ def reduce_payload_v2(data: dict[str, Any]) -> tuple[dict[str, Any], dict[str, A
             ac_priority_rank[ac_ref] = pr_rank
             ac_priority_label[ac_ref] = pr_label
 
-        case_type = mrow.get("Case Type", "").strip().lower()
-
         for cid in mapped_ids:
             check_to_rows[cid].append(mrow)
             check_to_acrefs[cid].add(ac_ref)
             ac_to_checks[ac_ref].add(cid)
-            if case_type:
-                check_to_case_types[cid].add(case_type)
-                case_type_to_checks[case_type].add(cid)
 
     check_scores: dict[str, int] = {}
     for cid in all_check_ids:
@@ -232,18 +212,14 @@ def reduce_payload_v2(data: dict[str, Any]) -> tuple[dict[str, Any], dict[str, A
         linked_ac = check_to_acrefs.get(cid, set())
         unique_ac_count = sum(1 for ac in linked_ac if len(ac_to_checks.get(ac, set())) == 1)
         high_ac_count = sum(1 for ac in linked_ac if ac_priority_label.get(ac) == "High")
-        case_diversity = len(check_to_case_types.get(cid, set()))
 
-        score = int(round(max_row + (0.35 * avg_row) + (30 * unique_ac_count) + (10 * high_ac_count) + (4 * case_diversity)))
+        score = int(round(max_row + (0.35 * avg_row) + (30 * unique_ac_count) + (10 * high_ac_count)))
         check_scores[cid] = score
 
     total_checks = len(all_check_ids)
     target_keep = max(MIN_CHECKS_KEPT, math.ceil(total_checks * TARGET_KEEP_RATIO))
 
     required_ac_refs = set(ac_to_checks.keys())
-    required_core_case_types = {
-        ct for ct in CORE_CASE_TYPES if ct in case_type_to_checks and case_type_to_checks[ct]
-    }
 
     kept: set[str] = set(all_check_ids)
     dropped: set[str] = set()
@@ -257,15 +233,10 @@ def reduce_payload_v2(data: dict[str, Any]) -> tuple[dict[str, Any], dict[str, A
 
         kept_after = kept_now - {cid}
 
-        # Hard constraint 1: every AC Ref retains at least one mapped checklist check.
+        # Hard constraint: every AC Ref retains at least one mapped checklist check.
         for ac_ref in check_to_acrefs.get(cid, set()):
             mapped = ac_to_checks.get(ac_ref, set())
             if mapped and not (mapped & kept_after):
-                return False
-
-        # Hard constraint 2: keep at least one check for each core case family present.
-        for case_type in required_core_case_types:
-            if not (case_type_to_checks.get(case_type, set()) & kept_after):
                 return False
 
         return True
@@ -288,7 +259,7 @@ def reduce_payload_v2(data: dict[str, Any]) -> tuple[dict[str, Any], dict[str, A
 
     reduced["COVERAGE_SUMMARY"] = (
         f"[Reduced V2 ~{removed_pct}% — {kept_count}/{total_checks} checks retained; "
-        f"AC and core-case coverage guardrails enforced] " + str(data.get("COVERAGE_SUMMARY", ""))
+        f"AC coverage guardrail enforced] " + str(data.get("COVERAGE_SUMMARY", ""))
     )
 
     epic_key = str(data.get("EPIC_KEY", "EPIC-KEY"))
@@ -342,7 +313,6 @@ def reduce_payload_v2(data: dict[str, Any]) -> tuple[dict[str, Any], dict[str, A
         "high_ac_coverage_pct": high_coverage_pct,
         "matrix_before": len(matrix_rows_raw),
         "matrix_after": len(reduced["MATRIX_ROWS"]),
-        "core_case_constraints": ", ".join(sorted(required_core_case_types)) if required_core_case_types else "none",
         "priority_before": dict(before_prio),
         "priority_after": dict(after_prio),
         "priority_reliability_before": f"{before_rel_score} ({before_rel_band})",
@@ -386,9 +356,8 @@ def write_batch_summary(kpis: list[dict[str, Any]], output_dir: str) -> None:
     lines = [
         "# UAT Reducer V2 Batch Summary",
         "",
-        "Deterministic reducer with matrix-join scoring and hard constraints:",
+        "Deterministic reducer with matrix-join scoring and hard constraint:",
         "- Preserve at least one checklist check per AC Ref.",
-        "- Preserve at least one checklist check for each core case type present (functional/regression/integration).",
         "",
         "## Batch KPI",
         "",
@@ -423,13 +392,13 @@ def write_batch_summary(kpis: list[dict[str, Any]], output_dir: str) -> None:
         "",
         "## Dropped Checks",
         "",
-        "| Epic | Core case guardrails | Dropped checks (Check ID [Section]) |",
-        "|---|---|---|",
+        "| Epic | Dropped checks (Check ID [Section]) |",
+        "|---|---|",
     ]
 
     for k in sorted(kpis, key=lambda row: str(row["epic_key"])):
         dropped_cell = ", ".join(k["dropped_labels"]) if k["dropped_labels"] else "—"
-        lines.append(f"| {k['epic_key']} | {k['core_case_constraints']} | {dropped_cell} |")
+        lines.append(f"| {k['epic_key']} | {dropped_cell} |")
 
     out_path = os.path.join(output_dir, "dropped-summary.md")
     with open(out_path, "w", encoding="utf-8") as f:
