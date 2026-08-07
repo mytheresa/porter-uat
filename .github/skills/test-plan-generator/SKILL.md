@@ -48,7 +48,7 @@ Activate this mode when an in-scope story has no explicit acceptance criteria te
    - Keep Jira-first behavior for non-trigger stories.
    - Map PRs/comments/test notes to AC scenarios only as supporting evidence.
    - Build atomic checks for `CHECKLIST_ROWS` with parity to `MATRIX_ROWS`.
-   - Default target: **8-12 checks**; allow up to **15** for high-risk Epics.
+   - Default target: **6-10 checks**; allow up to **15** for high-risk Epics.
    - Exception: in **Missing-AC Fallback Mode**, generate only **2-4** exploratory checks for the affected story and do not expand to synthetic journey coverage.
    - Keep wording business-facing and session-friendly; move technical diagnostics to `MATRIX_ROWS` or `EXPLORATORY_ROWS`.
 2. **Silent JSON Payload Generation (`/tmp/data_payload_<EPIC_KEY>.json`):**
