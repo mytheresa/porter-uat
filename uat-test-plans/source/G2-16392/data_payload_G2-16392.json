@@ -1,0 +1,255 @@
+{
+  "EPIC_KEY": "G2-16392",
+  "EPIC_SLUG": "wishlist-single-wl-login-features",
+  "OUTPUT_PATH": "uat-test-plans/G2-16392-wishlist-single-wl-login-features.xlsx",
+  "PLAN_TITLE": "G2-16392 UAT — Wishlist Single WL Login Features",
+  "GENERATED_DATE": "2026-08-07",
+  "EPIC_SUMMARY": "Wishlist | Single WL | Login + Features",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+  "COMPONENT": "D3",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "35-50 minutes",
+  "COVERAGE_SUMMARY": "9 UI-testable child stories mapped to 10 business checklist checks; 36 items excluded from business execution scope (35 non-Story issues plus 1 Story excluded by backend/migration/evaluation rule).",
+  "STORIES_IN_SCOPE": "G2-19741 | FE | PDP | Mini PDP Unavailable and Sold out | Done\nG2-18775 | FE | Delete from WL Notification | Closed\nG2-18774 | FE | Wishlist Empty State | Done\nG2-18773 | FE | Wishlist Skeleton | Done\nG2-18682 | FE | Delete item from WL | UNDO | Done\nG2-18655 | FE | Delete from WL | Done\nG2-18186 | FE | WL | Product remains in WL after A2C (add to WL mutation) | Done\nG2-17808 | FE Render single WL | Closed\nG2-16808 | FE | WL Require Login/Registration | Done",
+  "STORIES_EXCLUDED": "Story excluded by backend/migration/evaluation rule:\nG2-18797 | Story | Done | [SPIKE] FE | WL Require Login/Registration\n\nNon-Story items excluded by story-only scope:\nG2-21517 | Task | Done | BE | Revert Wishlist to Cart functionality changes\nG2-21005 | Task | Done | FE | WL | update design for Empty WL page\nG2-20975 | Bug | Closed | FE | WL Login/Registration form - fix margins, fix modal in landscape\nG2-20967 | Task | Done | FE | WL | AddToWishlist not showing on mobile\nG2-20900 | Technical Story | Closed | BE | WL | access token\nG2-20826 | Technical Story | Done | BE | WL | Return correct 'displayImages' value for product in 'xGetWishlist' query\nG2-20801 | Technical Story | Done | BE | WL | Return correct 'color' value for product in 'xGetWishlist' query\nG2-20798 | Technical Story | Done | BE | WL | Maintain correct ordering of Wishlist variants in 'XGetWishlist' based on the date they were added\nG2-20777 | Bug | Closed | FE | WL | Fix product card\nG2-20680 | Bug | Closed | FE | Mini PDP: apply fixes according to design\nG2-20578 | Technical Story | Done | FE | WL | Refactor menu + API integration based on recent design changes\nG2-20376 | Task | Done | FE | Wishlist | Refactor product list container\nG2-20368 | Technical Story | Done | BE | WL | AddToWL - Improve xMoveFromWishlistToCart endpoint to to add a product to the cart multiple times\nG2-20366 | Bug | Closed | BE | AddToWL XGetWishlist query works incorrectly with Tapir(v3)\nG2-20364 | Technical Story | Closed | BE | AddToWL - Adapt XGetWishlist query for multiple withlists\nG2-20358 | Technical Story | Done | BE | AddToWL - Adapt the logic to work with Porter image format\nG2-20244 | Evaluation | Done | [SPIKE] BE | Wishlist Default for CD Team\nG2-19759 | Task | Closed | FE | WL Refactor | WL Margins reduced on Product Cards\nG2-19757 | Task | Closed | FE | WL Refactor | Mini PDP buttons (remove in mobile)\nG2-19409 | Task | Done | FE | WL Refactor | ProductCard to match design\nG2-18185 | Technical Story | Done | BE | Product remains in WL after A2C\nG2-18184 | Technical Story | Closed | FE | WL Availability\nG2-18101 | Technical Story | Done | FE | WL | Integrate ProductSummary into the Product List component\nG2-18015 | Technical Story | Done | FE | Implement the Mini PDP container\nG2-18014 | Technical Story | Done | FE | Implement Mini PDP Data Layer and API Integration\nG2-17922 | Technical Story | Done | BE | HYENA | Parallel WL Schema CREATE\nG2-17921 | Technical Story | Done | BE | TAPIR | Parallel WL Schema CREATE\nG2-17915 | Technical Story | Done | FE | WL Navigation Bar\nG2-17911 | Technical Story | Done | BE | HYENA | GET Customer WL Query\nG2-17421 | Technical Story | Closed | FE | Shared Component | ProductList Container on WL\nG2-17420 | Technical Story | Done | FE | Shared Component | ProductCard for WL\nG2-17411 | Technical Story | Done | FE | Implement Wishlist Data Fetching and Query Layer\nG2-16809 | Evaluation | Done | [SPIKE] WL Features: Authentication and Data\nG2-16806 | Evaluation | Done | [SPIKE] WL Features: Mini PDP\nG2-16801 | Technical Story | Done | BE | TAPIR | Get Customer WL Endpoint",
+  "OUT_OF_SCOPE": "Backend endpoint internals, API schema-level assertions, migration/platform hardening tickets, and low-level implementation diagnostics not executable as business UAT checks.",
+  "DEV_EVIDENCE": "GitHub evidence available for 7/9 in-scope stories via direct Jira-key PR lookup; inherited linked-Done lineage evidence recovered for 3 additional stories; 2 stories remain without explicit PR evidence after direct lookup + linked-Done search + Jira-link fallback.",
+  "GAPS_SUMMARY": "G2-18773 and G2-17808 did not yield explicit PR/commit evidence after direct GitHub key search, linked-Done lineage checks, and Jira-link fallback scans. Several stories use sparse AC placeholders ('x'/high-level bullets), so verification relies on AC intent plus linked context.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Authentication Gate",
+      "Check": "Guest user is forced to login/register before wishlist actions",
+      "How to Verify": "As logged-out user, attempt wishlist entry from header and add-to-wishlist from PDP. Complete login with both single-WL and multi-WL accounts.",
+      "Pass Criteria": "User is redirected to authentication before wishlist mutation executes.\nAfter successful login, user can continue the intended wishlist action in a valid context."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Single Wishlist Rendering",
+      "Check": "Single wishlist page renders expected product content and navigation",
+      "How to Verify": "Open wishlist for account with one wishlist and validate layout, product card details, and basic controls across desktop and mobile breakpoints.",
+      "Pass Criteria": "Single wishlist view loads without layout regressions.\nProduct card information and controls are visible and actionable."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Mini PDP",
+      "Check": "Mini PDP reflects sold-out and unavailable states correctly",
+      "How to Verify": "Open products with sold-out and unavailable variants and inspect Mini PDP CTAs and visual state treatment.",
+      "Pass Criteria": "Sold-out and unavailable states show the correct CTA behavior.\nVisual indicators match expected state without contradictory messaging."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Delete Action",
+      "Check": "Delete from wishlist removes item from visible list",
+      "How to Verify": "From wishlist list/grid view, delete an item and confirm list refresh and item absence.",
+      "Pass Criteria": "Deleted item disappears from current wishlist list.\nNo broken card placeholders or stale counters remain."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Undo Action",
+      "Check": "Undo after delete restores item state",
+      "How to Verify": "Delete an item, trigger Undo notification, then re-check wishlist content and card state.",
+      "Pass Criteria": "Undo restores the deleted item in the expected position/state.\nNo duplicate or inconsistent card state appears after undo."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Delete Notification",
+      "Check": "Delete notification appears with meaningful message and action",
+      "How to Verify": "Delete item and verify notification copy, timing, and Undo action affordance.",
+      "Pass Criteria": "User receives immediate confirmation after delete.\nNotification includes clear Undo action and dismisses predictably."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Empty State",
+      "Check": "Wishlist empty state appears when no products remain",
+      "How to Verify": "Clear wishlist items or use empty account to load wishlist and inspect empty-state visuals and CTA links.",
+      "Pass Criteria": "Empty state is displayed instead of broken list shell.\nEmpty state messaging and CTA allow user recovery path."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Wishlist Skeleton",
+      "Check": "Skeleton/loading state is shown while wishlist data loads",
+      "How to Verify": "Throttle network or refresh wishlist entry and observe loading transition before content render.",
+      "Pass Criteria": "Skeleton state appears during data fetch.\nSkeleton is replaced by final content without stuck loading artifacts."
+    },
+    {
+      "Check ID": "UAT-009",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "A2C Behavior",
+      "Check": "Product remains in wishlist after Add to Cart from wishlist context",
+      "How to Verify": "Add a wishlist product to cart and revisit wishlist list and item state afterward.",
+      "Pass Criteria": "Item remains in wishlist after Add to Cart action.\nCart addition does not force unintended wishlist removal."
+    },
+    {
+      "Check ID": "UAT-010",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Cross-Breakpoint Consistency",
+      "Check": "Core wishlist flows are consistent across desktop and mobile",
+      "How to Verify": "Repeat login-gated add/delete/undo and empty-state checks on desktop and mobile breakpoints for NAP and MRP acceptance hosts.",
+      "Pass Criteria": "Critical flows work on both breakpoints without behavior regressions.\nBrand surfaces preserve functional parity for covered scenarios."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-16808",
+      "AC Ref": "AC1",
+      "Capability": "Wishlist actions require authentication and preserve post-login intent",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-010",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Direct PR hit: #384. Jira fallback includes additional related auth PR links #284 and #286.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Login flow dependency on shared account modal and responsive layout alignment can vary by brand surface."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-17808",
+      "AC Ref": "AC1",
+      "Capability": "Single wishlist page renders product data, controls, and interaction states",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002,UAT-010",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "No explicit PR found by Jira-key search; no linked-Done lineage or Jira GitHub URL evidence detected.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Ticket notes indicate AC distributed into follow-up tickets, reducing standalone traceability."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-19741",
+      "AC Ref": "AC1",
+      "Capability": "Mini PDP represents sold-out and unavailable states correctly",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003,UAT-010",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Direct PR hit: #293.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Acceptance verification can depend on product assortment availability at test time."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-18655",
+      "AC Ref": "AC1",
+      "Capability": "Delete from wishlist removes selected product",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004,UAT-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Direct PR hit: #255. Jira comment explicitly references this PR.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "None."
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-18682",
+      "AC Ref": "AC1",
+      "Capability": "Undo after deletion restores item visibility and state",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-005,UAT-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Direct PR hit: #485; linked evidence references delete baseline #255.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Undo timing behavior may vary by notification timeout."
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-18775",
+      "AC Ref": "AC1",
+      "Capability": "Delete notification behavior aligns with delete/undo flow",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "No direct PR by own key; inherited linked-Done evidence from #255 and #485 via clone/relates chain.",
+      "Evidence Availability": "Available",
+      "Case Type": "UX",
+      "Inconsistencies": "Ticket marked duplicate in comments; final behavior implemented across linked tickets."
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-18774",
+      "AC Ref": "AC1",
+      "Capability": "Empty wishlist state is shown with recovery CTA",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Direct PR hit: #233.",
+      "Evidence Availability": "Available",
+      "Case Type": "UX",
+      "Inconsistencies": "None."
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-18773",
+      "AC Ref": "AC1",
+      "Capability": "Wishlist skeleton/loading state appears before content render",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-008",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "No direct or inherited PR evidence found; Jira comments indicate implementation existed but no traceable PR key match.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "UX",
+      "Inconsistencies": "Evidence traceability gap between Jira completion note and GitHub key search."
+    },
+    {
+      "Coverage ID": "COV-009",
+      "Jira Source": "G2-18186",
+      "AC Ref": "AC1",
+      "Capability": "Adding to cart from wishlist does not remove product unexpectedly",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-009",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Direct PR hit: #436; linked bug-fix lineage includes #473 for related UI button-state correction.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Prior bug context indicates potential regression area for button state transitions."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "OBS-001",
+      "Source Type": "Jira Comments",
+      "Jira Source": "G2-18186",
+      "Summary": "Acceptance verification initially blocked by no products in stock; later retested successfully.",
+      "How to Validate": "Execute A2C-from-WL checks with both in-stock and low-stock products to confirm state transitions and CTA behavior.",
+      "Expected Observation": "WL and cart interactions remain stable regardless of assortment volatility.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-009",
+      "Evidence Notes": "Comments reference additional bug follow-up G2-21406."
+    },
+    {
+      "Observation ID": "OBS-002",
+      "Source Type": "Jira Links + GitHub",
+      "Jira Source": "G2-16808",
+      "Summary": "Authentication flow touches multiple linked implementation tickets beyond the base story.",
+      "How to Validate": "Run login-gated flow from PDP and header on both brands; verify modal layout and return path after authentication.",
+      "Expected Observation": "Login modal behavior and continuation flow are consistent for single-WL and multi-WL accounts.",
+      "Impact": "High",
+      "Linked Coverage IDs": "COV-001",
+      "Evidence Notes": "Linked PR lineage includes #338, #226, #253, #418 and Jira fallback URLs #284/#286."
+    },
+    {
+      "Observation ID": "OBS-003",
+      "Source Type": "Evidence Gap",
+      "Jira Source": "G2-17808,G2-18773",
+      "Summary": "Two in-scope stories have completion status but no explicit PR key evidence.",
+      "How to Validate": "Prioritize regression checks for single-WL render and skeleton transitions in acceptance across desktop/mobile.",
+      "Expected Observation": "Behavior matches AC intent despite missing direct PR traceability.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-002,COV-008",
+      "Evidence Notes": "No direct key PR hit and no inheritable linked-Done PR evidence found."
+    }
+  ]
+}

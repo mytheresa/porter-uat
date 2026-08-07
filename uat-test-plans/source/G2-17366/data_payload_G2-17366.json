@@ -1,0 +1,146 @@
+{
+  "EPIC_KEY": "G2-17366",
+  "EPIC_SLUG": "ch-tapir-data-colours-designer-neptune",
+  "OUTPUT_PATH": "uat-test-plans/G2-17366-ch-tapir-data-colours-designer-neptune.xlsx",
+  "PLAN_TITLE": "G2-17366 UAT - CH | Tapir Data | Colours & Designer (Neptune)",
+  "GENERATED_DATE": "2026-08-07",
+  "EPIC_SUMMARY": "CH | Tapir Data | Colours & Designer (Neptune)",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Mazzoli, Michele || YOOX NET A PORTER",
+  "COMPONENT": "CM",
+  "TARGET_URLS": [
+    "https://acceptance.net-a-porter.com/en-ch",
+    "https://acceptance.mrporter.com/en-ch",
+    "Tapir CH acceptance data surfaces for designer and colour exposure"
+  ],
+  "TIMEBOX": "45-60 minutes",
+  "COVERAGE_SUMMARY": "No child issues of type Story were found for this epic. Checklist is intentionally minimal (4 exploratory checks) based on epic-level intent and secondary evidence only.",
+  "STORIES_IN_SCOPE": "No Jira child issues of type Story were found via Epic Link/parent discovery for G2-17366.",
+  "STORIES_EXCLUDED": "G2-21198 (Technical Story, Done), G2-19762 (Technical Story, Done), G2-19761 (Technical Story, Done), G2-19796 (Evaluation, Done), G2-19797 (Evaluation, Done) - excluded by mandatory Story-only scope. These items are used only as secondary evidence.",
+  "OUT_OF_SCOPE": "Deletion logic, Taxons or Products ingestion handled by other epics, infrastructure provisioning of SNS topics, raw Neptune or Chameleon internals, and any verification path that requires source-code inspection rather than business-observable outcomes.",
+  "DEV_EVIDENCE": "Available via Jira-link fallback and linked documentation. G2-19761 comment links Chameleon.Color documentation and Bitbucket PR 3; G2-19762 and G2-21198 comments link Chameleon.Designers documentation and repository references. Confluence pages PD1 | Neptune Events: Entity Updates Notification (SNS), Colors, and Designer provide the event, idempotency, and payload-shape context. Direct GitHub Jira-key searches on G2-19761, G2-19762, and G2-21198 returned unrelated public PRs, so the workflow falls back to Jira-linked evidence per repo policy.",
+  "GAPS_SUMMARY": "The epic has zero Story-type children, so there is no direct story-level AC decomposition or explicit business test entrypoint. Checklist is intentionally minimal (4 exploratory checks) and requires product/engineering confirmation of validation surfaces and acceptance boundaries.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "CHK-001",
+      "Contact": "Mazzoli, Michele || YOOX NET A PORTER",
+      "Section": "Exploratory Event Signal",
+      "Check": "Observe whether designer/colour update activity from Neptune is visible in agreed downstream traces.",
+      "How to Verify": "Replay or trigger one designer-related and one colour-related update in a controlled acceptance setup. Check support-visible traces or agreed validation surfaces for corresponding downstream activity.",
+      "Pass Criteria": "Update activity is observable for both sampled entity types.\nEach observation can be correlated to the originating entity identifier."
+    },
+    {
+      "Check ID": "CHK-002",
+      "Contact": "Mazzoli, Michele || YOOX NET A PORTER",
+      "Section": "Exploratory Payload Presence",
+      "Check": "Observe whether downstream outputs expose expected basic designer/colour fields after updates.",
+      "How to Verify": "Inspect sampled downstream records following updates and confirm presence of core identifiers and human-readable labels where available.",
+      "Pass Criteria": "Sampled outputs contain expected core fields without obvious corruption.\nAny missing or ambiguous field behavior is recorded for clarification."
+    },
+    {
+      "Check ID": "CHK-003",
+      "Contact": "Mazzoli, Michele || YOOX NET A PORTER",
+      "Section": "Exploratory Routing",
+      "Check": "Observe high-level routing consistency across NAP and MRP acceptance contexts.",
+      "How to Verify": "Run one sampled update per brand context and compare where the resulting records appear. Record cross-brand leakage or mismatched destination behavior.",
+      "Pass Criteria": "No severe cross-brand routing defect is observed in sampled runs.\nDestination behavior is consistent enough to support follow-up with product/engineering."
+    },
+    {
+      "Check ID": "CHK-004",
+      "Contact": "Mazzoli, Michele || YOOX NET A PORTER",
+      "Section": "Exploratory Resilience",
+      "Check": "Observe behavior during replay/retry conditions for the same entity identifiers.",
+      "How to Verify": "Replay one designer identifier and one colour identifier multiple times. Compare downstream outputs for obvious duplication or unstable end state.",
+      "Pass Criteria": "No obvious duplicate record proliferation is observed in sampled replays.\nReplay behavior remains stable enough for escalation of any anomalies."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-17366 + secondary evidence",
+      "AC Ref": "G2-17366-AC-INF-OBS-01",
+      "Capability": "Exploratory observation of designer/colour update signal",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-001",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "No Story-level AC exists; check is bounded to observable traces and epic intent.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Exploratory",
+      "Inconsistencies": "Validation surface is not explicitly defined in Story-level artifacts."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-17366 + secondary evidence",
+      "AC Ref": "G2-17366-AC-INF-OBS-02",
+      "Capability": "Exploratory downstream payload presence",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-002",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Record-content expectation is inferred due absent Story-level acceptance text.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Exploratory",
+      "Inconsistencies": "Required field boundaries are not formally specified for business UAT."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-17366 + secondary evidence",
+      "AC Ref": "G2-17366-AC-INF-OBS-03",
+      "Capability": "Exploratory cross-brand routing behavior",
+      "Priority": "Medium",
+      "Checklist Mapping": "CHK-003",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Brand-routing validation is inferred from epic wording and linked technical context.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Exploratory",
+      "Inconsistencies": "Brand-specific routing acceptance boundaries are not explicit in Story-level scope."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-17366 + secondary evidence",
+      "AC Ref": "G2-17366-AC-INF-OBS-04",
+      "Capability": "Exploratory replay/retry stability",
+      "Priority": "Medium",
+      "Checklist Mapping": "CHK-004",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Replay expectations are inferred from secondary references and not explicit in Story-level artifacts.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Exploratory",
+      "Inconsistencies": "No explicit business acceptance threshold is defined for retry/replay outcomes."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "OBS-001",
+      "Source Type": "Jira Epic Map",
+      "Jira Source": "G2-17366",
+      "Summary": "The epic has zero Story-type children, so execution guidance depends on epic AC plus excluded technical tickets rather than business stories.",
+      "How to Validate": "Confirm with product or engineering whether a dedicated business validation surface exists for Tapir designer and colour exposure, and attach any missing Story-level tickets for future reruns.",
+      "Expected Observation": "A concrete downstream validation touchpoint or late-linked Story tickets can be identified to sharpen future UAT runs.",
+      "Impact": "Traceability",
+      "Linked Coverage IDs": "COV-001,COV-002,COV-003,COV-004",
+      "Evidence Notes": "Epic Link/parent discovery returned only Technical Story and Evaluation issues; none qualified for Story-only scope."
+    },
+    {
+      "Observation ID": "OBS-002",
+      "Source Type": "Confluence + Jira Technical Story",
+      "Jira Source": "G2-21198, G2-19761, G2-19762",
+      "Summary": "Brand and domain routing is the likeliest regression point because designer and colour traffic split by both entity type and NAP/MRP destination.",
+      "How to Validate": "Run one NAP and one MRP update for both Designer and Colour entities, then verify that each update reaches the expected downstream brand and domain context without cross-routing.",
+      "Expected Observation": "Each update lands in the correct domain-specific and brand-specific destination path.",
+      "Impact": "Coverage",
+      "Linked Coverage IDs": "COV-001,COV-003",
+      "Evidence Notes": "G2-21198 lists separate NAP and MRP ARNs for designers and colours, increasing routing-variance risk."
+    },
+    {
+      "Observation ID": "OBS-003",
+      "Source Type": "Confluence Docs",
+      "Jira Source": "Colors, Designer, PD1 Neptune Events",
+      "Summary": "At-least-once delivery and optional non-ENU translations create a combined risk of duplicate processing or degraded locale completeness if replay handling is weak.",
+      "How to Validate": "Replay the same Colour and Designer identifiers and include a Colour with partial locale coverage. Verify that repeated processing preserves one downstream record per identifier and that missing optional locales do not corrupt the output.",
+      "Expected Observation": "Idempotent upsert behavior keeps a single record per identifier, and locale gaps remain limited to missing optional translations rather than broken records.",
+      "Impact": "Regression",
+      "Linked Coverage IDs": "COV-002,COV-004",
+      "Evidence Notes": "PD1 Neptune Events states at-least-once delivery; Colors page states ENU is mandatory while other locales are optional."
+    }
+  ]
+}

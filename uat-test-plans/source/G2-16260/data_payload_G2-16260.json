@@ -1,0 +1,145 @@
+{
+  "EPIC_KEY": "G2-16260",
+  "EPIC_SLUG": "pdp-recs-ymal-vertex-integration",
+  "OUTPUT_PATH": "uat-test-plans/G2-16260-pdp-recs-ymal-vertex-integration.xlsx",
+  "PLAN_TITLE": "G2-16260 UAT - PDP recs | YMAL Vertex integration",
+  "GENERATED_DATE": "2026-08-07",
+  "EPIC_SUMMARY": "PDP recs | YMAL Vertex integration",
+  "EPIC_STATUS": "New",
+  "EPIC_CREATED_BY": "Kozlova, Nika || External",
+  "COMPONENT": "D1",
+  "TARGET_URLS": [
+    "https://www.net-a-porter.com/",
+    "https://www.mrporter.com/"
+  ],
+  "TIMEBOX": "60-90 min",
+  "COVERAGE_SUMMARY": "4 exploratory checklist checks covering 1 in-scope Story with inferred AC due missing explicit acceptance criteria.",
+  "STORIES_IN_SCOPE": "G2-21095 - BE | PDP YMAL recs | Vertex | Custom attributes (Status: New)",
+  "STORIES_EXCLUDED": "G2-16858 - [Evaluation] [SPIKE BE] PDP Vertex Integration (excluded: non-Story issue type)",
+  "OUT_OF_SCOPE": "Backend implementation internals, Vertex service monitoring, data pipeline jobs, and non-UI spike outcomes.",
+  "DEV_EVIDENCE": "Jira-first + trigger-gated enrichment executed. TRG-AC/TRG-BRAND/TRG-REL fired for G2-21095. GitHub key search attempted for G2-21095 (PR/commit: 0 hits). Jira description/comments/issuelinks/remotelinks fallback scanned (0 links). Clone/relates linked-Done lineage not applicable (no issuelinks).",
+  "GAPS_SUMMARY": "No explicit AC content on in-scope story G2-21095; no linked docs or PR/commit evidence found. Checklist is intentionally minimal (4 exploratory checks) and requires product/engineering confirmation.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "CHK-01",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Exploratory Visibility",
+      "Check": "Observe whether a recommendations container appears on PDP pages where the feature is expected.",
+      "How to Verify": "1. Open several PDPs across different categories.\n2. Note if and where a recommendations container appears.\n3. Record any missing or unstable rendering.",
+      "Pass Criteria": "Container behavior is observable and consistent for the sampled PDPs.\nNo broken layout artifact is observed in the module area."
+    },
+    {
+      "Check ID": "CHK-02",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Exploratory Consistency",
+      "Check": "Observe whether recommendation content appears to change when switching between clearly different PDP contexts.",
+      "How to Verify": "1. Open two or more PDPs with distinct context (for example category or brand).\n2. Capture visible recommendation outputs for each page.\n3. Compare for obvious staleness or no-change behavior.",
+      "Pass Criteria": "Observed output is not obviously stale across context changes.\nAny ambiguous behavior is recorded for product clarification."
+    },
+    {
+      "Check ID": "CHK-03",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Exploratory Fallback",
+      "Check": "Observe page behavior when recommendation data is absent or not returned.",
+      "How to Verify": "1. Open PDPs likely to have sparse recommendation data.\n2. Inspect module area and surrounding layout.\n3. Record placeholder, spacing, or broken-state artifacts.",
+      "Pass Criteria": "PDP remains usable when recommendation content is absent.\nNo customer-facing technical error message is shown."
+    },
+    {
+      "Check ID": "CHK-04",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Exploratory Cross-Brand",
+      "Check": "Observe high-level recommendation module behavior across NAP and MRP storefronts.",
+      "How to Verify": "1. Open similar PDPs on net-a-porter and mrporter.\n2. Compare recommendation area placement and baseline rendering quality.\n3. Record notable deviations for triage.",
+      "Pass Criteria": "No severe rendering defect is observed in either storefront sample.\nDifferences are captured as observations, not treated as pass/fail AC without product guidance."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-01",
+      "Jira Source": "G2-21095",
+      "AC Ref": "G2-21095-AC-INF-OBS-01",
+      "Capability": "Exploratory visibility of recommendation module",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-01",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "No explicit AC text available in Jira story description/comments; exploratory probe only.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Exploratory",
+      "Inconsistencies": "AC missing; check is a bounded observation, not a complete flow."
+    },
+    {
+      "Coverage ID": "COV-02",
+      "Jira Source": "G2-21095",
+      "AC Ref": "G2-21095-AC-INF-OBS-02",
+      "Capability": "Exploratory context-switch consistency",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-02",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "No linked docs/remotelinks to define expected recommendation logic.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Exploratory",
+      "Inconsistencies": "Expected context-switch behavior is undocumented."
+    },
+    {
+      "Coverage ID": "COV-03",
+      "Jira Source": "G2-21095",
+      "AC Ref": "G2-21095-AC-INF-OBS-03",
+      "Capability": "Exploratory no-data fallback behavior",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-03",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "No explicit fallback expectation captured in Jira artifacts.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Exploratory",
+      "Inconsistencies": "Fallback behavior is inferred due absent AC and dev evidence."
+    },
+    {
+      "Coverage ID": "COV-04",
+      "Jira Source": "G2-21095",
+      "AC Ref": "G2-21095-AC-INF-OBS-04",
+      "Capability": "Exploratory cross-brand module behavior",
+      "Priority": "Medium",
+      "Checklist Mapping": "CHK-04",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Epic summary indicates YMAL integration; no brand-specific AC found.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Exploratory",
+      "Inconsistencies": "Brand-specific behavior boundaries are not documented."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "OBS-01",
+      "Source Type": "Jira Story",
+      "Jira Source": "G2-21095",
+      "Summary": "Potential inconsistency in recommendation placement between NAP and MRP templates.",
+      "How to Validate": "Compare recommendation block DOM placement and visual order across both storefront PDPs.",
+      "Expected Observation": "Placement aligns with each storefront template without overlap or spacing defects.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-01, COV-04",
+      "Evidence Notes": "Brand variance not explicitly documented; exploratory verification needed."
+    },
+    {
+      "Observation ID": "OBS-02",
+      "Source Type": "Jira Story",
+      "Jira Source": "G2-21095",
+      "Summary": "Recommendation module may retain stale items when navigating rapidly between PDPs.",
+      "How to Validate": "Perform rapid multi-product navigation and observe recommendation refresh behavior.",
+      "Expected Observation": "Recommendations refresh to match active PDP context every time.",
+      "Impact": "High",
+      "Linked Coverage IDs": "COV-02, COV-03",
+      "Evidence Notes": "No technical evidence available; inferred from data-driven integration nature."
+    },
+    {
+      "Observation ID": "OBS-03",
+      "Source Type": "Jira Story",
+      "Jira Source": "G2-21095",
+      "Summary": "No-data recommendation responses could leave empty spacing or visible placeholders.",
+      "How to Validate": "Use products expected to produce empty recommendation set and inspect module area rendering.",
+      "Expected Observation": "Module area collapses gracefully with no broken visual artifacts.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-03, COV-04",
+      "Evidence Notes": "Fallback UX is not specified in Jira, requiring exploratory confirmation."
+    }
+  ]
+}

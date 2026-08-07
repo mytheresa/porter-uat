@@ -9,6 +9,7 @@
 - Clone/relates lineage: when an in-scope story clones or relates to a `Done` story, follow that link and run a GitHub key search on the linked key to recover implementation evidence.
 - Quick wins: if the epic has no UI-testable stories, or the workbook already exists, stop early with the minimal result.
 - Use two passes: classify first, enrich only when needed.
+- Missing-AC rule: if explicit AC are absent, produce only 2-4 exploratory checks and do not invent end-to-end UAT flows.
 - Final chat output: status + artifact paths only, except in batch mode when explicitly instructed to skip final rendering.
 
 ## Mandatory Orchestration Workflow

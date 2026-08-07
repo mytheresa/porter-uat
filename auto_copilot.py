@@ -28,7 +28,7 @@ PROCESSED_LOG_FILE = "epics_processed.txt"
 OUTPUT_DIR_TEMPLATE = "uat-test-plans"
 ARTIFACTS_DIR = os.path.join(OUTPUT_DIR_TEMPLATE, "source")
 MAX_WAIT_SECONDS = 600  # 10 minutes max per Epic
-POST_COMPLETION_GRACE_SECONDS = int(os.environ.get("POST_COMPLETION_GRACE_SECONDS", "20"))  # wait for Copilot to finish rendering before /clear
+POST_COMPLETION_GRACE_SECONDS = int(os.environ.get("POST_COMPLETION_GRACE_SECONDS", "30"))  # wait for Copilot to finish rendering before /clear
 SKIP_IF_EXISTS = os.environ.get("SKIP_IF_EXISTS", "1") != "0"
 PERSIST_JSON_ARTIFACTS = os.environ.get("PERSIST_JSON_ARTIFACTS", "1") != "0"
 PERSIST_CHUNK_ARTIFACTS = os.environ.get("PERSIST_CHUNK_ARTIFACTS", "0") != "0"
@@ -88,13 +88,11 @@ def cleanup_temp_files(epic_key=None):
             f"/tmp/chunk_{epic_key}_*.json",
             f"/tmp/data_payload_{epic_key}.json"
         ]
-        persist_dir = os.path.join(ARTIFACTS_DIR, epic_key)
     else:
         patterns = [
             "/tmp/chunk_*.json",
             "/tmp/data_payload_*.json"
         ]
-        persist_dir = os.path.join(ARTIFACTS_DIR, "startup")
 
     handled_count = 0
     for pattern in patterns:
@@ -104,9 +102,19 @@ def cleanup_temp_files(epic_key=None):
             should_persist = PERSIST_JSON_ARTIFACTS and (not is_chunk or PERSIST_CHUNK_ARTIFACTS)
             try:
                 if should_persist:
-                    os.makedirs(persist_dir, exist_ok=True)
-                    destination = os.path.join(persist_dir, file_name)
-                    os.replace(file_path, destination)
+                    target_epic = epic_key
+                    if not target_epic:
+                        match = re.search(r'(?:^data_payload_|^chunk_)([A-Z][A-Z0-9]+-\d+)', file_name)
+                        target_epic = match.group(1) if match else None
+
+                    # Unknown-key leftovers are deleted to avoid creating a generic startup bucket.
+                    if not target_epic:
+                        os.remove(file_path)
+                    else:
+                        persist_dir = os.path.join(ARTIFACTS_DIR, target_epic)
+                        os.makedirs(persist_dir, exist_ok=True)
+                        destination = os.path.join(persist_dir, file_name)
+                        os.replace(file_path, destination)
                 else:
                     os.remove(file_path)
                 handled_count += 1

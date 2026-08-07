@@ -1,0 +1,131 @@
+{
+  "EPIC_KEY": "G2-20906",
+  "EPIC_SLUG": "res-06-reservation-expires",
+  "OUTPUT_PATH": "uat-test-plans/G2-20906-res-06-reservation-expires.xlsx",
+  "PLAN_TITLE": "G2-20906 UAT — RES-06 Reservation Expires",
+  "GENERATED_DATE": "2026-08-07",
+  "EPIC_SUMMARY": "RES-06 | Reservation Expires",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Sohail, Katherine || LuxExperience",
+  "COMPONENT": "EIP",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "10-15 minutes",
+  "COVERAGE_SUMMARY": "Story-only scope contains 2 child stories, both backend-only and excluded from direct UI execution (G2-20922, G2-20929). Minimal no-UI-scope payload includes 4 business-facing outcome checks to validate reservation-expiry behavior at customer-observable level while preserving checklist/matrix parity.",
+  "STORIES_IN_SCOPE": "None — no UI-testable child stories after Story-only + backend-only exclusion rules.",
+  "STORIES_EXCLUDED": "G2-20922 | BE - Expire reservations after 24h and release held stock | Story | Done | Backend implementation story (scheduler/expiration agent/stock release API), no direct FE/business UI AC.\nG2-20929 | BE - Stop stock being held for an expired reservation (TO DELETE) | Story | Closed | Marked TO DELETE and merged into G2-20922; backend-only and not independently executable for business UAT.",
+  "OUT_OF_SCOPE": "Scheduler cadence internals, queue/EventBridge design, pod topology changes, infrastructure scaling plans, API payload/schema verification, and low-level concurrency implementation details.",
+  "DEV_EVIDENCE": "Trigger pass outcome: no UI-testable in-scope stories, so TRG-AC/TRG-BRAND/TRG-RISK/TRG-REL did not open additional UI enrichment paths. Linked-Done lineage executed from clone/relates graph: G2-20922 clones Done story G2-20919. GitHub org-scoped evidence found: mytheresa/orca#23 (G2-20919), mytheresa/orca#26 (G2-20919 follow-up), mytheresa/orca#35 (G2-20922), mytheresa/orca-deployment#15 (G2-20922 deployment/env wiring). Relates lineage check for G2-20933 returned no org-scoped PR hits. Overall evidence status: Available (implementation lineage present).",
+  "GAPS_SUMMARY": "No FE/UI child story exists to anchor end-user acceptance steps directly. AC is primarily backend-oriented and technical; business checks are inferred from epic intent (reservation expires after 24h and stock becomes purchasable by others). Concrete test data for near-expiry reservations and cross-brand SKU setup must be prepared before execution.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Reservation Expiry Outcome",
+      "Check": "A reservation that passes its 24-hour validity window is no longer treated as active",
+      "How to Verify": "Use a product with a known reservation that is close to expiry in acceptance. Confirm the reservation is active before expiry and check again after the 24-hour mark or with a prepared expired fixture.",
+      "Pass Criteria": "After expiry threshold, reservation is no longer active for that customer.\nSystem behavior reflects expired state consistently on re-check."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Stock Re-Availability",
+      "Check": "Stock held by an expired reservation becomes available for another customer journey",
+      "How to Verify": "After confirming an expired reservation case, attempt the same product flow with a different eligible customer/session. Validate that the item can be added/purchased where previously blocked by reservation hold.",
+      "Pass Criteria": "Previously held stock is available to another customer flow after expiry.\nNo persistent hold remains once reservation has expired."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Checkout Guardrail",
+      "Check": "An expired reservation cannot proceed as if still valid",
+      "How to Verify": "Use an expired reservation scenario and continue through the checkout path where reservation validity is enforced. Observe behavior at the point reservation status is checked.",
+      "Pass Criteria": "Checkout does not continue under an expired reservation as valid.\nUser flow shows consistent handling of expired-state guardrail."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Cross-Brand Confidence",
+      "Check": "Reservation-expiry outcome behaves consistently across NAP and MRP acceptance",
+      "How to Verify": "Repeat one expired-reservation and one post-expiry stock-availability scenario on both NAP and MRP acceptance environments using equivalent setup data.",
+      "Pass Criteria": "Expiration outcome is consistent on NAP and MRP.\nPost-expiry availability behavior is consistent on NAP and MRP."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-20906, G2-20922",
+      "AC Ref": "Epic intent: reservations expire after 24 hours so other customers can purchase",
+      "Capability": "Reservation transitions from active to expired at expected validity boundary",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Derived from epic statement plus backend story context in G2-20922. Implementation lineage supported by mytheresa/orca#35 and clone-linked Done story evidence mytheresa/orca#23.",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": "No dedicated UI acceptance story; expiry timing verification depends on prepared near-expiry fixtures."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-20906, G2-20922, G2-20919",
+      "AC Ref": "Epic intent: expired reservations release stock for other customers",
+      "Capability": "Held stock is released after expiry and becomes purchasable by others",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Business outcome inferred from epic objective and backend cancellation/release implementation lineage (mytheresa/orca#23, mytheresa/orca#26, mytheresa/orca#35).",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": "No explicit UI acceptance criteria define exact storefront messaging when stock reappears."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-20922, G2-20933",
+      "AC Ref": "Story technical intent: validate reservation status at checkout; cancel expired allocation",
+      "Capability": "Checkout path rejects expired reservation as valid entitlement",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-003",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Derived from G2-20922 technical breakdown and related cancellation story link to G2-20933. No org-scoped PR hit found for G2-20933 key search.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Negative",
+      "Inconsistencies": "Cancellation path evidence for G2-20933 is linkage-only in Jira without direct PR trace by key."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-20906, G2-20922",
+      "AC Ref": "Epic dependency/value context includes NAP and MRP availability in LuxExperience platform",
+      "Capability": "Reservation-expiry outcomes remain consistent across brands",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Cross-brand confidence check is risk-based and business-facing; deployment lineage includes mytheresa/orca-deployment#15 for expiration-agent runtime configuration.",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": "Brand-specific data fixture parity must be controlled to avoid false differences."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "Jira Comment",
+      "Jira Source": "G2-20922",
+      "Summary": "Implementation notes indicate scheduler/processing design choices evolved during delivery (delay queue assumptions vs scheduler approach).",
+      "How to Validate": "During outcome testing, run the same expiry scenario twice with different processing windows to ensure no inconsistent expiry behavior appears due to scheduling cadence.",
+      "Expected Observation": "Outcome remains deterministic: once expired, reservation remains expired and stock release behavior is consistent.",
+      "Impact": "Scheduler edge behavior could create intermittent customer-facing inconsistency around the expiry boundary.",
+      "Linked Coverage IDs": "COV-001, COV-002",
+      "Evidence Notes": "From G2-20922 implementation discussion comments."
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Attachment",
+      "Jira Source": "G2-20922",
+      "Summary": "Attached ADR references concurrency considerations for reservation expiration worker behavior.",
+      "How to Validate": "Execute two close-timing expiry cases for similar products/customers and compare that outcomes are stable with no duplicate or conflicting release effects.",
+      "Expected Observation": "No duplicate-release side effects and no conflicting reservation state presented to business users.",
+      "Impact": "Concurrency anomalies could create brief stock/state confusion and reduce trust in reservation fairness.",
+      "Linked Coverage IDs": "COV-001, COV-002, COV-003",
+      "Evidence Notes": "ADR-Two-phase-reservation-expiration attachment noted in Jira; used as exploratory risk context only."
+    }
+  ]
+}

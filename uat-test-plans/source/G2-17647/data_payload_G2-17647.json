@@ -1,0 +1,124 @@
+{
+  "EPIC_KEY": "G2-17647",
+  "EPIC_SLUG": "productsup-feeds",
+  "OUTPUT_PATH": "uat-test-plans/G2-17647-productsup-feeds.xlsx",
+  "PLAN_TITLE": "G2-17647 UAT - ProductsUp Feeds",
+  "GENERATED_DATE": "2026-08-07",
+  "EPIC_SUMMARY": "ProductsUp Feeds",
+  "EPIC_STATUS": "New",
+  "EPIC_CREATED_BY": "Kozlova, Nika || External",
+  "COMPONENT": "D1",
+  "TARGET_URLS": [
+    "https://acceptance.net-a-porter.com",
+    "https://acceptance.mrporter.com",
+    "ProductsUp feed ingestion and affiliate/google-shopping downstream visibility"
+  ],
+  "TIMEBOX": "30-45 minutes",
+  "COVERAGE_SUMMARY": "No child issues of type Story were found for this epic via Epic Link/parent discovery. Coverage is generated as an epic-only business plan with 4 checks based on epic scope statements for product export, inventory updates, promotion handling, and feed continuity.",
+  "STORIES_IN_SCOPE": "No Jira child issues of type Story were found via Epic Link/parent discovery for G2-17647.",
+  "STORIES_EXCLUDED": "G2-23902 (Evaluation, Closed), G2-18456 (Evaluation, New) - excluded by mandatory Story-only scope; treated only as secondary context.",
+  "OUT_OF_SCOPE": "Backend implementation details, API schema mapping internals, job scheduler internals, account provisioning, and any validation requiring source-code access.",
+  "DEV_EVIDENCE": "Unavailable at Story scope: no in-scope Story issues were discovered, so no Story-key PR/commit evidence could be attached. Secondary excluded-ticket context exists in Jira but does not change Story-only evidence status.",
+  "GAPS_SUMMARY": "Epic acceptance criteria are minimal and do not provide Story-level Given/When/Then detail. No Story children were found, so detailed functional decomposition and environment-specific edge-case coverage remain limited.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "CHK-001",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Feed Export",
+      "Check": "Products data export can be generated for ProductsUp import without manual data patching.",
+      "How to Verify": "Trigger the standard feed export run in the acceptance flow and capture the produced output file for a representative catalog slice. Validate that core product records are present and parseable by the business-facing import validation path.",
+      "Pass Criteria": "A feed file is generated successfully.\nCore product records required for affiliate ingestion are present.\nNo manual data repair is required before import validation."
+    },
+    {
+      "Check ID": "CHK-002",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Inventory Freshness",
+      "Check": "Inventory changes propagate into the generated feed in line with expected update cadence.",
+      "How to Verify": "Choose at least one SKU with a known stock-state change and run a new feed export after the update window. Compare inventory fields in consecutive feed outputs and confirm the latest state appears in the newer export.",
+      "Pass Criteria": "Updated stock values appear in the subsequent feed export.\nNo stale inventory value remains for the validated SKU after the refresh window."
+    },
+    {
+      "Check ID": "CHK-003",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Promotion Handling",
+      "Check": "Promotion-related pricing or flags are represented consistently for downstream channel consumption.",
+      "How to Verify": "Select products with and without promotions, generate the feed, and compare promotion-related fields across both sets. Confirm promoted products expose expected promotional indicators while non-promoted products keep baseline values.",
+      "Pass Criteria": "Promoted products include expected promotional indicators in the feed.\nNon-promoted products keep baseline values without false promotion flags."
+    },
+    {
+      "Check ID": "CHK-004",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Cross-Brand Continuity",
+      "Check": "Feed flow remains usable for both NAP and MRP business contexts.",
+      "How to Verify": "Validate one representative product sample for NAP and one for MRP through the same export and downstream verification routine. Confirm each sample is present with expected core attributes in its respective business context.",
+      "Pass Criteria": "NAP sample data is present and consistent in downstream validation.\nMRP sample data is present and consistent in downstream validation.\nNo cross-brand data omission is observed in the validated sample."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-17647",
+      "AC Ref": "AC-EPIC-001",
+      "Capability": "Product export supports ProductsUp import flow",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-001",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Epic scope states export for ProductsUp import to affiliates/google shopping; no Story-level decomposition provided.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Positive",
+      "Inconsistencies": "Epic AC body is minimal and does not define explicit acceptance thresholds."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-17647",
+      "AC Ref": "AC-EPIC-002",
+      "Capability": "Inventory updates are reflected in feed outputs",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-002",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Epic scope references inventory updates with TBC cadence details.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "Expected update frequency is not specified in epic acceptance criteria."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-17647",
+      "AC Ref": "AC-EPIC-003",
+      "Capability": "Promotion handling is represented consistently in exported feeds",
+      "Priority": "Medium",
+      "Checklist Mapping": "CHK-003",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Epic scope includes promotion handling without field-level rules.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Promotion field semantics are not defined in epic text."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-17647",
+      "AC Ref": "AC-EPIC-004",
+      "Capability": "Feed continuity supports both NAP and MRP business flows",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-004",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Epic narrative explicitly names NAP and MRP as target brands for automated pipeline behavior.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "End-to-End",
+      "Inconsistencies": "Brand-specific output constraints are not specified in Story-level requirements."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "OBS-001",
+      "Source Type": "Jira Epic Map",
+      "Jira Source": "G2-17647",
+      "Summary": "No child issues of type Story were found, so the plan is epic-only and uses generalized business checks.",
+      "How to Validate": "Confirm with product owner whether missing Story tickets exist and should be linked to this epic for a richer rerun.",
+      "Expected Observation": "Either new Story links are added for rerun or current epic-only test scope is explicitly accepted.",
+      "Impact": "Traceability",
+      "Linked Coverage IDs": "COV-001,COV-002,COV-003,COV-004",
+      "Evidence Notes": "Epic Link/parent discovery returned only Evaluation tickets, excluded by mandatory Story-only scope."
+    }
+  ]
+}

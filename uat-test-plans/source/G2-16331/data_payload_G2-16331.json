@@ -1,0 +1,203 @@
+{
+  "EPIC_KEY": "G2-16331",
+  "EPIC_SLUG": "plp-merchandising-tool-for-porter",
+  "OUTPUT_PATH": "uat-test-plans/G2-16331-plp-merchandising-tool-for-porter.xlsx",
+  "PLAN_TITLE": "G2-16331 UAT - PLP Merchandising tool for Porter",
+  "GENERATED_DATE": "2026-08-07",
+  "EPIC_SUMMARY": "PLP Merchandising tool for Porter",
+  "EPIC_STATUS": "New",
+  "EPIC_CREATED_BY": "Kozlova, Nika || External",
+  "COMPONENT": "D1",
+  "TARGET_URLS": [
+    "https://acceptance.net-a-porter.com/en-de",
+    "https://acceptance.mrporter.com/en-de"
+  ],
+  "TIMEBOX": "35-45 minutes",
+  "COVERAGE_SUMMARY": "1 in-scope Story (G2-19324) mapped to 8 business checks and 6 coverage rows. 10 non-Story children were excluded by mandatory Story-only scope.",
+  "STORIES_IN_SCOPE": "G2-19324 | BE: PLP | Mink | Sold out products | New",
+  "STORIES_EXCLUDED": "G2-25987 (Technical Story), G2-25986 (Task), G2-25985 (Task), G2-25984 (Technical Story), G2-25983 (Technical Story), G2-24080 (Technical Story), G2-24079 (Technical Story), G2-23970 (Evaluation), G2-23969 (Technical Story), G2-23968 (Technical Story) - excluded by mandatory Story-only scope and/or evaluation exclusion rule.",
+  "OUT_OF_SCOPE": "Manual-ranking UI interactions, forced-visibility merchandising behavior, and implementation internals in Mink/Opensearch beyond business-observable PLP outcomes.",
+  "DEV_EVIDENCE": "No trigger fired for direct in-scope GitHub retrieval. Clone/relates linked-Done lineage check found no applicable linked Done story for G2-19324. Jira-link fallback scan (description/comments/issuelinks) found no PR/commit URL evidence. Evidence status: Unavailable.",
+  "GAPS_SUMMARY": "AC defines filtering and replacement outcomes but does not specify exact sorting tie-breaker behavior for replacement candidates. Story is New, so implementation evidence is currently unavailable.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "PLP Stock Filtering",
+      "Check": "Sold-out products are not displayed on PLP by default",
+      "How to Verify": "Open a PLP with known sold-out SKUs in acceptance and compare visible item cards against stock state from business reference data.",
+      "Pass Criteria": "Sold-out SKUs are not visible on PLP by default.\nNo out-of-stock-only card appears in the first rendered product set."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "PLP Stock Filtering",
+      "Check": "PLP keeps expected list size after sold-out filtering",
+      "How to Verify": "Use a PLP expected to render 100 products and confirm the rendered count after filtering sold-out items.",
+      "Pass Criteria": "Rendered product count remains 100 where 100 is the configured page size.\nFiltering sold-out items does not reduce visible list size."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Replacement Behavior",
+      "Check": "Each filtered sold-out item is replaced by next available in-stock item",
+      "How to Verify": "Capture a before/after sample around positions where sold-out items would have appeared and verify in-stock replacements fill the gaps.",
+      "Pass Criteria": "No visual hole or reduced list length is present after filtering.\nReplacement items are purchasable and in stock."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Cross-brand Consistency",
+      "Check": "Filtering behavior is consistent on NAP and MRP acceptance",
+      "How to Verify": "Run the same sold-out sample validation on both acceptance.net-a-porter.com and acceptance.mrporter.com.",
+      "Pass Criteria": "Both brands hide sold-out items by default.\nBoth brands maintain expected PLP page size after filtering."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "User Experience",
+      "Check": "PLP remains stable during pagination or refresh when sold-out mix changes",
+      "How to Verify": "Refresh the PLP and navigate pagination where stock changes are likely, then verify no broken ordering block or empty slots appear.",
+      "Pass Criteria": "PLP remains visually stable after refresh/pagination.\nNo empty rows or rendering error state appears due to sold-out filtering."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Regression Guardrail",
+      "Check": "In-stock products remain discoverable after sold-out filtering logic",
+      "How to Verify": "Validate that expected in-stock SKUs still appear in PLP results and can be opened from product cards.",
+      "Pass Criteria": "In-stock SKUs are still visible and clickable.\nFiltering logic does not remove valid in-stock products."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Out-of-scope Alignment",
+      "Check": "Forced-visibility behavior is not used as pass/fail criterion for this epic",
+      "How to Verify": "Confirm business execution notes treat forced-visibility as out-of-scope and focus pass/fail on default sold-out filtering behavior.",
+      "Pass Criteria": "Execution notes clearly separate forced-visibility from this epic's acceptance checks.\nPass/fail decisions are based on default PLP stock filtering outcomes."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Kozlova, Nika || External",
+      "Section": "Negative-path Sampling",
+      "Check": "PLP does not degrade when multiple sold-out products exist within the same result window",
+      "How to Verify": "Use a PLP window where several products are sold out and verify replacement still keeps page complete and purchasable.",
+      "Pass Criteria": "Multiple sold-out entries are filtered without UX degradation.\nReplacement behavior still maintains complete purchasable PLP window."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-19324",
+      "AC Ref": "AC-001",
+      "Capability": "Default PLP result excludes sold-out products",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-004",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Directly mapped to acceptance criterion requiring out-of-stock exclusion from PLP.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "AC wording is broad and does not define edge-case handling by locale or category filter."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-19324",
+      "AC Ref": "AC-002",
+      "Capability": "PLP preserves configured result size by replacing filtered sold-out items",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002,UAT-003,UAT-008",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Directly mapped to acceptance criterion stating the page remains at 100 items using next available products.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Replacement tie-breaker order is not explicitly specified in story AC."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-19324",
+      "AC Ref": "AC-UX-001",
+      "Capability": "Filtering logic does not create PLP rendering instability",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-005",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Derived from expected business usability of maintained list size and replacement behavior.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "No explicit AC sentence defines pagination/refresh behavior; inferred from outcome intent."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-19324",
+      "AC Ref": "AC-REG-001",
+      "Capability": "In-stock visibility remains intact while sold-out items are filtered",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Supported by story intent to preserve purchasable-product experience while removing clutter from sold-out items.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "AC does not explicitly enumerate false-positive filtering risk for in-stock items."
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-19324",
+      "AC Ref": "AC-SCOPE-001",
+      "Capability": "Forced-visibility behavior remains separate from this story's acceptance path",
+      "Priority": "Low",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Story explicitly marks forced visibility as out-of-scope and addressed separately.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Scope",
+      "Inconsistencies": "Future ranking implementation may reintroduce interactions requiring separate epic coverage."
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-19324",
+      "AC Ref": "AC-BRAND-001",
+      "Capability": "Outcome parity across NAP and MRP storefront acceptance environments",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Epic context targets both NAP and MRP customers; parity validation is required for business confidence.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Integration",
+      "Inconsistencies": "Story AC itself does not explicitly split acceptance by brand."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "Jira AC Gap",
+      "Jira Source": "G2-19324",
+      "Summary": "Replacement ordering logic for the next available product is not explicitly defined beyond keeping page size constant.",
+      "How to Validate": "Compare successive runs of the same PLP under similar data conditions and inspect whether replacement ordering remains stable and business-acceptable.",
+      "Expected Observation": "Replacement behavior is consistent enough for merchandising expectations, even without a fully explicit tie-breaker in AC.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-002,COV-003",
+      "Evidence Notes": "Derived from AC text and absence of tie-break details."
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Jira Story Context",
+      "Jira Source": "G2-19324",
+      "Summary": "Legacy Gecco push-down behavior differs from Porter target hard-filter behavior and may surface migration regressions.",
+      "How to Validate": "Run side-by-side expectation review with product stakeholders for a sample PLP where multiple sold-out items existed in legacy behavior.",
+      "Expected Observation": "Porter acceptance behavior follows hard-filter outcome and stakeholders confirm this as intended deviation from legacy.",
+      "Impact": "High",
+      "Linked Coverage IDs": "COV-001,COV-002",
+      "Evidence Notes": "Directly derived from story context section describing legacy versus target behavior."
+    },
+    {
+      "Observation ID": "EXP-003",
+      "Source Type": "Evidence Availability",
+      "Jira Source": "G2-19324",
+      "Summary": "No PR/commit references were found in mandatory non-trigger evidence path, limiting implementation traceability at this stage.",
+      "How to Validate": "Re-run evidence retrieval after story progress and check for newly linked Jira comments/remotelinks or referenced PR metadata.",
+      "Expected Observation": "Implementation evidence becomes discoverable once development activity is linked to the story.",
+      "Impact": "Traceability",
+      "Linked Coverage IDs": "COV-001,COV-002,COV-004",
+      "Evidence Notes": "No clone/relates linked-Done lineage or Jira-link PR/commit references were present in current snapshot."
+    }
+  ]
+}

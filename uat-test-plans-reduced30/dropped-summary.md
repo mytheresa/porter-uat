@@ -86,3 +86,79 @@ Deterministic reducer with matrix-join scoring and hard constraint:
 |---|---|
 | G2-16977 | — |
 | G2-16979 | CHK-005 [Impersonation Session], CHK-007 [Account And Checkout Continuity] |
+
+## Incremental Run 2026-08-07 16:40:31
+
+### Batch KPI
+
+- Epics processed: 8
+- Checks: 60 -> 52 (8 removed, 13.3% removed)
+- AC coverage retained: 43/43 (100.0%)
+- High-priority AC coverage retained: 25/25 (100.0%)
+- Target reduction hit exactly: 5/8 epics
+
+### Per-Epic KPI
+
+| Epic | Checks (orig->kept) | Removed % | AC coverage % | High AC coverage % | Target hit | Priority reliability (before->after) |
+|---|---:|---:|---:|---:|---|---|
+
+### Dropped Checks
+
+| Epic | Dropped checks (Check ID [Section]) |
+|---|---|
+
+## Incremental Run 2026-08-07 16:51:15
+
+### Batch KPI
+
+- Epics processed: 8
+- Checks: 56 -> 48 (8 removed, 14.3% removed)
+- AC coverage retained: 39/39 (100.0%)
+- High-priority AC coverage retained: 24/24 (100.0%)
+- Target reduction hit exactly: 6/8 epics
+
+### Per-Epic KPI
+
+| Epic | Checks (orig->kept) | Removed % | AC coverage % | High AC coverage % | Target hit | Priority reliability (before->after) |
+|---|---:|---:|---:|---:|---|---|
+
+### Dropped Checks
+
+| Epic | Dropped checks (Check ID [Section]) |
+|---|---|
+
+## Incremental Run 2026-08-07 16:53:38
+
+### Batch KPI
+
+- Epics processed: 8
+- Checks: 51 -> 43 (8 removed, 15.7% removed)
+- AC coverage retained: 34/34 (100.0%)
+- High-priority AC coverage retained: 18/18 (100.0%)
+- Target reduction hit exactly: 7/8 epics
+
+### Per-Epic KPI
+
+| Epic | Checks (orig->kept) | Removed % | AC coverage % | High AC coverage % | Target hit | Priority reliability (before->after) |
+|---|---:|---:|---:|---:|---|---|
+| G2-16174 | 8->7 | 12% | 100.0% | 100.0% | No (guardrail constrained) | 90 (Good) -> 90 (Good) |
+| G2-16260 | 4->4 | 0% | 100.0% | 100.0% | Yes | 60 (Moderate skew) -> 60 (Moderate skew) |
+| G2-16331 | 8->6 | 25% | 100.0% | 100.0% | Yes | 100 (Good) -> 100 (Good) |
+| G2-16392 | 10->7 | 30% | 100.0% | 100.0% | Yes | 67 (Moderate skew) -> 51 (Moderate skew) |
+| G2-17366 | 4->4 | 0% | 100.0% | 100.0% | Yes | 80 (Good) -> 80 (Good) |
+| G2-17647 | 4->4 | 0% | 100.0% | 100.0% | Yes | 60 (Moderate skew) -> 60 (Moderate skew) |
+| G2-20906 | 4->4 | 0% | 100.0% | 100.0% | Yes | 80 (Good) -> 80 (Good) |
+| G2-21511 | 9->7 | 22% | 100.0% | 100.0% | Yes | 67 (Moderate skew) -> 63 (Moderate skew) |
+
+### Dropped Checks
+
+| Epic | Dropped checks (Check ID [Section]) |
+|---|---|
+| G2-16174 | UAT-002 [Waitlist Visibility] |
+| G2-16260 | — |
+| G2-16331 | UAT-003 [Replacement Behavior], UAT-008 [Negative-path Sampling] |
+| G2-16392 | UAT-002 [Single Wishlist Rendering], UAT-007 [Empty State], UAT-008 [Wishlist Skeleton] |
+| G2-17366 | — |
+| G2-17647 | — |
+| G2-20906 | — |
+| G2-21511 | UAT-003 [Image Rendering], UAT-007 [KR Compliance] |

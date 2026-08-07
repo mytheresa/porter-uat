@@ -1,0 +1,215 @@
+{
+  "EPIC_KEY": "G2-16174",
+  "EPIC_SLUG": "res-10-reserve-product-with-no-stock",
+  "OUTPUT_PATH": "uat-test-plans/G2-16174-res-10-reserve-product-with-no-stock.xlsx",
+  "PLAN_TITLE": "G2-16174 UAT - Reserve Product With No Stock",
+  "GENERATED_DATE": "2026-08-07",
+  "EPIC_SUMMARY": "RES-10 | Reserve Product With No Stock",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Sohail, Katherine || LuxExperience",
+  "COMPONENT": "EIP",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "30-40 minutes",
+  "COVERAGE_SUMMARY": "1 UI-testable story mapped to 8 business checklist checks and 8 coverage rows. 5 backend/spike stories and 1 non-Story Evaluation item excluded from UI scope.",
+  "STORIES_IN_SCOPE": "G2-16769 | Story | FE - Display the waitlist for a product | Closed",
+  "STORIES_EXCLUDED": "G2-23809 | Story | BE - Handle where no stock is available | Done | Backend-only implementation story.\nG2-22813 | Story | BE - Change schema to allow multiple pre-reservation related to single reservation | Done | Backend-only schema story.\nG2-19559 | Story | [Spike] BE - Create Reservation Engine | Closed | Spike/backend exploration.\nG2-16774 | Story | BE - Handle no stock response from Racoon | Closed | Backend integration response handling.\nG2-16772 | Story | BE - Persist a Reservation with status Waitlist | Closed | Backend persistence behavior.\nG2-16684 | Evaluation | [Spike] Reserve a non-live item | Done | Non-Story issue type; out of scope by Story-only rule.",
+  "OUT_OF_SCOPE": "Backend internals, data migration strategy, and non-UI technical diagnostics that are not directly observable by business users in Mochi.",
+  "DEV_EVIDENCE": "No PR/commit references found for G2-16769 after GitHub MCP searches (global and org-scoped). Jira fallback scan across description/comments/issuelinks found no GitHub URLs or commit SHAs. Evidence status remains Unavailable.",
+  "GAPS_SUMMARY": "AC for G2-16769 is minimal and does not define expected empty-state content, sort order, field visibility, or brand-specific variance. Confirm these with product/business during UAT execution.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Waitlist Retrieval",
+      "Check": "Waitlist panel can be opened for a specific product",
+      "How to Verify": "In Mochi, search for a product known to have waitlisted reservations and open the product-level reservation view.",
+      "Pass Criteria": "Waitlist area is reachable from the product reservation view.\nThe selected product context remains visible while viewing waitlist data."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Waitlist Visibility",
+      "Check": "WAITLIST reservations are displayed for the selected product",
+      "How to Verify": "Open a product with known waitlisted customers and review the reservation rows returned in the waitlist section.",
+      "Pass Criteria": "At least one reservation with WAITLIST status is visible when data exists.\nDisplayed rows correspond to the selected product."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Status Integrity",
+      "Check": "Displayed reservation statuses remain consistent with WAITLIST expectation",
+      "How to Verify": "Inspect the status field for each displayed reservation in the product waitlist.",
+      "Pass Criteria": "Rows shown in waitlist view use WAITLIST status naming.\nNo conflicting non-waitlist status is mixed into the waitlist-only view."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Product Specificity",
+      "Check": "Waitlist list is scoped to the selected product only",
+      "How to Verify": "Switch between two products and compare the waitlist entries returned for each product.",
+      "Pass Criteria": "Changing product changes the waitlist result set.\nReservations from unrelated products are not displayed."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "No Data Handling",
+      "Check": "No-waitlist case is handled clearly",
+      "How to Verify": "Open a product with no waitlisted reservations and observe the waitlist panel behavior.",
+      "Pass Criteria": "System shows a clear empty-state outcome when no WAITLIST rows exist.\nNo stale data from previous product remains visible."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Cross-Brand Consistency",
+      "Check": "Behavior is consistent for NAP and MRP business flows",
+      "How to Verify": "Run the waitlist display flow in acceptance.net-a-porter.com and acceptance.mrporter.com with equivalent product test data.",
+      "Pass Criteria": "Both brands expose the waitlist display capability for eligible products.\nNo brand-specific functional breakage is observed in core waitlist visibility."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Data Freshness",
+      "Check": "Waitlist view reflects updated backend state after refresh",
+      "How to Verify": "After backend/test-data update to waitlist rows, refresh the product view and re-open waitlist.",
+      "Pass Criteria": "Updated waitlist entries are visible after refresh.\nRemoved or changed rows do not persist incorrectly in UI."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Access Control",
+      "Check": "Only expected business roles can view waitlist details",
+      "How to Verify": "Test with authorized PS/CC role and with a non-authorized role in the same environment.",
+      "Pass Criteria": "Authorized role can access waitlist display for a product.\nUnauthorized role is prevented or receives a clear access outcome."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-16769",
+      "AC Ref": "AC-WAITLIST-DISPLAY-CORE",
+      "Capability": "Display waitlist reservations for a specific product",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-002",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Jira AC explicitly states waitlist reservations must be displayed for a specific product.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-16769",
+      "AC Ref": "AC-WAITLIST-STATUS",
+      "Capability": "Waitlist status semantics are represented correctly in UI",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Status semantics inferred from epic context and linked backend stories describing WAITLIST persistence.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "Story AC does not define exact status label formatting for UI rows."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-16769",
+      "AC Ref": "AC-PRODUCT-SCOPING",
+      "Capability": "Results are scoped to selected product",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Specific product scope is stated in AC and Confluence frontend task line.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-16769",
+      "AC Ref": "AC-EMPTY-STATE",
+      "Capability": "No-result behavior is handled without stale or misleading output",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-005",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Not explicitly documented; added as business-critical guardrail for operational usage.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "UX",
+      "Inconsistencies": "AC does not define expected copy or behavior when no waitlist entries exist."
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-16769",
+      "AC Ref": "AC-CROSS-BRAND",
+      "Capability": "Core waitlist visibility works consistently across NAP and MRP",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Epic value statement includes both NET-A-PORTER and MR PORTER business teams.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "No explicit per-brand acceptance wording at story level."
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-16769",
+      "AC Ref": "AC-DATA-REFRESH",
+      "Capability": "Waitlist display reflects latest state after refresh",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Confluence goal implies operational usage where current waitlist state must be visible.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Refresh/update mechanics are not specified in AC."
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-16769",
+      "AC Ref": "AC-ROLE-ACCESS",
+      "Capability": "Authorized business roles can access waitlist details",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-008",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Role context appears in story persona (PS/CC agent) but authorization behavior is not explicitly described.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Security",
+      "Inconsistencies": "AC omits concrete role/permission outcomes."
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-16769",
+      "AC Ref": "AC-DOC-ALIGNMENT",
+      "Capability": "Story behavior aligns with Slice 10 frontend task definition",
+      "Priority": "Low",
+      "Checklist Mapping": "UAT-001,UAT-002,UAT-004",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Confluence page 'Slice 10 - Reserve product with no stock' lists frontend task to display WAITLIST reservations for a specific product.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": ""
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "AC Ambiguity",
+      "Jira Source": "G2-16769",
+      "Summary": "Story AC provides only one high-level requirement without detailed display rules",
+      "How to Validate": "Run UAT with business stakeholder to confirm expected table columns, ordering, and empty-state behavior for waitlist display.",
+      "Expected Observation": "Business confirms a single agreed behavior set that can be reused for both brands.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-002,COV-004,COV-005",
+      "Evidence Notes": "No additional implementation notes were present in Jira comment thread beyond 'This will work out of the box'."
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Evidence Gap",
+      "Jira Source": "G2-16769",
+      "Summary": "No direct PR/commit evidence was found for the story key",
+      "How to Validate": "Request implementation reference from engineering or confirm whether work was delivered under a different linked key before sign-off.",
+      "Expected Observation": "Either a traceable implementation reference is provided or the team accepts Jira/Confluence-only evidence for UAT closure.",
+      "Impact": "Low",
+      "Linked Coverage IDs": "COV-001,COV-008",
+      "Evidence Notes": "GitHub searches for G2-16769 returned zero commits/code hits; Jira fallback link scan also returned no GitHub URLs/SHAs."
+    }
+  ]
+}

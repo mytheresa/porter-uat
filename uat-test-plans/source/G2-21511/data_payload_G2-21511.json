@@ -1,0 +1,247 @@
+{
+  "EPIC_KEY": "G2-21511",
+  "EPIC_SLUG": "updated-order-history-gecco-rollout",
+  "OUTPUT_PATH": "uat-test-plans/G2-21511-updated-order-history-gecco-rollout.xlsx",
+  "PLAN_TITLE": "G2-21511 UAT - Updated Order History in Gecco during Rollout",
+  "GENERATED_DATE": "2026-08-07",
+  "EPIC_SUMMARY": "Updated Order History in Gecco during Rollout",
+  "EPIC_STATUS": "In Progress",
+  "EPIC_CREATED_BY": "Cobbe, Valentina || YOOX NET A PORTER",
+  "COMPONENT": "CD1",
+  "TARGET_URLS": "Porter web My Account order history (UAT), Gecco Order History repository via integrated test data",
+  "TIMEBOX": "40-55 minutes",
+  "COVERAGE_SUMMARY": "6 UI-testable stories mapped to 9 business checks and 9 coverage rows. Story-only scope applied from epic children; backend-only, migration foundation, and evaluation items excluded.",
+  "STORIES_IN_SCOPE": "G2-23873 | Map Gift Messages from Signature Packaging Context | New\nG2-23872 | Integrate WCS Product Enrichment Fields (ProductName, DesignerName, ImagePath) | New\nG2-23871 | Refactor item level discount to use totalProductDiscount as Primary Source | New\nG2-23870 | Map South Korea PCCC to PersonID and AddressLine3 | New\nG2-23868 | Enforce Strict Exception Policy for Positive Discount Amounts | New\nG2-23398 | ANT | Create Order Item URL image for WCS orders | Done",
+  "STORIES_EXCLUDED": "G2-25967 | Extend shipping model to support tracking event history and timestamps | Story excluded as backend-only model extension.\nG2-22780 | Sync complete order details from WCS | Story excluded as migration foundation lineage item.\nG2-22529 | Store in Gecco Order History an order placed in WCS | Story excluded as migration/bootstrap scope.\nG2-25690 | Order Source Column Module | Task excluded (non-Story, backend-only).\nG2-24961 | Add shipment information during import from Legacy porter | Task excluded (non-Story, migration).\nG2-24960 | Ant processing order history skeleton cmd | Technical Story excluded (non-Story scope, backend-only).\nG2-24925 | Order events idempotency field | Task excluded (non-Story, backend-only).\nG2-24808 | Infra for Dataplatform for sending data | Task excluded (non-Story, backend infra).\nG2-24807 | Ant processing order updates events | Technical Story excluded (non-Story scope, backend-only).\nG2-23638 | Contract Testing using pact broker | Evaluation excluded.\nG2-23635 | Agree on mapping from WCS | Evaluation excluded.",
+  "OUT_OF_SCOPE": "Infrastructure provisioning, migration bootstrap mechanics, message queue tuning, backend pod scheduling, and non-story technical tasks/evaluations outside customer-visible UAT flows.",
+  "DEV_EVIDENCE": "Trigger-gated + lineage checks executed. G2-23398 has direct PR evidence from GitHub search: ant#117, ant#113, ant#109, ant-deployment#42; Jira-link fallback also contains a GitHub blob URL. Mandatory clone/relates lineage check for linked Done story G2-22780 found ant#105 (inherited implementation evidence). For G2-23873/G2-23872/G2-23871/G2-23870/G2-23868 no PR/commit URLs were found in Jira description/comments/issuelinks and direct trigger-based key search returned no hits where attempted, so evidence remains unavailable.",
+  "GAPS_SUMMARY": "Most in-scope stories are New and contain implementation hints but no merged PR references, so AC is currently the only authoritative test source for those stories. G2-23398 AC remains partially vague ('check which image'), requiring exploratory confirmation of final image formatting behavior across real products.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Gift Message",
+      "Check": "Signature packaging gift message is propagated to Gecco order history",
+      "How to Verify": "Place or replay a WCS order that contains UserData giftMessage at root level with signature packaging enabled. Open Gecco order history details for the order and inspect gift message fields.",
+      "Pass Criteria": "Gift message text is present and matches the source payload.\nNo truncation or null substitution occurs for non-empty messages."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Catalog Enrichment",
+      "Check": "Product name, designer name, and image path are populated from WCS enrichment fields",
+      "How to Verify": "Replay an order containing ProductName, DesignerName, and ImagePath values from WCS. Inspect corresponding line items in Gecco order history.",
+      "Pass Criteria": "Product name and designer name match WCS source values.\nImage path field is populated for each eligible line item."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Image Rendering",
+      "Check": "Order item image URL is correctly formatted and resolves for Porter order items",
+      "How to Verify": "Use a known Porter order item imported through ANT and inspect rendered image URL and thumbnail behavior in order history.",
+      "Pass Criteria": "Image URL follows expected brand/path format.\nImage loads successfully without broken placeholder."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Discount Mapping",
+      "Check": "Item discount uses totalProductDiscount when present and non-zero",
+      "How to Verify": "Replay an order where item UserData includes totalProductDiscount with a non-zero value. Compare Gecco item discount against source field.",
+      "Pass Criteria": "Displayed item discount equals totalProductDiscount from source.\nNo secondary adjustment sum overrides the non-zero primary field."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Discount Fallback",
+      "Check": "Fallback discount calculation is applied when totalProductDiscount is missing or zero",
+      "How to Verify": "Replay an order with missing or zero totalProductDiscount and valid adjustment blocks. Validate resulting line-item discount in Gecco.",
+      "Pass Criteria": "Discount is computed from adjustment blocks only when primary field is missing or zero.\nComputed value is stable and not duplicated."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "KR Compliance",
+      "Check": "For KR shipping addresses, PCCC is mapped to PersonID and fills AddressLine3 when blank",
+      "How to Verify": "Replay a KR order where PCCC exists and AddressLine3 is blank at source. Validate address data in Gecco order history payload/view.",
+      "Pass Criteria": "PersonID contains the exact PCCC value.\nAddressLine3 is populated with PCCC only when originally blank."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "KR Compliance",
+      "Check": "Existing non-blank AddressLine3 is preserved for KR orders while PersonID still receives PCCC",
+      "How to Verify": "Replay a KR order where AddressLine3 already has content and PCCC exists. Compare source and target address fields.",
+      "Pass Criteria": "AddressLine3 original value remains unchanged.\nPersonID is still populated with PCCC."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Data Integrity",
+      "Check": "Positive discount amounts are rejected and do not create inconsistent order history records",
+      "How to Verify": "Inject or replay an order containing a positive discount adjustment and observe processing result and persisted state.",
+      "Pass Criteria": "Processing fails fast or rejects the malformed discount payload.\nNo partially inconsistent discount record is persisted in order history."
+    },
+    {
+      "Check ID": "UAT-009",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Regression",
+      "Check": "Legacy image-path behavior regression is not reintroduced after image URL changes",
+      "How to Verify": "Open at least one historical order previously validated by business for image rendering and compare with current output after deployment.",
+      "Pass Criteria": "Previously valid item images still render correctly.\nNo regression in image host/path transformation is detected."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-23873",
+      "AC Ref": "AC-1",
+      "Capability": "Gift message extraction and propagation",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Story AC explicitly requires extracting root giftMessage and mapping to GiftMessage in order payload.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-23872",
+      "AC Ref": "AC-1",
+      "Capability": "Product/designer/image enrichment mapping",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC requires replacing PartNumber placeholder with ProductName, DesignerName, and ImagePath values.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Data Integrity",
+      "Inconsistencies": "Field names dependency on WCS noted in story context; validate real payload naming in UAT."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-23398",
+      "AC Ref": "AC-1",
+      "Capability": "Image URL construction for order items",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "PR evidence found: https://github.com/mytheresa/ant/pull/117, https://github.com/mytheresa/ant/pull/113, https://github.com/mytheresa/ant/pull/109, https://github.com/mytheresa/ant-deployment/pull/42. Jira description includes reference blob URL in tapir repo.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "AC wording is brief; final expected image pattern must be asserted during UAT."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-23871",
+      "AC Ref": "AC-1",
+      "Capability": "Primary discount source selection",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC explicitly prioritizes totalProductDiscount when available and non-zero.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Data Integrity",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-23871",
+      "AC Ref": "AC-2",
+      "Capability": "Discount fallback logic",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-005",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC requires fallback to adjustment summation only when primary field is missing or zero.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-23870",
+      "AC Ref": "AC-1",
+      "Capability": "KR PCCC to PersonID mapping",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC defines KR-only extraction of PCCC and mapping to PersonID plus conditional AddressLine3 overwrite when blank.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Compliance",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-23870",
+      "AC Ref": "AC-2",
+      "Capability": "KR AddressLine3 preservation behavior",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Conditional overwrite requirement implies preserving existing non-blank AddressLine3.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-23868",
+      "AC Ref": "AC-1",
+      "Capability": "Strict rejection of positive discount amounts",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-008",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC mandates exception/error when positive discount values are received and forbids absInt normalization.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Data Integrity",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-009",
+      "Jira Source": "G2-23398",
+      "AC Ref": "Lineage-G2-22780",
+      "Capability": "Inherited image-path implementation lineage validation",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-009",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Mandatory linked-Done lineage check: G2-23398 clones Done story G2-22780. GitHub key search found inherited PR evidence https://github.com/mytheresa/ant/pull/105.",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": "None"
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "Trigger-AC",
+      "Jira Source": "G2-23398",
+      "Summary": "Clarify expected final image URL format when AC is vague",
+      "How to Validate": "Compare a sample of order item image URLs before and after rollout for Porter SKUs and confirm host/path parity with expected downstream consumers.",
+      "Expected Observation": "Image URL pattern is deterministic and consistent for all sampled items.",
+      "Impact": "Incorrect URL formatting causes broken image rendering in order history UI.",
+      "Linked Coverage IDs": "COV-003,COV-009",
+      "Evidence Notes": "PR and Jira evidence exists, but AC text does not define exact URL pattern contract."
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Trigger-RISK",
+      "Jira Source": "G2-23868",
+      "Summary": "Malformed positive discount payload does not leave partial persisted state",
+      "How to Validate": "Submit a controlled malformed message with positive discount and verify no order history row is partially updated while error handling remains observable.",
+      "Expected Observation": "Payload is rejected and persistence remains unchanged.",
+      "Impact": "Partial writes can corrupt customer-visible totals and trust.",
+      "Linked Coverage IDs": "COV-008",
+      "Evidence Notes": "AC requires strict exception behavior; no code-level PR reference located."
+    },
+    {
+      "Observation ID": "EXP-003",
+      "Source Type": "Trigger-BRAND",
+      "Jira Source": "G2-23870",
+      "Summary": "KR-only PCCC behavior does not leak into non-KR countries",
+      "How to Validate": "Run one KR and one non-KR order through the same flow and compare PersonID/AddressLine3 behavior.",
+      "Expected Observation": "PCCC mapping applies only to KR orders.",
+      "Impact": "Leakage to non-KR addresses could expose incorrect personal data fields.",
+      "Linked Coverage IDs": "COV-006,COV-007",
+      "Evidence Notes": "Country-specific AC is clear; regression-style negative test is still recommended."
+    }
+  ]
+}

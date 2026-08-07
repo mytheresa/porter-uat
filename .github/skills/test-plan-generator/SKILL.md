@@ -22,6 +22,18 @@ Bridge evidence extraction to the workbook script. Convert AC, metadata, docs, a
 - If the epic has no UI-testable stories, emit the minimal excluded-story payload and stop.
 - If no trigger fires, stay Jira-only and skip Confluence/GitHub.
 - If coverage is already obvious from AC, do not expand evidence just to fill space.
+- If explicit AC are missing for an in-scope story, switch to **Missing-AC Fallback Mode** and do not synthesize full UAT flows.
+
+## Missing-AC Fallback Mode
+
+Activate this mode when an in-scope story has no explicit acceptance criteria text (empty, placeholder-only, or too vague to derive concrete pass/fail AC).
+
+- Generate only **2-4** checklist checks for that story.
+- Checks must be exploratory and evidence-seeking, not scenario-complete business flows.
+- Do not invent end-to-end journeys (for example checkout/login/order placement) unless explicitly present in AC.
+- Phrase checks as observable behavior probes (rendering, fallback, resilience, consistency) with conservative pass criteria.
+- Mark each mapped matrix row with `AC Fidelity: Inferred` and `Evidence Availability: Unavailable` when appropriate.
+- `GAPS_SUMMARY` must explicitly state that AC are missing and that the checklist is intentionally minimal pending product/engineering confirmation.
 
 ## Input
 
@@ -36,7 +48,8 @@ Bridge evidence extraction to the workbook script. Convert AC, metadata, docs, a
    - Keep Jira-first behavior for non-trigger stories.
    - Map PRs/comments/test notes to AC scenarios only as supporting evidence.
    - Build atomic checks for `CHECKLIST_ROWS` with parity to `MATRIX_ROWS`.
-   - Aim for **8–12 checks**; allow up to **15** for high-risk Epics.
+   - Default target: **8-12 checks**; allow up to **15** for high-risk Epics.
+   - Exception: in **Missing-AC Fallback Mode**, generate only **2-4** exploratory checks for the affected story and do not expand to synthetic journey coverage.
    - Keep wording business-facing and session-friendly; move technical diagnostics to `MATRIX_ROWS` or `EXPLORATORY_ROWS`.
 2. **Silent JSON Payload Generation (`/tmp/data_payload_<EPIC_KEY>.json`):**
 
