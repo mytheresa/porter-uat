@@ -42,6 +42,33 @@ MODIFIER_KEY = "command" if platform.system() == "Darwin" else "ctrl"
 
 # Global state to track currently processing epic for graceful shutdown
 CURRENT_PROCESSING_EPIC = None
+EPIC_SORT_PATTERN = re.compile(r'^([A-Z][A-Z0-9]*)-(\d+)$')
+
+
+def epic_sort_key(epic_key):
+    key = str(epic_key or "").strip()
+    match = EPIC_SORT_PATTERN.match(key)
+    if match:
+        return match.group(1), int(match.group(2)), key
+    return "~", 10**12, key
+
+
+def extract_epic_from_log_line(line):
+    match = re.search(r'\b([A-Z][A-Z0-9]*-\d+)\b', line or "")
+    return match.group(1) if match else ""
+
+
+def upsert_sorted_log_line(log_path, epic_key, new_line):
+    lines = []
+    if os.path.exists(log_path):
+        with open(log_path, "r", encoding="utf-8") as f:
+            lines = [ln for ln in f.readlines() if extract_epic_from_log_line(ln) != epic_key]
+
+    lines.append(new_line)
+    lines.sort(key=lambda ln: epic_sort_key(extract_epic_from_log_line(ln)))
+
+    with open(log_path, "w", encoding="utf-8") as f:
+        f.writelines(lines)
 
 
 def extract_jira_key(epic_ref):
@@ -159,18 +186,18 @@ def is_workbook_generated(epic_key, run_start_time, baseline_workbooks):
 
 def log_processed(epic_key, elapsed_seconds, note=None):
     """Logs completed or intentionally skipped Epics to epics_processed.txt."""
-    with open(PROCESSED_LOG_FILE, "a", encoding="utf-8") as f:
-        status_suffix = f" | {note}" if note else ""
-        f.write(
-            f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {epic_key} "
-            f"(Completed in {elapsed_seconds}s){status_suffix}\n"
-        )
+    status_suffix = f" | {note}" if note else ""
+    line = (
+        f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {epic_key} "
+        f"(Completed in {elapsed_seconds}s){status_suffix}\n"
+    )
+    upsert_sorted_log_line(PROCESSED_LOG_FILE, epic_key, line)
 
 
 def log_failure(epic_key, reason):
     """Logs stalled or timed-out Epics to epics_failed.txt for manual review."""
-    with open(FAILED_LOG_FILE, "a", encoding="utf-8") as f:
-        f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {epic_key}: {reason}\n")
+    line = f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {epic_key}: {reason}\n"
+    upsert_sorted_log_line(FAILED_LOG_FILE, epic_key, line)
 
 
 def detect_secondary_rate_limit(epic_key, since_epoch=None):

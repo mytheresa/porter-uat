@@ -1,0 +1,226 @@
+{
+  "EPIC_KEY": "G2-15883",
+  "EPIC_SLUG": "view-of-the-customer-customer-loyalty",
+  "OUTPUT_PATH": "uat-test-plans/G2-15883-view-of-the-customer-customer-loyalty.xlsx",
+  "PLAN_TITLE": "G2-15883 UAT - View of the Customer Customer Loyalty",
+  "GENERATED_DATE": "2026-08-07",
+  "EPIC_SUMMARY": "View of the Customer | Customer Loyalty",
+  "EPIC_STATUS": "New",
+  "EPIC_CREATED_BY": "Sohail, Katherine || LuxExperience",
+  "COMPONENT": "EIP",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "30-40 minutes",
+  "COVERAGE_SUMMARY": "1 UI-testable story mapped to 8 business checks and 8 coverage rows. AC 1-6 carry inherited implementation evidence from clone G2-16660 (PR mytheresa/tapir#6541). No backend-only, migration, or evaluation child stories were excluded.",
+  "STORIES_IN_SCOPE": "G2-19836 | Enrich EIP view by Personal Shopper | New",
+  "STORIES_EXCLUDED": "None.",
+  "OUT_OF_SCOPE": "Backend data ingestion quality, source-system synchronization latency outside the UI workflow, and non-EIP customer profile areas.",
+  "DEV_EVIDENCE": "Clone/relates lineage: in-scope story G2-19836 clones Done story G2-16660, implemented by PR mytheresa/tapir#6541 (https://github.com/mytheresa/tapir/pull/6541, merged 2026-01-27). GitHub key search on linked Done key returned this PR; evidence inherited by G2-19836. Direct GitHub search on G2-19836 returned 0 PRs (New status). Story evidence availability: 1 Available (inherited), 0 Unavailable.",
+  "GAPS_SUMMARY": "Story template contains empty AC rows (7-9) and placeholder Given/When/Then section. Inherited PR #6541 covers AC 1-6; AC3 carries a known caveat that preferred-language and category handling depends on receiving those data points, so verify those two fields explicitly.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Personal Shopper Selection",
+      "Check": "User can select a Personal Shopper to open a client book",
+      "How to Verify": "Open the EIP loyalty view, use the Personal Shopper selector, and choose a shopper with assigned clients.",
+      "Pass Criteria": "The selected Personal Shopper is accepted by the UI.\nThe client-book area loads without blocking errors."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Client Book Population",
+      "Check": "System lists clients assigned to the selected Personal Shopper",
+      "How to Verify": "After selecting a shopper with known assignments, review the displayed client list.",
+      "Pass Criteria": "Assigned clients are displayed for the selected shopper.\nThe list is consistent with expected ownership."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Client Detail Visibility",
+      "Check": "Client book shows all required detail fields",
+      "How to Verify": "Inspect one or more rows and confirm visibility of First Name, Last Name, Email, Preferred Language, Most Used Country, Category, % Personal Shopping, Twelve Month Return Rate, Loyalty Year Spend, Loyalty Year Pending Spend, and Current Year Net Sales.",
+      "Pass Criteria": "All required fields are visible in the client-book view.\nValues render in readable business format."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Empty State Handling",
+      "Check": "No-client scenario displays the expected message",
+      "How to Verify": "Select a Personal Shopper that has no assigned clients and observe the client-book panel.",
+      "Pass Criteria": "The message 'There are no clients assigned' is displayed.\nNo misleading stale client data remains visible."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Shopper Switching",
+      "Check": "User can switch to another Personal Shopper and view the new client book",
+      "How to Verify": "Change the selected shopper at least twice and compare resulting client-book contents.",
+      "Pass Criteria": "Client-book content updates to match each newly selected shopper.\nThe previous shopper's list is not retained after the switch."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Default View",
+      "Check": "Personal Shopper sees their own client book by default",
+      "How to Verify": "Log in as a Personal Shopper and open the view without changing filters.",
+      "Pass Criteria": "The initial view is preloaded with the logged-in shopper's own client book.\nNo manual selection is required for first render."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Data Confidence",
+      "Check": "Displayed loyalty fields stay consistent after shopper changes and page refresh",
+      "How to Verify": "Switch shopper, capture a few key values, refresh the page, and compare values for the same selected shopper.",
+      "Pass Criteria": "Key loyalty values remain consistent for the selected shopper after refresh.\nNo duplicated or cross-shopper leakage appears."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Business Readability",
+      "Check": "Loyalty information is understandable for business users during clienteling workflows",
+      "How to Verify": "Run through a typical manager review flow and confirm the view supports quick interpretation of customer loyalty profile strength.",
+      "Pass Criteria": "Business users can identify loyalty profile status using visible fields.\nNo critical label ambiguity blocks decision-making."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-19836",
+      "AC Ref": "AC-G2-19836-1",
+      "Capability": "Select Personal Shopper and open associated client book",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Directly mapped from story AC #1; implemented in clone G2-16660 via PR mytheresa/tapir#6541",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Evidence inherited from clone lineage (G2-16660 / PR #6541); no PR raised directly against G2-19836 yet."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-19836",
+      "AC Ref": "AC-G2-19836-2",
+      "Capability": "Display customers assigned to selected Personal Shopper",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Directly mapped from story AC #2; implemented in clone G2-16660 via PR mytheresa/tapir#6541",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Evidence inherited from clone lineage (G2-16660 / PR #6541); no PR raised directly against G2-19836 yet."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-19836",
+      "AC Ref": "AC-G2-19836-3",
+      "Capability": "Render full loyalty and profile detail set per client",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003,UAT-007",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Directly mapped from story AC #3 field list; implemented in clone G2-16660 via PR mytheresa/tapir#6541",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Clone AC3 caveat: preferred-language and category depend on receiving those data points; verify both fields explicitly."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-19836",
+      "AC Ref": "AC-G2-19836-4",
+      "Capability": "Show explicit empty-state message for shoppers with no clients",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Directly mapped from story AC #4; implemented in clone G2-16660 via PR mytheresa/tapir#6541",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Message text is exact in AC and must be verified verbatim."
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-19836",
+      "AC Ref": "AC-G2-19836-5",
+      "Capability": "Switch Personal Shopper and update client-book view",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-005",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Directly mapped from story AC #5; implemented in clone G2-16660 via PR mytheresa/tapir#6541",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": "AC does not define performance threshold for switch update latency."
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-19836",
+      "AC Ref": "AC-G2-19836-6",
+      "Capability": "Default view opens to the logged-in Personal Shopper book",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Directly mapped from story AC #6; implemented in clone G2-16660 via PR mytheresa/tapir#6541",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "No explicit fallback rule if user has no Personal Shopper assignment."
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-15883",
+      "AC Ref": "AC-EPIC-LOYALTY-VIEW",
+      "Capability": "Business teams can access a comprehensive loyalty profile for decision support",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-008",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Derived from epic value statement and in-scope scope bullets",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Usability",
+      "Inconsistencies": "Epic intent is broad and does not define measurable UI acceptance thresholds."
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-19836",
+      "AC Ref": "AC-G2-19836-TEMPLATE-GAP",
+      "Capability": "Coverage closure for AC template completeness and scenario reliability",
+      "Priority": "Low",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Rows 7-9 and Given/When/Then placeholders are empty in story template",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "Story includes incomplete AC template sections that require interpretation during execution."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "OBS-001",
+      "Source Type": "Jira Description",
+      "Jira Source": "G2-19836",
+      "Summary": "Story template contains empty AC rows and placeholder test scenario section",
+      "How to Validate": "During execution, document any behavior that was inferred due to missing explicit scenario details.",
+      "Expected Observation": "Core AC checks remain executable, but any inferred assumptions are captured in tester notes.",
+      "Impact": "Coverage confidence",
+      "Linked Coverage IDs": "COV-008",
+      "Evidence Notes": "Empty AC rows 7-9 and blank Given/When/Then found in Jira story description"
+    },
+    {
+      "Observation ID": "OBS-002",
+      "Source Type": "Jira Epic",
+      "Jira Source": "G2-15883",
+      "Summary": "Epic scope includes editable loyalty fields that are not explicitly represented in this single child story",
+      "How to Validate": "Confirm with business stakeholders whether edit flows are expected in this release scope or handled by separate stories.",
+      "Expected Observation": "Either explicit edit behavior is available and testable, or scope is clarified as future work.",
+      "Impact": "Scope clarity",
+      "Linked Coverage IDs": "COV-007",
+      "Evidence Notes": "Epic in-scope bullets mention editable fields such as Category and Personal Shopper assignments"
+    },
+    {
+      "Observation ID": "OBS-003",
+      "Source Type": "Clone Lineage / GitHub",
+      "Jira Source": "G2-19836",
+      "Summary": "In-scope story clones Done story G2-16660, implemented by PR mytheresa/tapir#6541",
+      "How to Validate": "Cross-check the enrichment story against the merged clone behavior; confirm the enrichment does not regress the base Personal Shopper client-book view delivered in PR #6541.",
+      "Expected Observation": "Base client-book behavior from PR #6541 remains intact; enrichment additions layer on top without breaking AC 1-6.",
+      "Impact": "Release confidence",
+      "Linked Coverage IDs": "COV-001,COV-002,COV-003,COV-004,COV-005,COV-006",
+      "Evidence Notes": "PR mytheresa/tapir#6541 (merged 2026-01-27) inherited via clone link; direct G2-19836 GitHub search returned 0 PRs"
+    }
+  ]
+}

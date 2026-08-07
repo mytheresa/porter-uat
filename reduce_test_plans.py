@@ -6,18 +6,21 @@ coverage constraints derived from MATRIX_ROWS joins.
 """
 
 import copy
+from datetime import datetime
 import json
 import math
 import os
+import re
 import subprocess
 import sys
 import tempfile
 from collections import Counter, defaultdict
-from typing import Any
+from typing import Any, Optional, Set, Tuple
 
 GENERATOR = os.path.join(os.path.dirname(__file__), ".github", "scripts", "generate-test-plan-xlsx.py")
 SOURCE_DIR = os.path.join(os.path.dirname(__file__), "uat-test-plans", "source")
 OUTPUT_DIR = "uat-test-plans-reduced30"
+CONTROL_FILE = os.path.join(os.path.dirname(__file__), "reduce_test_plans.txt")
 PYTHON = sys.executable
 
 TARGET_KEEP_RATIO = 0.70
@@ -28,6 +31,54 @@ FIDELITY_WEIGHT = {"Full": 35, "Partial": 22, "Inferred": 10}
 EVIDENCE_WEIGHT = {"Available": 0, "Unavailable": 8}
 
 PRIORITY_LEVELS = ["High", "Medium", "Low"]
+EPIC_KEY_PATTERN = re.compile(r"^([A-Z][A-Z0-9]*)-(\d+)$")
+
+
+def epic_sort_key(epic_key: str) -> Tuple[str, int, str]:
+    key = str(epic_key or "").strip()
+    match = EPIC_KEY_PATTERN.match(key)
+    if match:
+        return match.group(1), int(match.group(2)), key
+    return "~", 10**12, key
+
+
+def extract_epic_key(value: str) -> Optional[str]:
+    text = os.path.basename(str(value).strip())
+    if not text or text.startswith("#"):
+        return None
+    match = re.search(r"[A-Z][A-Z0-9]*-\d+", text)
+    return match.group(0) if match else None
+
+
+def epic_key_from_payload_path(payload_path: str) -> str:
+    name = os.path.basename(payload_path)
+    match = re.search(r"data_payload_([A-Z][A-Z0-9]*-\d+)\.json$", name)
+    if match:
+        return match.group(1)
+    return os.path.basename(os.path.dirname(payload_path))
+
+
+def load_requested_epics(control_file: str) -> Tuple[Optional[Set[str]], Set[str], int]:
+    if not os.path.exists(control_file):
+        return None, set(), 0
+
+    requested: set[str] = set()
+    force_override: set[str] = set()
+    parsed_entries = 0
+    with open(control_file, encoding="utf-8") as f:
+        for raw in f:
+            line = raw.strip()
+            if not line or line.startswith("#"):
+                continue
+            parsed_entries += 1
+            epic = extract_epic_key(line)
+            if epic:
+                requested.add(epic)
+                base = os.path.basename(line).lower()
+                if base.endswith(".xlsx"):
+                    force_override.add(epic)
+
+    return requested, force_override, parsed_entries
 
 
 def parse_mapping_ids(mapping_value: Any) -> list[str]:
@@ -337,7 +388,74 @@ def run_generator(payload_path: str) -> bool:
     return True
 
 
-def write_batch_summary(kpis: list[dict[str, Any]], output_dir: str) -> None:
+def prune_summary_rows_for_epics(summary_path: str, epic_keys: Set[str]) -> int:
+    if not os.path.exists(summary_path) or not epic_keys:
+        return 0
+
+    removed = 0
+    with open(summary_path, encoding="utf-8") as f:
+        lines = f.readlines()
+
+    kept_lines: list[str] = []
+    row_pattern = re.compile(r"^\|\s*([A-Z][A-Z0-9]*-\d+)\s*\|")
+    for line in lines:
+        match = row_pattern.match(line)
+        if match and match.group(1) in epic_keys:
+            removed += 1
+            continue
+        kept_lines.append(line)
+
+    if removed > 0:
+        with open(summary_path, "w", encoding="utf-8") as f:
+            f.writelines(kept_lines)
+
+    return removed
+
+
+def sort_summary_tables_by_epic(summary_path: str) -> int:
+    if not os.path.exists(summary_path):
+        return 0
+
+    with open(summary_path, encoding="utf-8") as f:
+        lines = f.readlines()
+
+    row_pattern = re.compile(r"^\|\s*([A-Z][A-Z0-9]*-\d+)\s*\|")
+    i = 0
+    tables_sorted = 0
+
+    while i < len(lines):
+        header = lines[i].strip()
+        if header.startswith("| Epic |") and i + 1 < len(lines) and lines[i + 1].strip().startswith("|---"):
+            start = i + 2
+            end = start
+            while end < len(lines) and lines[end].startswith("|"):
+                end += 1
+
+            rows = lines[start:end]
+            if len(rows) > 1:
+                sortable: list[tuple[Tuple[str, int, str], str]] = []
+                for row in rows:
+                    match = row_pattern.match(row)
+                    epic = match.group(1) if match else ""
+                    sortable.append((epic_sort_key(epic), row))
+                rows_sorted = [row for _, row in sorted(sortable, key=lambda item: item[0])]
+                if rows_sorted != rows:
+                    lines[start:end] = rows_sorted
+                    tables_sorted += 1
+
+            i = end
+            continue
+
+        i += 1
+
+    if tables_sorted > 0:
+        with open(summary_path, "w", encoding="utf-8") as f:
+            f.writelines(lines)
+
+    return tables_sorted
+
+
+def append_batch_summary(kpis: list[dict[str, Any]], output_dir: str) -> None:
     total_original = sum(int(k["original_checks"]) for k in kpis)
     total_kept = sum(int(k["kept_checks"]) for k in kpis)
     removed_total = total_original - total_kept
@@ -352,14 +470,13 @@ def write_batch_summary(kpis: list[dict[str, Any]], output_dir: str) -> None:
     high_cov_batch = round((total_high_after / total_high_before) * 100, 1) if total_high_before else 100.0
 
     target_hit_count = sum(1 for k in kpis if k["target_hit"])
+    run_label = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     lines = [
-        "# UAT Reducer V2 Batch Summary",
         "",
-        "Deterministic reducer with matrix-join scoring and hard constraint:",
-        "- Preserve at least one checklist check per AC Ref.",
+        f"## Incremental Run {run_label}",
         "",
-        "## Batch KPI",
+        "### Batch KPI",
         "",
         f"- Epics processed: {len(kpis)}",
         f"- Checks: {total_original} -> {total_kept} ({removed_total} removed, {removed_pct}% removed)",
@@ -367,13 +484,13 @@ def write_batch_summary(kpis: list[dict[str, Any]], output_dir: str) -> None:
         f"- High-priority AC coverage retained: {total_high_after}/{total_high_before} ({high_cov_batch}%)",
         f"- Target reduction hit exactly: {target_hit_count}/{len(kpis)} epics",
         "",
-        "## Per-Epic KPI",
+        "### Per-Epic KPI",
         "",
         "| Epic | Checks (orig->kept) | Removed % | AC coverage % | High AC coverage % | Target hit | Priority reliability (before->after) |",
         "|---|---:|---:|---:|---:|---|---|",
     ]
 
-    for k in sorted(kpis, key=lambda row: str(row["epic_key"])):
+    for k in sorted(kpis, key=lambda row: epic_sort_key(str(row["epic_key"]))):
         lines.append(
             "| {epic} | {orig}->{kept} | {removed}% | {ac_cov}% | {high_cov}% | {hit} | {prio_before} -> {prio_after} |".format(
                 epic=k["epic_key"],
@@ -390,24 +507,41 @@ def write_batch_summary(kpis: list[dict[str, Any]], output_dir: str) -> None:
 
     lines += [
         "",
-        "## Dropped Checks",
+        "### Dropped Checks",
         "",
         "| Epic | Dropped checks (Check ID [Section]) |",
         "|---|---|",
     ]
 
-    for k in sorted(kpis, key=lambda row: str(row["epic_key"])):
+    for k in sorted(kpis, key=lambda row: epic_sort_key(str(row["epic_key"]))):
         dropped_cell = ", ".join(k["dropped_labels"]) if k["dropped_labels"] else "—"
         lines.append(f"| {k['epic_key']} | {dropped_cell} |")
 
     out_path = os.path.join(output_dir, "dropped-summary.md")
-    with open(out_path, "w", encoding="utf-8") as f:
+    if not os.path.exists(out_path):
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write("# UAT Reducer V2 Batch Summary\n\n")
+            f.write("Deterministic reducer with matrix-join scoring and hard constraint:\n")
+            f.write("- Preserve at least one checklist check per AC Ref.\n")
+
+    rerun_epics = {str(k["epic_key"]) for k in kpis}
+    removed_rows = prune_summary_rows_for_epics(out_path, rerun_epics)
+
+    with open(out_path, "a", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
-    print(f"\nSummary written to {out_path}")
+
+    tables_sorted = sort_summary_tables_by_epic(out_path)
+    print(f"\nSummary appended to {out_path}")
+    if removed_rows:
+        print(f"Replaced previous summary rows for rerun epics: {removed_rows}")
+    if tables_sorted:
+        print(f"Sorted Epic tables in summary: {tables_sorted}")
 
 
 def main() -> None:
     os.makedirs(os.path.join(os.path.dirname(__file__), OUTPUT_DIR), exist_ok=True)
+
+    requested_epics, force_override_epics, parsed_entries = load_requested_epics(CONTROL_FILE)
 
     payloads = sorted([
         os.path.join(root, f)
@@ -415,19 +549,49 @@ def main() -> None:
         for f in files
         if f.startswith("data_payload_") and f.endswith(".json")
     ])
+    payloads = sorted(payloads, key=lambda path: epic_sort_key(epic_key_from_payload_path(path)))
+
+    if requested_epics is not None:
+        payloads_by_epic = {epic_key_from_payload_path(path): path for path in payloads}
+        payloads = [payloads_by_epic[epic] for epic in sorted(requested_epics, key=epic_sort_key) if epic in payloads_by_epic]
+
+        missing_epics = sorted((epic for epic in requested_epics if epic not in payloads_by_epic), key=epic_sort_key)
+        if parsed_entries > 0 and not requested_epics:
+            print(f"{os.path.basename(CONTROL_FILE)} has entries, but no valid epic keys were found.")
+            sys.exit(1)
+        if missing_epics:
+            print("Not found in source payloads:")
+            for epic in missing_epics:
+                print(f"  - {epic}")
 
     if not payloads:
-        print(f"No payload files found under {SOURCE_DIR}")
+        if requested_epics is not None:
+            print(f"No matching payload files found for {os.path.basename(CONTROL_FILE)}")
+        else:
+            print(f"No payload files found under {SOURCE_DIR}")
         sys.exit(1)
 
     all_kpis: list[dict[str, Any]] = []
+    skipped_epics: list[str] = []
 
     for payload_path in payloads:
-        epic_key = os.path.basename(os.path.dirname(payload_path))
-        print(f"\n{epic_key}")
-
         with open(payload_path, encoding="utf-8") as f:
             data = json.load(f)
+
+        epic_key = str(data.get("EPIC_KEY", "")).strip() or os.path.basename(os.path.dirname(payload_path))
+        epic_slug = str(data.get("EPIC_SLUG", "")).strip()
+        output_name = f"{epic_key}-{epic_slug}.xlsx"
+        output_path = os.path.join(os.path.dirname(__file__), OUTPUT_DIR, output_name)
+
+        payload_mtime = os.path.getmtime(payload_path)
+        output_exists = os.path.exists(output_path)
+        output_mtime = os.path.getmtime(output_path) if output_exists else -1.0
+
+        if output_exists and output_mtime >= payload_mtime and epic_key not in force_override_epics:
+            skipped_epics.append(epic_key)
+            continue
+
+        print(f"\n{epic_key}")
 
         try:
             reduced_data, kpi = reduce_payload_v2(data)
@@ -457,13 +621,20 @@ def main() -> None:
             tmp_path = tmp.name
 
         try:
-            run_generator(tmp_path)
+            generated = run_generator(tmp_path)
         finally:
             os.unlink(tmp_path)
+
+        if not generated:
+            continue
 
         all_kpis.append(kpi)
 
     if not all_kpis:
+        if skipped_epics:
+            print("\nNo new or updated payloads to process.")
+            print(f"Skipped unchanged epics: {len(skipped_epics)}")
+            return
         print("\nNo epic was reduced successfully.")
         sys.exit(1)
 
@@ -474,8 +645,10 @@ def main() -> None:
 
     print(f"\nDone. {total_original} -> {total_kept} checks across all epics ({removed_pct}% removed).")
     print(f"Output: {OUTPUT_DIR}/")
+    if skipped_epics:
+        print(f"Skipped unchanged epics: {len(skipped_epics)}")
 
-    write_batch_summary(all_kpis, os.path.join(os.path.dirname(__file__), OUTPUT_DIR))
+    append_batch_summary(all_kpis, os.path.join(os.path.dirname(__file__), OUTPUT_DIR))
 
 
 if __name__ == "__main__":

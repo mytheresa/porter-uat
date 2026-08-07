@@ -1,0 +1,239 @@
+{
+  "EPIC_KEY": "G2-16979",
+  "EPIC_SLUG": "impersonation-checkout-account",
+  "OUTPUT_PATH": "uat-test-plans/G2-16979-impersonation-checkout-account.xlsx",
+  "PLAN_TITLE": "G2-16979 UAT - Impersonation Checkout Account",
+  "GENERATED_DATE": "2026-08-06",
+  "EPIC_SUMMARY": "Impersonation - Checkout & Account",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Cavazzuti, Matilde || LuxExperience",
+  "COMPONENT": "EIP",
+  "TARGET_URLS": [
+    "NAP impersonation login",
+    "MRP impersonation login",
+    "Customer account",
+    "Checkout"
+  ],
+  "TIMEBOX": "0.5-1 business day",
+  "COVERAGE_SUMMARY": "3 UI-testable fallback stories in scope from the linked initiative; 1 spike excluded.",
+  "STORIES_IN_SCOPE": "G2-21324, G2-21325, G2-21326",
+  "STORIES_EXCLUDED": "G2-21327 (backend-only/migration/evaluation/technical spike)",
+  "OUT_OF_SCOPE": "Backend impersonation endpoint internals, VPN/network enablement, internal tooling entrypoints, and non-UI migration spikes.",
+  "DEV_EVIDENCE": "Available - PR 510 covers login and FE-to-BE connection via Jira comment + GitHub PR evidence; PR 557 search evidence covers impersonation UI frame/banner for G2-21326.",
+  "GAPS_SUMMARY": "Epic has no direct child stories on the epic-link query, so scope is reconstructed from linked initiative G2-15882. G2-21326 AC is terse and relies on PR summary for banner/frame specifics.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "CHK-001",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Impersonation Login",
+      "Check": "NAP impersonation login entry page is reachable for an authorized internal agent.",
+      "How to Verify": "Open the NAP impersonation login entry point.\nConfirm the impersonation login form loads without redirecting to the standard customer login.\nVerify the page reflects the normal site shell and is usable by an internal agent.",
+      "Pass Criteria": "Authorized agents can reach the NAP impersonation login form.\nThe page loads with the expected site layout and without broken states."
+    },
+    {
+      "Check ID": "CHK-002",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Impersonation Login",
+      "Check": "MRP impersonation login entry page is reachable for an authorized internal agent.",
+      "How to Verify": "Open the MRP impersonation login entry point.\nConfirm the impersonation login form loads for the MRP brand context.\nVerify the page remains consistent with the brand experience.",
+      "Pass Criteria": "Authorized agents can reach the MRP impersonation login form.\nThe page loads in the correct brand context and remains usable."
+    },
+    {
+      "Check ID": "CHK-003",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Impersonation Login",
+      "Check": "The impersonation form accepts agent credentials and the customer account identifier to impersonate.",
+      "How to Verify": "Populate the impersonation form with valid agent credentials and a valid customer email or account identifier.\nSubmit the form once fields are complete.\nConfirm the form accepts the values and starts the impersonation flow.",
+      "Pass Criteria": "The form exposes the required input fields for agent authentication and customer targeting.\nSubmitting valid values starts impersonation without validation regressions."
+    },
+    {
+      "Check ID": "CHK-004",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Impersonation Session",
+      "Check": "A NAP impersonation login starts a customer session and opens the customer account view with accurate customer data.",
+      "How to Verify": "Complete impersonation for a NAP customer account.\nConfirm the resulting session lands in the customer's account context.\nValidate that key customer data shown in account areas matches the impersonated account.",
+      "Pass Criteria": "The agent enters the customer's NAP session successfully.\nCustomer data shown after login matches the impersonated account."
+    },
+    {
+      "Check ID": "CHK-005",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Impersonation Session",
+      "Check": "A MRP impersonation login starts a customer session and opens the customer account view with accurate customer data.",
+      "How to Verify": "Complete impersonation for an MRP customer account.\nConfirm the resulting session lands in the customer's account context.\nValidate that key customer data shown in account areas matches the impersonated account.",
+      "Pass Criteria": "The agent enters the customer's MRP session successfully.\nCustomer data shown after login matches the impersonated account."
+    },
+    {
+      "Check ID": "CHK-006",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Impersonation Session",
+      "Check": "The session redirects the agent to the customer's last used channel and language after successful impersonation.",
+      "How to Verify": "Use a customer account with a known last used brand locale.\nComplete impersonation from the login form.\nConfirm the post-login page opens in the expected channel and language combination.",
+      "Pass Criteria": "Successful impersonation redirects to the expected last used channel.\nThe rendered language and brand context match the customer's stored preference."
+    },
+    {
+      "Check ID": "CHK-007",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Account And Checkout Continuity",
+      "Check": "Existing customer wishlist and cart content remain available during impersonation across account and checkout flows.",
+      "How to Verify": "Impersonate a customer who already has saved wishlist items and cart items.\nInspect account areas and proceed into checkout entry points where applicable.\nConfirm existing saved items remain visible and usable during the impersonated session.",
+      "Pass Criteria": "Customer wishlist and cart content persist when impersonation begins.\nAccount and checkout flows continue to use the customer's existing state without unexpected resets."
+    },
+    {
+      "Check ID": "CHK-008",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Impersonation Indicator",
+      "Check": "The UI clearly indicates when impersonation mode is active.",
+      "How to Verify": "Start an impersonation session on both NAP and MRP.\nObserve the account or shell UI immediately after login and while navigating relevant pages.\nConfirm that the active impersonation indicator remains visible and understandable.",
+      "Pass Criteria": "An active impersonation indicator is visible after login.\nThe indicator remains clear enough for agents to distinguish impersonated sessions from standard customer browsing."
+    },
+    {
+      "Check ID": "CHK-009",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "End-to-End Confidence",
+      "Check": "The impersonated experience preserves the production site look and feel while allowing the agent to act as the customer.",
+      "How to Verify": "From a successful impersonation session, navigate through representative account and checkout entry points.\nCompare the UI behavior with a normal customer journey for the same brand.\nConfirm the agent can continue the customer journey without broken impersonation context.",
+      "Pass Criteria": "The impersonated journey matches the normal site presentation closely enough for business use.\nThe agent can continue through account and checkout without losing impersonation context."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-21324",
+      "AC Ref": "G2-21324-AC-01",
+      "Capability": "NAP impersonation login form access",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-001",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Direct Jira AC for NAP form access; supported by PR 510 login flow and /impersonationlogin testing notes.",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-21324",
+      "AC Ref": "G2-21324-AC-02",
+      "Capability": "MRP impersonation login form access",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-002",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Direct Jira AC for MRP form access; PR 510 body states same behavior and UI as NAP for MRP.",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-21324",
+      "AC Ref": "G2-21324-AC-03",
+      "Capability": "Credential and customer-target input capture",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Direct Jira AC plus PR 510 How to test notes for agent login and impersonation setup.",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-21325",
+      "AC Ref": "G2-21325-AC-01",
+      "Capability": "NAP customer impersonation session",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-004, CHK-009",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Direct Jira AC; Jira comment links PR 510 as the feature implementation for the full flow.",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-21325",
+      "AC Ref": "G2-21325-AC-02",
+      "Capability": "MRP customer impersonation session",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-005, CHK-009",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Direct Jira AC; PR 510 states MRP should behave the same as NAP.",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-21325",
+      "AC Ref": "G2-21325-AC-03",
+      "Capability": "Redirect to last used channel and language",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Direct Jira AC and PR 510 preview/testing notes for logged-user redirect with impersonation flow.",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": ""
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-21326",
+      "AC Ref": "G2-21326-AC-01",
+      "Capability": "Visible impersonation mode indicator",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-008",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Jira AC is terse; GitHub PR search result for PR 557 adds banner/frame detail as supporting evidence.",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": "Jira AC does not define the exact indicator style; implementation detail inferred from PR summary."
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-16979",
+      "AC Ref": "G2-16979-AC-01",
+      "Capability": "Customer account view loads with accurate data and real site look and feel after secure impersonation",
+      "Priority": "High",
+      "Checklist Mapping": "CHK-004, CHK-005, CHK-007, CHK-009",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Epic AC is canonical; story ACs and PR 510 testing notes reinforce session accuracy, continuity, and customer-state persistence.",
+      "Evidence Availability": "Available",
+      "Case Type": "End-to-End",
+      "Inconsistencies": "Epic scope references account and checkout broadly while detailed child stories focus on login, redirect, and indicator behavior."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "OBS-001",
+      "Source Type": "GitHub PR",
+      "Jira Source": "G2-21325",
+      "Summary": "Persisted wishlist and cart data may be the first place impersonation context drift becomes visible.",
+      "How to Validate": "Start impersonation for a customer with pre-existing wishlist and cart data, then compare visible saved items and cart content before and after entering checkout-adjacent flows.",
+      "Expected Observation": "Existing customer state remains intact across the impersonated session without cross-user leakage or empty-state regressions.",
+      "Impact": "High",
+      "Linked Coverage IDs": "COV-004, COV-005, COV-008",
+      "Evidence Notes": "Derived from PR 510 testing note that wishlist and cart items should persist for the impersonated customer."
+    },
+    {
+      "Observation ID": "OBS-002",
+      "Source Type": "Jira Story AC",
+      "Jira Source": "G2-21325",
+      "Summary": "Redirect logic can land the agent in the wrong brand or locale if lastUsedData is stale or incomplete.",
+      "How to Validate": "Use accounts with different stored brand and language histories, repeat impersonation, and verify the final landing context for each.",
+      "Expected Observation": "Each impersonation lands deterministically on the expected brand and language combination.",
+      "Impact": "High",
+      "Linked Coverage IDs": "COV-006, COV-008",
+      "Evidence Notes": "Brand variance and auth/session continuity risk inferred from the redirection AC and epic objective."
+    },
+    {
+      "Observation ID": "OBS-003",
+      "Source Type": "GitHub PR Search",
+      "Jira Source": "G2-21326",
+      "Summary": "The impersonation banner must remain obvious enough during navigation so the agent does not mistake the session for normal customer browsing.",
+      "How to Validate": "Navigate between account and checkout-relevant pages during an active impersonation session and watch whether the visual indicator stays present and understandable.",
+      "Expected Observation": "The indicator remains visible through the critical journey and continues to distinguish impersonated mode clearly.",
+      "Impact": "Medium",
+      "Linked Coverage IDs": "COV-007, COV-008",
+      "Evidence Notes": "Supported by the PR 557 search result describing an impersonation banner/frame with highlight treatment."
+    }
+  ]
+}

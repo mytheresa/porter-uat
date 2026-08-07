@@ -123,6 +123,58 @@ Final chat output must include only Status, Workbook (when generated), Payload, 
 
 ---
 
+## Reducing Existing Test Plans (Reducer V2)
+
+Use `reduce_test_plans.py` to generate a reduced set of UAT workbooks from previously generated payloads in `uat-test-plans/source/`.
+
+This reducer is deterministic and keeps coverage guardrails while removing lower-value checklist checks.
+
+### What it does
+
+- Reads all `data_payload_*.json` files under `uat-test-plans/source/<EPIC_KEY>/`
+- Runs incrementally: skips epics whose reduced workbook is already up to date
+- Optional target file `reduce_test_plans.txt` limits processing to listed items
+   - Epic key entries (for example `G2-17566`) use incremental skip behavior
+   - `.xlsx` entries force regeneration and override existing reduced workbook for that epic
+- Scores checklist checks using matrix-linked fields:
+   - Priority (`High` > `Medium` > `Low`)
+   - AC Fidelity (`Full` > `Partial` > `Inferred`)
+   - Evidence Availability (`Unavailable` gets small penalty weight)
+   - Additional weight for unique AC coverage and High-priority AC links
+- Targets keeping ~70% of checks (`TARGET_KEEP_RATIO = 0.70`), with at least 4 checks retained per epic
+- Enforces hard constraint: every `AC Ref` must still map to at least one kept checklist check
+- Rewrites `MATRIX_ROWS` mappings to remove dropped check IDs
+- Regenerates reduced XLSX files via `.github/scripts/generate-test-plan-xlsx.py`
+
+### Run
+
+From repository root:
+
+```sh
+source .venv/bin/activate
+python3 reduce_test_plans.py
+```
+
+### Output
+
+- Reduced workbooks are written to `uat-test-plans-reduced30/`
+- Batch summary is written to `uat-test-plans-reduced30/dropped-summary.md`
+
+The summary includes:
+- Per-epic original vs kept checks and removal percentage
+- AC and High-priority AC coverage retention
+- Priority reliability before/after reduction
+- Exact dropped checks (`Check ID [Section]`)
+
+### Notes
+
+- The script reduces from payload JSON artifacts, not directly from existing XLSX files.
+- `uat-test-plans-reduced30/dropped-summary.md` is append-only per run (incremental sections are added; file is not rebuilt from scratch).
+- If no payload files are found under `uat-test-plans/source/`, the script exits with an error.
+- If a payload has invalid row shape (missing required fields), that epic is skipped and the batch continues.
+
+---
+
 ## Troubleshooting
 
 ### Copilot terminal asks for approval during batch runs
@@ -189,10 +241,12 @@ Artifact behavior is controlled by environment variables:
 ### Workflow Architecture
 
 1. **Epic Map & Categorization:** Agent invokes `evidence-context` skill to extract Epic metadata and categorize child stories (UI-testable vs. backend-only).
+   - `evidence-context` resolves epic children with `issuelinks` as primary discovery and Epic Link/agile epic membership lookup as secondary backstop; if that combined sequence still yields zero Story children, stop early and note that no stories were found.
 
 2. **Chunked Evidence Gathering (Map-Reduce):** 
    - Groups UI-testable stories into batches (6-8 per chunk)
    - Iteratively invokes `evidence-context` per story with minimal field retrieval
+   - No-trigger path stays Jira-first, but linked-`Done` clone/relates lineage GitHub key search still runs when applicable
    - Writes intermediate state to `/tmp/chunk_<EPIC_KEY>_<batch_id>.json` files to prevent context overflow
 
 3. **Plan Synthesis & Payload Generation:** 

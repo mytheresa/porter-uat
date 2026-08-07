@@ -1,0 +1,131 @@
+{
+  "EPIC_KEY": "G2-16639",
+  "EPIC_SLUG": "promos-promo-config",
+  "OUTPUT_PATH": "uat-test-plans/G2-16639-promos-promo-config.xlsx",
+  "PLAN_TITLE": "G2-16639 UAT — Promos Promo Config",
+  "GENERATED_DATE": "2026-08-06",
+  "EPIC_SUMMARY": "PROMOS | CRM & SITE | Promo Config",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+  "COMPONENT": "D3",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "20-30 minutes",
+  "COVERAGE_SUMMARY": "Backend/PoC promo-config epic with no dedicated FE/UI child stories. 8 child stories are backend config, spikes, evaluation, technical fix, or test-data prep. 4 customer-observable outcome-level smoke checks derived from the epic goal (Instant/Cart promo config) validate the visible pricing effects; all 8 child stories are excluded from direct business execution scope.",
+  "STORIES_IN_SCOPE": "None — epic has no dedicated FE/UI story. Customer-observable pricing outcomes of the backend promo-config PoC stories (G2-21848, G2-21853, G2-21855, G2-22250) are covered at outcome level via smoke checks.",
+  "STORIES_EXCLUDED": "G2-16810 | [SPIKE] Promos: E2E flows (Customer Triggers) | Evaluation | Spike/research; no user-facing acceptance flow.\nG2-21848 | BE | TAPIR | Discount % by segment Catalog Promo config (PoC) | Task | Backend PoC config; validated at pricing-outcome level only.\nG2-21853 | BE | TAPIR | Stacked Markdown + Catalog Promo config (PoC) | Task | Backend PoC config; validated at pricing-outcome level only.\nG2-21855 | BE | TAPIR | Newsletter & Welcome Cart Promo config (PoC) | Task | Backend PoC config; validated at cart-outcome level only.\nG2-21857 | [SPIKE] BE | TAPIR | Tagging/Attribution + Emails & Segments | Evaluation | Spike/research; no direct UI flow.\nG2-22250 | BE | Penguin not working on nap and mrp | Technical Story | Backend promo-engine fix; validated cross-brand at pricing-outcome level only.\nG2-23171 | CH | Test product files | All ProductERP discounted price amends | Technical Story (PD2) | Test-data/product-file preparation; not business-UAT executable.\nG2-23402 | BE | Promos PoC flows documentation | Evaluation | Documentation task; no executable UI flow.",
+  "OUT_OF_SCOPE": "Backend service internals (Tapir/Penguin engine logic), PoC configuration mechanics, tag/attribution management tooling, segmentation and bulk-export admin flows, API schema validation, and load/performance testing. These are backend/PoC concerns not executable as quick business UAT checks.",
+  "DEV_EVIDENCE": "Epic is backend/PoC oriented (labels: BE; FE estimate 0). Child stories are Tapir/Penguin config, spikes, and documentation with no FE PR footprint expected. GitHub MCP evidence: G2-22250 → mytheresa/penguin-deployment#50 'Add missing env vars to fix unsupported protocol scheme issue' (merged 2026-04-30). PoC config stories (G2-21848/G2-21853/G2-21855) and spike/docs/test-data stories have no discoverable PR. — Status: Available at engine/deploy level (G2-22250); Inferred at outcome level for PoC config.",
+  "GAPS_SUMMARY": "Epic AC section is a placeholder (position statement and success criteria are unfilled 'X' templates), so all checks are inferred from the epic goal (support for Instant cart promos) and child-story summaries. Exact promo codes, eligible segments, stacking rules, and configured campaigns must be supplied by Site-Trading/CRM before execution. No dedicated FE story exists to anchor UI-level acceptance; checks are outcome-level smoke validations only.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Instant Cart Promo",
+      "Check": "A configured Instant cart promo applies the expected discount in the cart",
+      "How to Verify": "Add an eligible product to the cart and apply/trigger a configured Instant cart promo (e.g. Newsletter/Welcome). Review the cart totals before and after the promo is active.",
+      "Pass Criteria": "The promo discount is reflected in the cart subtotal/total.\nThe displayed price matches the configured promo value with no error state."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Segment-Based Discount",
+      "Check": "Discount % by segment resolves the correct price for an eligible customer",
+      "How to Verify": "Using a customer account that matches the configured segment, view an in-scope product in cart/PDP and compare the shown price against the expected segment discount. Repeat with a non-eligible account.",
+      "Pass Criteria": "Eligible customer sees the configured segment discount.\nNon-eligible customer does not receive the segment discount."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Stacked Markdown + Catalog Promo",
+      "Check": "Stacked markdown and catalog promo combine to the correct final price",
+      "How to Verify": "Select a product that has both an active markdown and an applicable catalog promo. Inspect the final price on PDP and in cart to confirm the combined calculation.",
+      "Pass Criteria": "Final price reflects the intended combination of markdown and promo.\nNo double-discount or missing-discount discrepancy is observed."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Aguilar Sayaan, Nicholas || LuxExperience.com",
+      "Section": "Cross-Brand Promo Engine",
+      "Check": "Promo engine applies configured promos consistently on both NAP and MRP",
+      "How to Verify": "Run an equivalent promo scenario on net-a-porter and mrporter acceptance environments. Compare that the same configured promo is applied and priced correctly on each brand.",
+      "Pass Criteria": "Promo applies and prices correctly on NAP.\nPromo applies and prices correctly on MRP with no brand-specific failure."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-21855",
+      "AC Ref": "Epic Goal: Support Instant cart promos (Newsletter/Welcome Cart Promo config)",
+      "Capability": "Instant cart promo applies expected discount at cart",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Derived from epic goal (Instant cart promos) and G2-21855 PoC config; epic AC section is a placeholder template.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Positive",
+      "Inconsistencies": "Epic AC unfilled; concrete campaign/promo code must be supplied by CRM/Site-Trading."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-21848",
+      "AC Ref": "Discount % by segment Catalog Promo config (PoC)",
+      "Capability": "Segment-based discount resolves correct price for eligible customer",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Derived from G2-21848 summary; eligible-vs-non-eligible behavior inferred from segment discount intent.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Positive",
+      "Inconsistencies": "Eligible segment definition not specified in Jira; requires configured segment for execution."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-21853",
+      "AC Ref": "Stacked Markdown + Catalog Promo config (PoC)",
+      "Capability": "Markdown and catalog promo combine to correct final price",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-003",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Derived from G2-21853 summary; stacking rules inferred, exact precedence not documented in epic AC.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Positive",
+      "Inconsistencies": "Stacking/precedence rules undocumented; validate against expected combined value with SH input."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-22250",
+      "AC Ref": "Promo engine (Penguin) must work on NAP and MRP",
+      "Capability": "Configured promos apply consistently across both brands",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Derived from G2-22250 (Penguin not working on nap and mrp) technical fix; cross-brand parity inferred. GitHub PR: mytheresa/penguin-deployment#50 (merged 2026-04-30).",
+      "Evidence Availability": "Available",
+      "Case Type": "Negative",
+      "Inconsistencies": "Original defect scope not detailed; confirm both brands post-fix with an equivalent scenario."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "Spike",
+      "Jira Source": "G2-16810",
+      "Summary": "E2E promo flows for customer triggers were explored as a spike, not a delivered UI flow.",
+      "How to Validate": "During cart/checkout promo testing, note any customer-trigger paths (e.g. newsletter signup, welcome journey) that activate a promo and confirm the resulting price effect is coherent end to end.",
+      "Expected Observation": "Customer-trigger promo activation leads to a coherent, single expected discount without stacking or state errors.",
+      "Impact": "Ambiguous trigger behavior could cause unexpected or missing discounts for customers.",
+      "Linked Coverage IDs": "COV-001",
+      "Evidence Notes": "Spike ticket only; no acceptance flow. Use as exploratory guidance during outcome checks."
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Test Data",
+      "Jira Source": "G2-23171",
+      "Summary": "Test product files with ProductERP discounted-price amends were prepared for promo validation.",
+      "How to Validate": "Confirm that products used for UAT reflect the intended discounted ProductERP prices before evaluating promo/markdown stacking outcomes.",
+      "Expected Observation": "Test products show the prepared discounted base prices, giving a valid baseline for promo checks.",
+      "Impact": "Incorrect test-data prices would invalidate stacking and discount outcome checks.",
+      "Linked Coverage IDs": "COV-003",
+      "Evidence Notes": "Test-data prep ticket (PD2); supports but is not itself business-executable."
+    }
+  ]
+}

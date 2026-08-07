@@ -1,0 +1,268 @@
+{
+  "EPIC_KEY": "G2-16316",
+  "EPIC_SLUG": "migrate-non-registered-user-data-wcs-to-tapir",
+  "OUTPUT_PATH": "uat-test-plans/G2-16316-migrate-non-registered-user-data-wcs-to-tapir.xlsx",
+  "PLAN_TITLE": "G2-16316 UAT — Migrate Non-Registered User Data from WCS to Tapir",
+  "GENERATED_DATE": "2026-08-06",
+  "EPIC_SUMMARY": "Migrate non-registered user data from WCS to Tapir",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Cobbe, Valentina || YOOX NET A PORTER",
+  "COMPONENT": "CD1",
+  "TARGET_URLS": "TBD — specify Gecco/Tapir admin environment URL and CS tooling endpoint before UAT execution; requires access to Tapir admin API or backoffice and a sample set of known WCS guest records for comparison",
+  "TIMEBOX": "25–35 minutes",
+  "COVERAGE_SUMMARY": "0 UI-testable stories; 3 backend/migration stories excluded; 10 post-migration verification checks derived from 8 epic-level AC points covering data completeness, consent integrity, guest traceability, country/language fidelity, and downstream continuity.",
+  "STORIES_IN_SCOPE": "None — all child stories are backend/migration pipeline implementations with no direct UI customer interaction. UAT checks are derived from epic-level acceptance criteria and post-migration observable outcomes.\nG2-17623 | Query to export non-registered users from WCS | Done — contributes to completeness verification (UAT-001)\nG2-18317 | Ant | File Splitter for Newsletter Subscribers Users with Guest Mapping | Done — contributes to consent and data fidelity checks (UAT-003 to UAT-006)\nG2-18318 | Tapir | Customer Import Job for Guest Users | Done — contributes to identity, traceability, and isolation checks (UAT-002, UAT-007 to UAT-010)",
+  "STORIES_EXCLUDED": "G2-17623 | Query to export non-registered users from WCS | Backend SQL/script | Done — WCS database extraction script; no UI-testable surface; verified by engineering post-execution\nG2-18317 | Ant | File Splitter for Newsletter Subscribers Users with Guest Mapping | Backend pipeline | Done — ANT S3/SQS processing job; no customer-facing surface; all acceptance criteria are infrastructure-level\nG2-18318 | Tapir | Customer Import Job for Guest Users | Backend service | Done — Tapir SyncCustomerHandler logic; no direct UI; verified via data state in Tapir system",
+  "OUT_OF_SCOPE": "Internal S3 bucket/folder structure verification\nSQS message format and queue depth monitoring\nSQL query performance and WCS database internals\nCSV parsing edge cases (handled by G2-18317 implementation)\nReprocessing of failed files in /failed S3 folder\nBitbucket PR code review coverage\nAccountID field (marked TBC in epic — not migrated in this iteration)\nMultiple batch processing runs or incremental re-runs",
+  "DEV_EVIDENCE": "GitHub MCP evidence: G2-18317 → mytheresa/ant#49 'non registered bulk import' (merged 2026-01-26); G2-18318 → mytheresa/ant#63 'fix marketing consent mapping in non-registered bulk import' (merged 2026-01-28) plus deployment PRs mytheresa/raccoon-deployment#320/#322/#323/#324. G2-17623 (WCS export SQL) has no discoverable GitHub PR (DBA/script task). — Status: Available (2 of 3 in-scope stories evidenced)",
+  "GAPS_SUMMARY": "Full epic description AC was truncated in Jira API response; AC reconstruction is based on available description excerpt and value/impact statements.\nGitHub PR evidence found for G2-18317 (mytheresa/ant#49) and G2-18318 (mytheresa/ant#63 + raccoon-deployment deploys); G2-17623 WCS export query has no discoverable PR.\nSpecific record counts and sample email addresses for test data not provided in Jira; a sample WCS export reference set is required from engineering before UAT execution.\nConsent null handling (MAMARKETINGCONSENT with date fields but no granted flag) was flagged as uncertain in G2-18317 — confirm expected UAT-005 behaviour with product team.\nAccountID (TBC) was noted as undecided in epic scope; confirm whether it is included in the migrated dataset before running UAT-002.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Data Completeness",
+      "Check": "Total migrated non-registered user count matches WCS export volume",
+      "How to Verify": "Obtain the total non-registered user count from the WCS SQL export output (G2-17623). Query the Tapir/Gecco customer store to count records where accountStatus = Enabled and no registered account exists. Compare both counts.",
+      "Pass Criteria": "The migrated record count in Tapir matches or exceeds the count exported from WCS.\nNo unexplained gap of more than an agreed tolerance exists between source and target counts."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Guest Identity",
+      "Check": "Known migrated guest user can be retrieved by email in the new platform",
+      "How to Verify": "Select a known non-registered user email from the WCS export sample. Look up that email via the Tapir admin interface or CS tooling. Verify the record exists with matching email, country, and language.",
+      "Pass Criteria": "The guest record is found in Tapir by exact email match.\nEmail, country, and language fields match the source WCS record."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Consent Integrity",
+      "Check": "Opted-in guest user retains marketing consent granted = true in Tapir",
+      "How to Verify": "Select a guest user from the WCS export who had MAMARKETINGCONSENT = true. Retrieve that user's record in Tapir. Check the consents array to verify granted is set to true.",
+      "Pass Criteria": "The consents array is present for the user.\nThe granted field is set to true.\nlastOptIn timestamp is correctly converted to ISO 8601 format."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Consent Integrity",
+      "Check": "Opted-out guest user has marketing consent granted = false in Tapir",
+      "How to Verify": "Select a guest user from the WCS export who had MAMARKETINGCONSENT = false. Retrieve that user's record in Tapir. Check the consents array to verify granted is set to false.",
+      "Pass Criteria": "The consents array is present for the user.\nThe granted field is set to false.\nlastOptOut timestamp is present where applicable."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Consent Integrity",
+      "Check": "Guest user with no consent data has consents array omitted in Tapir",
+      "How to Verify": "Select a guest user from the WCS export where MAMARKETINGCONSENT, MAMARKETINGCONSENT_LASTOPTIN, and MAMARKETINGCONSENT_LASTOPTOUT are all empty. Retrieve the user's record in Tapir. Verify the consents field is absent or null.",
+      "Pass Criteria": "No consents array is present in the Tapir record for this user.\nThe user record is otherwise complete with required fields."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Country & Language Fidelity",
+      "Check": "Country and language preferences are correctly preserved for migrated guests",
+      "How to Verify": "Select 3–5 guest users from the WCS export covering different countries and languages. For each, retrieve the Tapir record and compare PREFERRED_COUNTRY and PREFERRED_LANGUAGE with the source values.",
+      "Pass Criteria": "Country code matches the source PREFERRED_COUNTRY value for all sampled users.\nLanguage code matches the source PREFERRED_LANGUAGE value for all sampled users."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Guest Traceability",
+      "Check": "parentCustomerUrn is correctly stored and linked in Tapir for guest users",
+      "How to Verify": "Select a guest user from the WCS export with a non-null PARENTCUSTOMERURN. Retrieve the Tapir record and verify the parentCustomerUrn field is present and matches the source value.",
+      "Pass Criteria": "The parentCustomerUrn field is present and correctly mapped in the Tapir record.\nThe value matches the source PARENTCUSTOMERURN from the WCS export.\nA legacy ID mapping exists allowing deduplication lookup by this identifier."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Downstream Continuity",
+      "Check": "Customer service tools can retrieve migrated guest records without errors",
+      "How to Verify": "Using the CS tooling, search for a known migrated guest email. Verify the record appears correctly and all relevant fields (email, country, language, consent status) are visible to the CS agent.",
+      "Pass Criteria": "CS tooling returns the migrated guest record on email lookup.\nNo error or empty-result response is returned for a known valid guest email.\nConsent status is visible and accurate for CS agent review."
+    },
+    {
+      "Check ID": "UAT-009",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Downstream Continuity",
+      "Check": "Returns process can identify a migrated guest user by parentCustomerUrn",
+      "How to Verify": "Simulate a returns lookup using a migrated guest's parentCustomerUrn via the CS or returns tooling. Verify the guest is identified and the returns record can be linked to the migrated profile.",
+      "Pass Criteria": "The returns tool resolves the guest identity using parentCustomerUrn.\nNo 'user not found' error is returned for a known migrated guest.\nThe linked guest profile shows correct email, country, and consent status."
+    },
+    {
+      "Check ID": "UAT-010",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Registered User Isolation",
+      "Check": "Existing registered user accounts are unaffected by the non-registered migration",
+      "How to Verify": "Select a known registered user account. Verify account details, order history, and consent settings remain unchanged after the migration was executed. Cross-reference with pre-migration snapshot if available.",
+      "Pass Criteria": "Registered user account data is identical to pre-migration state.\nNo duplicate or corrupted records exist for registered users.\nRegistered user login and data access remain fully functional."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-16316",
+      "AC Ref": "AC-1: All non-registered users extracted from WCS and importable into new platform",
+      "Capability": "Migration completeness — total record count parity between WCS export and Tapir",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Import pipeline evidenced via GitHub: mytheresa/ant#49 (G2-18317 non-registered bulk import) and mytheresa/ant#63 (G2-18318 consent mapping). G2-17623 WCS SQL export has no discoverable PR (DBA/script task).",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-18318",
+      "AC Ref": "AC-2: Non-registered user messages processed successfully; parentCustomerUrn stored correctly",
+      "Capability": "Guest identity lookup — migrated guest retrievable by email in Tapir",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "G2-18318 SyncCustomerHandler handles guest payloads. GitHub PR: mytheresa/ant#63 (merged 2026-01-28) plus deployment PRs mytheresa/raccoon-deployment#320/#322/#323/#324.",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": "AccountID (TBC in epic) — confirm inclusion scope before testing"
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-18317",
+      "AC Ref": "AC-3: Marketing consent preserved for opted-in users (MAMARKETINGCONSENT = true)",
+      "Capability": "Consent integrity — opted-in guest has granted = true in Tapir",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "G2-18317 field mapping: MAMARKETINGCONSENT → consents[0].granted (boolean). lastOptIn parsed to ISO 8601. GitHub PR: mytheresa/ant#49 (merged 2026-01-26).",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-18317",
+      "AC Ref": "AC-3: Marketing consent preserved for opted-out users (MAMARKETINGCONSENT = false)",
+      "Capability": "Consent integrity — opted-out guest has granted = false in Tapir",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "G2-18317 field mapping: MAMARKETINGCONSENT → consents[0].granted. lastOptOut parsed to ISO 8601. GitHub PR: mytheresa/ant#49 (merged 2026-01-26).",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-18317",
+      "AC Ref": "AC-4: Empty consent fields handled gracefully — omit consents array entirely",
+      "Capability": "Consent integrity — no-consent guest has consents array omitted in Tapir",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-005",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "G2-18317 consent handling: if all three consent fields empty → omit consents array. Uncertain handling when dates present but granted absent. GitHub PR: mytheresa/ant#49; consent mapping fix mytheresa/ant#63.",
+      "Evidence Availability": "Available",
+      "Case Type": "Edge Case",
+      "Inconsistencies": "Null handling for MAMARKETINGCONSENT with dates but no granted flag is uncertain per G2-18317 — confirm with product team before testing"
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-18317",
+      "AC Ref": "AC-5: Country and language preferences migrated from PREFERRED_COUNTRY and PREFERRED_LANGUAGE",
+      "Capability": "Country and language fidelity — preference fields correctly mapped in Tapir",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "G2-18317 field mapping: PREFERRED_COUNTRY → country; PREFERRED_LANGUAGE → language (direct copy). GitHub PR: mytheresa/ant#49 (merged 2026-01-26).",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-18318",
+      "AC Ref": "AC-2: parentCustomerUrn stored/linked correctly; legacy ID mapping for deduplication",
+      "Capability": "Guest traceability — parentCustomerUrn present and linked in Tapir for returns/CS use",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "G2-18318 AC: parentCustomerUrn stored/linked correctly; legacy ID mapping created for deduplication. GitHub PR: mytheresa/ant#63 (merged 2026-01-28).",
+      "Evidence Availability": "Available",
+      "Case Type": "Positive",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-16316",
+      "AC Ref": "AC-6: Downstream systems (CS) maintain continuity post-migration",
+      "Capability": "Downstream CS access — migrated guest records visible and retrievable via CS tooling",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-008",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Epic value statement: 'Enables downstream systems (Marketing, Customer Service, Analytics) to maintain continuity.' No story-level AC for CS tooling interface.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Positive",
+      "Inconsistencies": "No story-level AC exists for CS tooling integration; derived from epic value statement"
+    },
+    {
+      "Coverage ID": "COV-009",
+      "Jira Source": "G2-16316",
+      "AC Ref": "AC-7: Non-registered users can be recognized for returns operations post-migration",
+      "Capability": "Returns traceability — guest identity resolvable via parentCustomerUrn in returns flow",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-009",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Epic value statement: 'Ensures non-registered users can be recognized on the new platform if they initiate returns.' No story-level AC for returns flow integration.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Positive",
+      "Inconsistencies": "Returns tooling integration not explicitly specified at story level; derived from epic-level impact statement"
+    },
+    {
+      "Coverage ID": "COV-010",
+      "Jira Source": "G2-18318",
+      "AC Ref": "AC-8: Existing registered user flow unaffected by non-registered migration",
+      "Capability": "Registered user isolation — migration does not corrupt or alter registered user records",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-010",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "G2-18318 AC: 'Existing registered user flow unaffected.' Direct story-level AC coverage. GitHub PR: mytheresa/ant#63 (merged 2026-01-28).",
+      "Evidence Availability": "Available",
+      "Case Type": "Negative",
+      "Inconsistencies": "None"
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "AC Gap",
+      "Jira Source": "G2-18317",
+      "Summary": "Guest user with consent dates but no granted flag — null handling behaviour",
+      "How to Validate": "Identify a WCS export record where MAMARKETINGCONSENT_LASTOPTIN or MAMARKETINGCONSENT_LASTOPTOUT has a value but MAMARKETINGCONSENT is empty. Check the resulting Tapir record to see how the consents array is populated.",
+      "Expected Observation": "The Tapir record should either have granted: null or omit the granted field, as specified in G2-18317 consent handling rules. Behaviour should be consistent and must not cause a data processing error.",
+      "Impact": "Incorrect handling could produce misleading consent signals sent to marketing platforms, creating compliance risk.",
+      "Linked Coverage IDs": "COV-005",
+      "Evidence Notes": "G2-18317 flagged this case as uncertain: 'Empty MAMARKETINGCONSENT with dates present → granted: null (or derive from dates?)' — confirm with product team before UAT."
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Edge Case",
+      "Jira Source": "G2-18318",
+      "Summary": "Email exists in both registered and non-registered WCS datasets — deduplication outcome",
+      "How to Validate": "Identify a user email that exists as both a registered account and a non-registered (guest) entry. After migration, check how Tapir represents this user — as one merged record, two distinct records, or one suppressed.",
+      "Expected Observation": "The registered account should remain intact and unchanged. The non-registered entry should either be linked or de-duplicated via the legacy ID mapping without corrupting the registered profile.",
+      "Impact": "Failure to deduplicate could result in duplicate customer records and broken downstream linking for marketing and CS operations.",
+      "Linked Coverage IDs": "COV-002, COV-010",
+      "Evidence Notes": "G2-18318 AC references legacy ID mapping for deduplication but does not specify the merge strategy for overlapping registered and non-registered records."
+    },
+    {
+      "Observation ID": "EXP-003",
+      "Source Type": "Boundary",
+      "Jira Source": "G2-17623",
+      "Summary": "Large batch migration stability — no partial failures or silent data loss across batches",
+      "How to Validate": "If batch-level migration statistics are accessible (rows processed, published, skipped), verify the sum of all batch outputs equals the total WCS export count. Check for any rows in the /failed S3 folder that were silently skipped.",
+      "Expected Observation": "Total rows published across all batches equals total rows exported from WCS. The /failed folder contains only explicitly invalid rows (missing required fields) and each has a logged reason.",
+      "Impact": "Silent batch failures would result in missing guest records with no alerting, leading to untracked data loss post-migration.",
+      "Linked Coverage IDs": "COV-001",
+      "Evidence Notes": "G2-18317 specifies logging of rows processed/published/skipped per file. G2-17623 specifies batch-capable SQL query."
+    }
+  ]
+}

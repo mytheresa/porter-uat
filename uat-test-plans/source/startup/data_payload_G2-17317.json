@@ -1,0 +1,268 @@
+{
+  "EPIC_KEY": "G2-17317",
+  "EPIC_SLUG": "payment-critical-path",
+  "OUTPUT_PATH": "uat-test-plans/G2-17317-payment-critical-path.xlsx",
+  "PLAN_TITLE": "G2-17317 UAT - Payment Critical Path",
+  "GENERATED_DATE": "2026-08-06",
+  "EPIC_SUMMARY": "Payment - Critical Path",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Cavazzuti, Matilde || LuxExperience",
+  "COMPONENT": "CA",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "40-50 minutes",
+  "COVERAGE_SUMMARY": "3 UI-testable stories mapped to 10 business checks and 10 coverage rows. 2 technical stories are excluded from direct UAT execution.",
+  "STORIES_IN_SCOPE": "G2-17766 | FE: Payment Form UI - Critical Path | Done\nG2-17767 | FE: Billing Address Form - Critical Path | Done\nG2-20200 | FE: Fix MRP Credit Card Form | Done",
+  "STORIES_EXCLUDED": "G2-18458 | FE: Adyen library setup - Critical Path | Technical setup/integration story, not a business UI validation flow.\nG2-18459 | FE: Adyen credentials - Critical Path | Environment and CI/CD secret provisioning (migration/infrastructure), not direct business UI behavior.",
+  "OUT_OF_SCOPE": "Order placement completion behavior, additional payment methods beyond Credit Card, billing-country switching, saved-card management, and backend/infrastructure observability checks.",
+  "DEV_EVIDENCE": "Trigger summary: triggered stories=3/3 (TRG-BRAND, TRG-REL, plus TRG-RISK on payment form story). Confluence lookup attempted from epic-linked Milestone 1 URL but page not resolved by CQL in this run. GitHub lookups executed for all in-scope stories and returned 4 PR links plus 3 commit links in mytheresa/atelier. Jira-link fallback scan (description/comments/issuelinks) executed for all in-scope stories and found no additional PR/commit URLs. Story evidence availability: 3 Available, 0 Unavailable.",
+  "GAPS_SUMMARY": "Epic-level acceptance criteria remain broad for end-to-end payment completion boundaries. Confluence page linked in epic could not be deterministically resolved by title/CQL during this run; AC remained canonical for checklist synthesis.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Payment Methods",
+      "Check": "Payment methods are loaded and visible on the payment step",
+      "How to Verify": "Open payment step in checkout and confirm method list after page load.",
+      "Pass Criteria": "Payment methods list is fetched and displayed on the payment page.\nList is visible without broken or empty controls."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Payment Selection",
+      "Check": "User can select a payment method via radio button and selection persists after reload",
+      "How to Verify": "Select Credit Card, refresh the page, and revisit payment step.",
+      "Pass Criteria": "Selected payment option is marked correctly after reload.\nSelection control remains usable and consistent."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Credit Card Form",
+      "Check": "Adyen credit card form displays when Credit Card is selected",
+      "How to Verify": "Choose Credit Card and inspect presence of required fields.",
+      "Pass Criteria": "Credit card form appears with cardholder, card number, expiry, and CVV fields.\nForm layout is readable and interactive."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Card Validation",
+      "Check": "Proceed action validates card data and shows field-level errors for invalid input",
+      "How to Verify": "Enter invalid card values and attempt to proceed.",
+      "Pass Criteria": "Validation blocks progression on invalid card details.\nError messages are displayed near the relevant field block."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Billing Address",
+      "Check": "Billing address is shown as selected and matches shipping address",
+      "How to Verify": "Submit packaging step and inspect billing address area on payment page.",
+      "Pass Criteria": "Billing address appears selected by default.\nDisplayed billing address matches the submitted shipping address."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Billing Constraints",
+      "Check": "Billing address section respects critical-path restrictions",
+      "How to Verify": "Check billing section controls and interactions on payment page.",
+      "Pass Criteria": "Country switch is not enabled.\nBilling address cannot be edited in this critical-path scope."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Error and Loading States",
+      "Check": "Retry page and skeleton states are handled correctly",
+      "How to Verify": "Observe initial loading and simulate query failure path where possible.",
+      "Pass Criteria": "Skeleton is shown during loading.\nRetry page is shown when payments page query fails."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Submission Wiring",
+      "Check": "Selected payment method is submitted through ChooseCartPaymentMethodMutation",
+      "How to Verify": "Select Credit Card and inspect network call when submitting payment selection.",
+      "Pass Criteria": "Mutation for choosing cart payment method is triggered on submit action.\nSelected payment option is reflected in request behavior."
+    },
+    {
+      "Check ID": "UAT-009",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "MRP Styling",
+      "Check": "MRP credit card form styling matches approved design",
+      "How to Verify": "Open MRP payment step on desktop and mobile widths and compare with design baseline.",
+      "Pass Criteria": "Credit card form styling aligns with MRP design intent.\nNo visible style regression reduces trust or readability."
+    },
+    {
+      "Check ID": "UAT-010",
+      "Contact": "Cavazzuti, Matilde || LuxExperience",
+      "Section": "Cross-Device Critical Path",
+      "Check": "Critical payment path works consistently across desktop and mobile",
+      "How to Verify": "Repeat core checks on desktop and mobile viewport/device setup in acceptance.",
+      "Pass Criteria": "Core payment method and billing behaviors are consistent across device types.\nNo device-specific blocker prevents critical-path completion to payment selection stage."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-17766",
+      "AC Ref": "AC-G2-17766-METHODS-LIST",
+      "Capability": "Payment methods list is fetched and displayed",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Story AC plus PR [G2-17766] CreditCard payment submission",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "None observed in AC wording for this behavior."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-17766",
+      "AC Ref": "AC-G2-17766-SELECTION-PERSIST",
+      "Capability": "Payment method selection via radio and persistence on reload",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Explicit AC plus commit 301e7a2a6bfacf082858ed96cd1adf0dae279a52",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": "Persistence scope after full session restart is not explicitly defined."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-17766",
+      "AC Ref": "AC-G2-17766-ADYEN-FORM",
+      "Capability": "Adyen credit card form appears when Credit Card is selected",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Story AC and PR [G2-17766] Credit Card Payment Form from Adyen",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "No AC-level specification of card-brand icon fallback behavior."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-17766",
+      "AC Ref": "AC-G2-17766-VALIDATION",
+      "Capability": "Proceed action validates card fields and displays errors",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC plus Jira QA comment confirming invalid-card error behavior",
+      "Evidence Availability": "Available",
+      "Case Type": "Negative",
+      "Inconsistencies": "Exact copy/content of error messages is not specified in AC."
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-17767",
+      "AC Ref": "AC-G2-17767-BILLING-SAME-AS-SHIPPING",
+      "Capability": "Billing address is selected and mirrors shipping address",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-005",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Story AC plus PR [G2-17767] Setup payments page with billing address",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "No AC-level exception path for missing shipping address data."
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-17767",
+      "AC Ref": "AC-G2-17767-CONSTRAINTS",
+      "Capability": "No country switch and no billing edit in critical path",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Direct AC mapping",
+      "Evidence Availability": "Available",
+      "Case Type": "Usability",
+      "Inconsistencies": "Future edit-country enablement criteria not described in this scope."
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-17767",
+      "AC Ref": "AC-G2-17767-RETRY-SKELETON",
+      "Capability": "Retry page shown on query failure and skeleton during loading",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC and QA comment references loading state",
+      "Evidence Availability": "Available",
+      "Case Type": "Negative",
+      "Inconsistencies": "Trigger condition specifics for retry page are not fully enumerated in ticket."
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-17766",
+      "AC Ref": "AC-G2-17766-CHOOSE-MUTATION",
+      "Capability": "Payment selection is submitted via ChooseCartPaymentMethodMutation",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-008",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC text and PR/commit evidence in mytheresa/atelier",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "Mutation response handling boundaries to order placement are split across epics."
+    },
+    {
+      "Coverage ID": "COV-009",
+      "Jira Source": "G2-20200",
+      "AC Ref": "AC-G2-20200-MRP-STYLE",
+      "Capability": "MRP credit card form styling aligns with design",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-009",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Task AC plus PR [G2-20200] Fix CreditCard style for MRP",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": "Design tolerance thresholds are not explicitly codified in ticket text."
+    },
+    {
+      "Coverage ID": "COV-010",
+      "Jira Source": "G2-17317",
+      "AC Ref": "AC-EPIC-DEVICE-CONSISTENCY",
+      "Capability": "Payment critical path works consistently across desktop and mobile",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-010",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Epic NFR plus linked story/task evidence",
+      "Evidence Availability": "Available",
+      "Case Type": "Regression",
+      "Inconsistencies": "Epic-level requirement is broad and does not define measurable performance thresholds."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "OBS-001",
+      "Source Type": "Jira Comment",
+      "Jira Source": "G2-17766",
+      "Summary": "QA comment reported mutation handling limitations in ACP while core UI behaviors worked",
+      "How to Validate": "Run payment selection and capture whether backend mutation response still blocks full feature completion in acceptance.",
+      "Expected Observation": "Core payment UI checks pass while any backend dependency limitations are isolated and documented.",
+      "Impact": "Release risk",
+      "Linked Coverage IDs": "COV-004,COV-008",
+      "Evidence Notes": "Jira comment 711982"
+    },
+    {
+      "Observation ID": "OBS-002",
+      "Source Type": "GitHub PR",
+      "Jira Source": "G2-17766,G2-17767,G2-20200",
+      "Summary": "All in-scope stories have direct PR/commit linkage in mytheresa/atelier",
+      "How to Validate": "If needed for sign-off, open linked PRs and confirm merged status and scope alignment to AC.",
+      "Expected Observation": "Code-level traceability supports AC coverage confidence for all in-scope stories.",
+      "Impact": "Traceability",
+      "Linked Coverage IDs": "COV-001,COV-005,COV-009",
+      "Evidence Notes": "PRs #245, #260, #229, #310 and associated merge commits"
+    },
+    {
+      "Observation ID": "OBS-003",
+      "Source Type": "Confluence",
+      "Jira Source": "G2-17317",
+      "Summary": "Epic links Milestone 1 critical-path documentation, but exact page was not resolved via available CQL query in this run",
+      "How to Validate": "If business requests doc-level cross-check, provide exact page ID/link from stakeholder and rerun targeted extraction.",
+      "Expected Observation": "UAT checklist remains valid from Jira AC; additional doc context may refine wording only.",
+      "Impact": "Coverage confidence",
+      "Linked Coverage IDs": "COV-010",
+      "Evidence Notes": "Confluence title/siteSearch queries returned no deterministic match for linked milestone URL"
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "EPIC_KEY": "G2-17475",
+  "EPIC_SLUG": "near-real-time-sync-from-wcs-to-tapir-oblivion",
+  "OUTPUT_PATH": "uat-test-plans/G2-17475-near-real-time-sync-from-wcs-to-tapir-oblivion.xlsx",
+  "PLAN_TITLE": "G2-17475 UAT - Near Real-Time Sync From WCS To Tapir Oblivion",
+  "GENERATED_DATE": "2026-08-06",
+  "EPIC_SUMMARY": "Near real-time sync from WCS to Tapir - Oblivion",
+  "EPIC_STATUS": "Backlog",
+  "EPIC_CREATED_BY": "Cobbe, Valentina || YOOX NET A PORTER",
+  "COMPONENT": "CD1",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "20-30 minutes",
+  "COVERAGE_SUMMARY": "No child stories are directly linked to this epic. Coverage is enriched via the linked Initiative G2-16119 (Customer Data Synchronization – WCS to Tapir) which provides architectural context, latency SLA (< 5 seconds), data-scope definition, and links to 10+ Done sibling epics. Sibling Done stories G2-17014 (Registered User Deletes an Address, Done) and G2-17021 (Registered User Updates Email, Done, test result Nov-2025) confirm the event-driven WCS-to-Tapir/Gecco sync mechanism is implemented and tested. Coverage spans 6 checks: 4 epic-level AC checks plus 2 new checks derived from Initiative success criteria (latency SLA) and sibling implementation patterns (per-domain PII deletion).",
+  "STORIES_IN_SCOPE": "No direct child stories. Initiative context: G2-16119 (Customer Data Synchronization – WCS to Tapir). Sibling Done stories used for evidence and pattern derivation: G2-17014 (Registered User Deletes an Address – under G2-17473 Addresses, Done), G2-17021 (Registered User Updates Email – under G2-17476 Email Changes, Done).",
+  "STORIES_EXCLUDED": "Sibling epics: G2-16317 (Newly created users), G2-16318 (Profile updates), G2-20372 (Wishlist), G2-17473 (Addresses), G2-17476 (Email Changes) – all Done and excluded from scope as they cover distinct event types. Reverse sync from Gecco to WCS (G2-22993).",
+  "OUT_OF_SCOPE": "Story-level UI flows, technical implementation validation, reverse sync from Gecco to WCS (G2-22993), and non-PII data domains.",
+  "DEV_EVIDENCE": "Available via Initiative context and sibling Done story evidence. G2-16119 (Initiative) links to 10+ Done sibling epics confirming the event-driven WCS-to-Gecco sync pipeline is implemented. G2-17014 (Registered User Deletes an Address, Done) confirms deletion propagation via the same sync mechanism. G2-17021 test result comment (Nov 2025) confirms sync is functional end-to-end including rejection of conflicting updates. Direct Bitbucket PR access blocked (unauthorized) – sibling story Done status and test results serve as Jira-link fallback evidence.",
+  "GAPS_SUMMARY": "Oblivion event schema (full-customer deletion) differs from per-entity delete events used in sibling Done epics (G2-17014 deletes a single address). The oblivion trigger, event handler, and PII domain coverage matrix have not been enumerated in the epic ticket. Retry thresholds and SLA measurement points are not defined. Initiative success criteria (< 5s latency, 100% parity) apply but may need oblivion-specific tuning.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Deletion Propagation",
+      "Check": "Customer deletion initiated on WCS is reflected on Gecco in near real time",
+      "How to Verify": "Delete a test customer in WCS and confirm the customer profile is removed or anonymized in Gecco within expected sync latency. The customer is matched via the parentCustomerUrn identity key established by the sync pipeline (tapir#6382 PorterMigrationMapping; ant#32 forwards ParentCustomerUrn on the message DTOs), so verify the oblivion event resolves to the correct internal customer before erasure.",
+      "Pass Criteria": "Deletion/anonymization is reflected on Gecco after WCS deletion event.\nNo residual active profile remains in Gecco for the deleted customer."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Auditability",
+      "Check": "Oblivion event generates auditable confirmation of data removal",
+      "How to Verify": "Execute an oblivion event and review available business-accessible logs or support-visible traces for confirmation records.",
+      "Pass Criteria": "A traceable confirmation record exists for the deletion event.\nRecord can be correlated to the customer and deletion timestamp."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Retry Integrity",
+      "Check": "Partial or failed deletions are retried and converge to completed removal",
+      "How to Verify": "Use a controlled failure scenario or replay path, then verify the retry mechanism processes the pending deletion to completion.",
+      "Pass Criteria": "Retry process re-attempts failed deletion operations.\nFinal state reaches complete deletion/anonymization without manual data patching."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Data Scope Compliance",
+      "Check": "PII-associated data domains in scope are removed or anonymized consistently",
+      "How to Verify": "For a deleted customer, inspect representative data domains (profile attributes, addresses, consents, credentials visibility) through accepted business verification paths.",
+      "Pass Criteria": "In-scope personal data is removed or anonymized consistently across validated domains.\nNo in-scope domain remains in an undeleted state after completion."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Sync Latency",
+      "Check": "Oblivion event is reflected on Gecco within the near-real-time SLA defined in the initiative (< 5 seconds)",
+      "How to Verify": "Trigger a test customer deletion on WCS and measure the elapsed time until the deletion/anonymization is visible in Gecco. Compare against the < 5-second SLA specified in G2-16119 Initiative success criteria.",
+      "Pass Criteria": "Deletion is reflected on Gecco within 5 seconds of the WCS oblivion event.\nIf latency exceeds the SLA, the retry mechanism picks up the event and the final state still converges within a reasonable window."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Data Domain Coverage",
+      "Check": "Each PII data domain (profile attributes, address entries, consents, credentials/login link) is individually confirmed deleted or anonymized after an oblivion event",
+      "How to Verify": "After a test oblivion event, inspect each domain independently through available business verification paths: (1) profile attributes in Gecco, (2) address book entries, (3) marketing consents, (4) credential/login association. Address-domain removal reuses the delete path proven in tapir#6489 (G2-17014); customer identity resolution uses the parentCustomerUrn mapping (tapir#6382 + ant#32). Confirm the oblivion handler fans out to ALL four domains rather than relying on per-entity delete events.",
+      "Pass Criteria": "Profile attributes are removed or anonymized.\nAddress entries are removed.\nConsent records are removed or anonymized.\nCredential/login association is severed.\nNo domain retains identifiable data after completion."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-17475",
+      "AC Ref": "AC-EPIC-001",
+      "Capability": "Deletion on WCS is propagated to Gecco",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Deletion-propagation pattern evidenced by sibling tapir#6489 (registered user deletes an address, merged 2026-01-09, incl. DB migration) reused on the same WCS\u2192Tapir/Gecco pipeline. Oblivion (full-customer) fan-out not yet decomposed at story level.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "No linked child stories for G2-17475 directly. Sibling Done story G2-17014 confirms deletion propagation pattern; oblivion-specific flow not yet decomposed at story level."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-17475",
+      "AC Ref": "AC-EPIC-002",
+      "Capability": "Deletion confirmation is logged and auditable",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Mapped from epic acceptance criteria",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Compliance",
+      "Inconsistencies": "Audit log access path is not specified in the epic ticket. G2-16119 initiative requires full traceability but does not prescribe the audit mechanism."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-17475",
+      "AC Ref": "AC-EPIC-003",
+      "Capability": "Failed or partial deletion paths are retried",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Mapped from epic acceptance criteria",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "Retry thresholds and timing are not defined in the epic text."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-17475",
+      "AC Ref": "AC-EPIC-004",
+      "Capability": "PII and associated attributes are removed or anonymized",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Mapped from data scope bullets in epic description",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Security",
+      "Inconsistencies": "Exact field-level deletion matrix is not enumerated in the epic ticket."
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-16119 (Initiative context)",
+      "AC Ref": "AC-INIT-001",
+      "Capability": "Oblivion event propagates within near-real-time latency SLA (< 5 seconds)",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-005",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Latency SLA derived from G2-16119 Initiative success criteria. The event-driven pipeline meeting this SLA is evidenced by sibling PRs tapir#6382 + ant#32 (customer sync via parentCustomerUrn, merged 2025-11-13) and tapir#6489 (address delete, merged 2026-01-09).",
+      "Evidence Availability": "Available",
+      "Case Type": "Performance",
+      "Inconsistencies": "Oblivion events are full-customer deletes; latency profile may differ from incremental update events validated in sibling stories."
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-16119 (Initiative context) + G2-17014 (sibling Done story)",
+      "AC Ref": "AC-INIT-002",
+      "Capability": "All PII data domains are deleted or anonymized independently after an oblivion event",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Data-scope definition from G2-16119 (Personal Data, Attributes, Consents, Address Book). Address-domain deletion propagation is evidenced by tapir#6489 (G2-17014, merged 2026-01-09); customer identity mapping/anonymization key (parentCustomerUrn) by tapir#6382 + ant#32 (G2-17021). Oblivion-specific multi-domain fan-out not yet evidenced.",
+      "Evidence Availability": "Available",
+      "Case Type": "Compliance",
+      "Inconsistencies": "Oblivion-specific domain handler may not reuse per-entity delete events from sibling epics; confirmation of coverage for all 4 domains pending story breakdown."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "OBS-001",
+      "Source Type": "Jira Epic",
+      "Jira Source": "G2-17475",
+      "Summary": "Epic is backlog-level and lacks linked child stories for concrete execution paths",
+      "How to Validate": "Confirm with product/engineering owners whether implementation stories exist outside epic linkage and attach them before final sign-off.",
+      "Expected Observation": "Additional linked stories should refine scenario-level checks and evidence traceability.",
+      "Impact": "Traceability",
+      "Linked Coverage IDs": "COV-001,COV-002,COV-003,COV-004",
+      "Evidence Notes": "No child stories returned by parent/epic-link/linked-issues hierarchy queries. Context enriched via linked Initiative G2-16119 and sibling Done stories G2-17014, G2-17021."
+    },
+    {
+      "Observation ID": "OBS-002",
+      "Source Type": "Initiative + Sibling Done Stories",
+      "Jira Source": "G2-16119, G2-17014, G2-17021",
+      "Summary": "Oblivion event handler may differ architecturally from per-entity delete events used in sibling Done epics",
+      "How to Validate": "Confirm with engineering whether the oblivion trigger reuses the same WCS event bus / consumer as address and profile updates (G2-17014, G2-17021) or invokes a dedicated oblivion handler. Validate that the handler covers all 4 PII domains (profile, address, consent, credentials) rather than just a single entity type.",
+      "Expected Observation": "A dedicated oblivion consumer exists that orchestrates deletion across all PII domains, rather than delegating to per-entity handlers individually.",
+      "Impact": "Coverage",
+      "Linked Coverage IDs": "COV-001,COV-004,COV-006",
+      "Evidence Notes": "Sibling story G2-17014 (address delete, Done) and G2-17021 (email update, Done – test result Nov 2025) confirm the pipeline works for single-entity events. Full-customer oblivion scope not yet validated at story level."
+    }
+  ]
+}

@@ -1,0 +1,247 @@
+{
+  "EPIC_KEY": "G2-17387",
+  "EPIC_SLUG": "res-03-purchasable",
+  "OUTPUT_PATH": "uat-test-plans/G2-17387-res-03-purchasable.xlsx",
+  "PLAN_TITLE": "G2-17387 UAT - RES 03 Purchasable",
+  "GENERATED_DATE": "2026-08-06",
+  "EPIC_SUMMARY": "RES-03 | Purchasable",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Sohail, Katherine || LuxExperience",
+  "COMPONENT": "EIP",
+  "TARGET_URLS": "https://acceptance.net-a-porter.com/en-de, https://acceptance.mrporter.com/en-de",
+  "TIMEBOX": "35-45 minutes",
+  "COVERAGE_SUMMARY": "2 UI-testable FE stories mapped to 9 business checks and 9 coverage rows. 5 backend stories are excluded from direct UI execution.",
+  "STORIES_IN_SCOPE": "G2-21750 | FE - Reservation create clean payload | Done\nG2-22730 | FE - Update ProductID references to Product Variant Code for reservations | Done",
+  "STORIES_EXCLUDED": "G2-20915 | BE - Return reservations for a given filter | Backend API filtering implementation, not directly UI-testable.\nG2-21531 | BE - Serve reservations data to the storefront (Hyena) | Backend GraphQL service exposure, no direct business UI steps.\nG2-21532 | BE - Fetch reservation details and translate SKU into cart-ready products (Hyena) | Backend enrichment and translation logic, validated indirectly via FE behavior.\nG2-21787 | BE - Set OwnerId | Backend ownership assignment logic, not a standalone UI scenario.\nG2-22059 | BE: Customer URN addition to Tapir Authorization Token | Auth-token backend infrastructure update, no direct UI check flow.",
+  "OUT_OF_SCOPE": "Purchasable reservation notifications, non-storefront reservation lifecycle states outside purchasable display, and deep backend observability/logging verification.",
+  "DEV_EVIDENCE": "Trigger summary: triggered stories=2/2 (TRG-AC). Confluence lookups executed=1 (page 178564275). GitHub lookups executed=2 and returned no Jira-key matches. Jira-link fallback scan executed on description/comments/issuelinks for both in-scope stories and found no explicit PR/commit links. Story evidence availability: 0 Available, 2 Unavailable.",
+  "GAPS_SUMMARY": "FE story G2-21750 has terse acceptance wording and no explicit test-scenario detail. No direct PR/commit evidence was discoverable for in-scope FE stories from GitHub key lookup or Jira-link fallback.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "My Reservations Visibility",
+      "Check": "My Reservations section displays purchasable reservations for the signed-in customer",
+      "How to Verify": "Sign in with a customer having at least one purchasable reservation and open My Account > My Reservations.",
+      "Pass Criteria": "Purchasable reservations are visible in My Reservations.\nNo unrelated reservation status appears in this section."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Reservation Card Presence",
+      "Check": "Reservation card is shown only when purchasable reservations exist",
+      "How to Verify": "Compare two users: one with purchasable reservations and one without; open My Reservations for both.",
+      "Pass Criteria": "Reservation card appears for the user with purchasable reservations.\nReservation card is absent or clearly empty for users without purchasable reservations."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Product Identifier Consistency",
+      "Check": "Reservation details render correctly using ProductVariantCode-based references",
+      "How to Verify": "Inspect reservation list and detail actions after FE ProductVariantCode update; verify item targeting stays correct.",
+      "Pass Criteria": "Displayed item identity remains correct after identifier switch.\nNo missing or mismatched reservation items are shown."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Reservation Creation Payload",
+      "Check": "Reservation creation flow omits created_by and current_owner_id from FE payload",
+      "How to Verify": "Execute reservation creation in FE and inspect network payload for creation request fields.",
+      "Pass Criteria": "Payload excludes created_by.\nPayload excludes current_owner_id."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Validation Error Handling",
+      "Check": "FE handles Orca 400 validation response when ProductVariantCode cannot be resolved",
+      "How to Verify": "Trigger creation with an invalid ProductVariantCode in acceptance-safe setup and observe FE behavior.",
+      "Pass Criteria": "User receives a safe and understandable error response.\nFlow remains stable and does not break session context."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Cross-Brand Coverage",
+      "Check": "Core purchasable reservation visibility behaves consistently on NAP and MRP storefronts",
+      "How to Verify": "Repeat visibility checks on both acceptance storefronts with equivalent reservation-ready users.",
+      "Pass Criteria": "Both storefronts surface purchasable reservations in My Reservations.\nNo brand-specific blocker prevents the core flow."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Session Integrity",
+      "Check": "Navigating My Reservations and attempting purchase-ready actions does not lose customer context",
+      "How to Verify": "Navigate across My Account sections and back to My Reservations while interacting with reservation entries.",
+      "Pass Criteria": "Customer context remains stable during navigation.\nReservation data remains scoped to the current user session."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "No-Data UX",
+      "Check": "No-purchasable-reservation experience is clear and non-blocking",
+      "How to Verify": "Use a user with no purchasable reservations and observe message/empty-state handling.",
+      "Pass Criteria": "Empty state communicates no purchasable reservations clearly.\nNo broken components or confusing stale data are displayed."
+    },
+    {
+      "Check ID": "UAT-009",
+      "Contact": "Sohail, Katherine || LuxExperience",
+      "Section": "Regression Confidence",
+      "Check": "Existing reservation interactions still work after identifier and payload changes",
+      "How to Verify": "Run baseline reservation interaction flow before/after update scope in acceptance and compare outcomes.",
+      "Pass Criteria": "No regression blocks core reservation interaction steps.\nUpdated fields behave without introducing data integrity issues."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-21750",
+      "AC Ref": "AC-G2-21750-PAYLOAD",
+      "Capability": "Reservation create payload excludes created_by and current_owner_id",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Mapped directly from FE story description",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Story is concise and lacks expanded BDD scenario details."
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-22730",
+      "AC Ref": "AC-G2-22730-ID-SWITCH",
+      "Capability": "FE references ProductVariantCode instead of ProductID for reservation flows",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003,UAT-009",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Mapped from FE defect story narrative",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "No explicit acceptance table in ticket; behavior interpreted from narrative requirements."
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-22730",
+      "AC Ref": "AC-G2-22730-ERR400",
+      "Capability": "FE handles Orca 400 validation errors for invalid ProductVariantCode",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-005",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Mapped from explicit error-handling requirement in story description",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Negative",
+      "Inconsistencies": "Exact user-facing error text is not defined in Jira story."
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-17387",
+      "AC Ref": "AC-EPIC-PURCHASABLE-VIEW",
+      "Capability": "Customers can view purchasable reservations in My Reservations",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001,UAT-002",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Epic scope plus Confluence Slice 3 frontend tasks",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Epic-level wording is broad and does not define precise empty-state UX behavior."
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-17387",
+      "AC Ref": "AC-EPIC-CROSS-BRAND",
+      "Capability": "Purchasable reservation flow is usable on NAP and MRP",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Derived from epic business scope for NET-A-PORTER and MR PORTER",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "No ticket-level matrix of expected brand deltas is provided."
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-17387",
+      "AC Ref": "AC-EPIC-SESSION-CONTEXT",
+      "Capability": "Reservation data remains scoped to authenticated customer context",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Derived from epic intent and backend assumptions using parent URN",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Security",
+      "Inconsistencies": "No direct UI acceptance statement defines context-leak prevention criteria."
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-17387",
+      "AC Ref": "AC-CONF-178564275-FE-TASK",
+      "Capability": "Storefront My Reservations section supports purchasable display scenario",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-001,UAT-008",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Confluence Slice 3 section: frontend tasks and assumptions",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Usability",
+      "Inconsistencies": "Confluence task status marks investigation items and does not prescribe final UX copy."
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-21750",
+      "AC Ref": "AC-G2-21750-REGRESSION",
+      "Capability": "Payload cleanup change does not regress existing reservation behavior",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-009",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Regression guard derived from scope of FE payload field removal",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "No explicit regression checklist is provided in story."
+    },
+    {
+      "Coverage ID": "COV-009",
+      "Jira Source": "G2-22730",
+      "AC Ref": "AC-G2-22730-FORM-TARGET",
+      "Capability": "Reservation form/filter/list references remain coherent after identifier migration",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003,UAT-009",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Story text explicitly mentions form submission, filters, and listings updates",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Functional",
+      "Inconsistencies": "Exact affected screens are not exhaustively listed in the ticket."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "OBS-001",
+      "Source Type": "Confluence",
+      "Jira Source": "G2-17387",
+      "Summary": "Slice 3 marks frontend tasks with investigation markers, indicating potential implementation variance",
+      "How to Validate": "During execution, capture any storefront behavior that deviates from the expected My Reservations visibility assumptions.",
+      "Expected Observation": "Core purchasable reservation visibility remains consistent even if minor UX details vary.",
+      "Impact": "Coverage confidence",
+      "Linked Coverage IDs": "COV-004,COV-007",
+      "Evidence Notes": "Confluence page 178564275"
+    },
+    {
+      "Observation ID": "OBS-002",
+      "Source Type": "Jira Story",
+      "Jira Source": "G2-22730",
+      "Summary": "Invalid ProductVariantCode handling depends on environment data alignment between Orca and Tapir",
+      "How to Validate": "Test one known-invalid variant in acceptance-safe setup and document whether error handling is deterministic.",
+      "Expected Observation": "A controlled validation error path is shown without breaking UI continuity.",
+      "Impact": "Release risk",
+      "Linked Coverage IDs": "COV-003",
+      "Evidence Notes": "G2-22730 requirement text"
+    },
+    {
+      "Observation ID": "OBS-003",
+      "Source Type": "Jira Evidence Fallback",
+      "Jira Source": "G2-21750,G2-22730",
+      "Summary": "No explicit GitHub PR or commit links found in Jira description/comments/issuelinks for in-scope FE stories",
+      "How to Validate": "If release sign-off requires code traceability, request linked PR references from engineering owners.",
+      "Expected Observation": "Business UAT remains executable but development traceability may stay partial.",
+      "Impact": "Traceability",
+      "Linked Coverage IDs": "COV-001,COV-002,COV-003",
+      "Evidence Notes": "GitHub key search returned no matches and Jira-link fallback yielded none"
+    }
+  ]
+}

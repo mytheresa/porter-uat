@@ -1,0 +1,10 @@
+# Optional filter list for incremental reducer runs.
+# If this file exists, only listed items are processed.
+# Accepted entries per line:
+# - Epic key: G2-17566
+# - Workbook name: G2-17566-some-slug.xlsx
+# - Workbook path: uat-test-plans/G2-17566-some-slug.xlsx
+
+G2-16977-shopping-bag.xlsx
+G2-16979-impersonation-checkout-account.xlsx
+

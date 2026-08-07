@@ -1,0 +1,268 @@
+{
+  "EPIC_KEY": "G2-17473",
+  "EPIC_SLUG": "wcs-tapir-address-sync",
+  "OUTPUT_PATH": "uat-test-plans/G2-17473-wcs-tapir-address-sync.xlsx",
+  "PLAN_TITLE": "G2-17473 UAT \u2014 Near Real-Time Address Sync WCS to Tapir",
+  "GENERATED_DATE": "2026-08-06",
+  "EPIC_SUMMARY": "Near real-time sync from WCS to Tapir - Addresses",
+  "EPIC_STATUS": "Done",
+  "EPIC_CREATED_BY": "Cobbe, Valentina || YOOX NET A PORTER",
+  "COMPONENT": "CD1",
+  "TARGET_URLS": "Integ WCS (address change trigger), Acceptance Tapir Admin (sync verification target)",
+  "TIMEBOX": "25-35 minutes",
+  "COVERAGE_SUMMARY": "3 UI-testable stories mapped to 10 business checks and 10 coverage rows. Bug G2-20787 (province sync regression, now Closed) informs regression scenario only.",
+  "STORIES_IN_SCOPE": "G2-17012 | Registered User Adds a New Address | Done\nG2-17013 | Registered User Updates an Address | Done\nG2-17014 | Registered User Deletes an Address | Done",
+  "STORIES_EXCLUDED": "G2-20787 | Province not updated in shipping address during sync | Bug/defect ticket (Closed); informs exploratory regression scenario but is not a user story for direct UAT execution.",
+  "OUT_OF_SCOPE": "Sync of non-registered (guest) users' addresses, WCS bulk import flows, Tapir Admin UI rendering completeness beyond address persistence, direct Tapir-to-WCS reverse address sync, and backend observability/monitoring validation.",
+  "DEV_EVIDENCE": "GitHub MCP (org:mytheresa) search recovered merged PRs across two repos: tapir (Catalog Service, the Tapir target) and ant (Middleware between WCS and Tapir). G2-17012 (Add address): tapir#6419 'Add registered user add address endpoint' (merged 2025-11-21) + ant#37 'registered user adds a new address' (merged 2025-11-21). G2-17013 (Update address): ant#42 'update addresses' (merged 2025-12-05); the tapir-side update PR #6451 was closed UNMERGED (labeled 'do NOT merge'/'work in progress'), so the update path landed in the ant middleware. G2-17014 (Delete address): tapir#6489 'registered user deletes an address' (merged 2026-01-09, labels 'Contains Migrations','Porter' \u2014 includes a DB schema migration). Bug G2-20873 (clone of G2-20787): tapir#6634 'Improve handling of non-existing addresses in SyncAddressProcessor' (merged 2026-03-04) removed the non-blank requirement on addressId so a delete/sync for an address absent in Tapir no longer fails validation. No PR found for province-regression bug G2-20787. PR bodies for the add/update/delete stories use the boilerplate template (no per-field changelog); evidence is at endpoint/handler level. Story availability: G2-17012, G2-17013, G2-17014 Available; province regression Unavailable.",
+  "GAPS_SUMMARY": "Add/update/delete PRs confirm the endpoints and middleware handlers exist, but their PR bodies are boilerplate (no explicit per-field mapping, address-type, or default-flag changelog) \u2014 those attribute checks remain evidenced only at AC level. No PR found for the province/state regression (G2-20787): province_name is stored in DB per developer comment but Tapir Admin UI display was unresolved at bug close; coverage deferred to exploratory scenario. tapir#6451 (update) was abandoned unmerged \u2014 verify the update path is fully served by the ant middleware (ant#42). Confluence page linked in G2-17013 (CD1 | Analysis | Customer Addresses Sync) not retrieved; AC from Jira remains canonical. Latency SLA (<5s) is defined at initiative level (G2-16119), not in child story AC.",
+  "CHECKLIST_ROWS": [
+    {
+      "Check ID": "UAT-001",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Address Creation",
+      "Check": "Adding a new address via WCS MyAccount Address Book is synchronized to Tapir",
+      "How to Verify": "Log in to a registered user account on WCS. Navigate to MyAccount > Address Book and add a new address with all required fields. The WCS event is consumed by the ant middleware (ant#37) and posted to the Tapir add-address endpoint (tapir#6419). Wait for sync, then inspect the address in Tapir (admin or API) to confirm the new record is present.",
+      "Pass Criteria": "The new address appears in Tapir with matching street, city, postal code, region, and country values.\nAddress is created without error and the sync completes without manual intervention."
+    },
+    {
+      "Check ID": "UAT-002",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Address Creation",
+      "Check": "Adding a new address during WCS checkout (Shipping Details) is synchronized to Tapir",
+      "How to Verify": "Log in as a registered user on WCS. Proceed to checkout and add a new shipping address in the Shipping Details step. Complete or abandon the checkout flow. The add-address event flows through the same ant#37 middleware handler to the tapir#6419 endpoint. Verify the address exists in Tapir.",
+      "Pass Criteria": "The new address entered during checkout is present in Tapir with all fields matching the input.\nSync occurs without requiring additional user action after address entry."
+    },
+    {
+      "Check ID": "UAT-003",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Address Update",
+      "Check": "Updating an existing address via WCS MyAccount Address Book is synchronized to Tapir",
+      "How to Verify": "Log in as a registered user on WCS. Navigate to MyAccount > Address Book, select an existing address, and change at least one field (e.g., street or city). Save the change. The update event is processed by the ant middleware update-addresses path (ant#42). Verify the updated address in Tapir; confirm the existing record is modified in place, not duplicated.",
+      "Pass Criteria": "The updated field values are reflected in Tapir after sync.\nNo duplicate address record is created; the existing record is modified in place."
+    },
+    {
+      "Check ID": "UAT-004",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Address Update",
+      "Check": "Updating an existing address during WCS checkout (Shipping Details) is synchronized to Tapir",
+      "How to Verify": "Log in as a registered user on WCS. Proceed to checkout, select an existing address and edit it in the Shipping Details step. Proceed past that step. Verify the updated address in Tapir.",
+      "Pass Criteria": "The edited address is updated in Tapir to match the values entered during checkout.\nExisting address record is updated; no duplicate is introduced."
+    },
+    {
+      "Check ID": "UAT-005",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Address Deletion",
+      "Check": "Deleting an address via WCS MyAccount Address Book propagates the deletion to Tapir",
+      "How to Verify": "Log in as a registered user on WCS. Navigate to MyAccount > Address Book and delete an existing address. Deletion is handled by tapir#6489 (includes a DB migration). Verify in Tapir that the address record no longer exists. Also test deleting an address that does not exist in Tapir: per tapir#6634, the SyncAddressProcessor tolerates a blank/absent addressId and should not raise a validation error (event handled gracefully / routed to DLQ).",
+      "Pass Criteria": "The deleted address is removed from Tapir after sync completes.\nNo orphaned or ghost record remains in Tapir for the deleted address."
+    },
+    {
+      "Check ID": "UAT-006",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Data Completeness",
+      "Check": "All address fields are correctly mapped and persisted in Tapir after sync",
+      "How to Verify": "After any create or update sync operation, inspect the address in Tapir (via admin UI or API). Verify each field: address line (street), city, postal code, region/state/province, and country.",
+      "Pass Criteria": "All address fields match the source values from WCS exactly.\nNo field is truncated, nulled, or incorrectly mapped during transit."
+    },
+    {
+      "Check ID": "UAT-007",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Data Completeness",
+      "Check": "Province/state field is correctly synced and stored in Tapir (regression from G2-20787)",
+      "How to Verify": "Update the province field of an existing address on WCS. Wait for sync. Inspect the address in Tapir at database level (province_name column) or via admin. Confirm the province value matches the WCS input.",
+      "Pass Criteria": "Province/state value is correctly stored in Tapir after sync.\nRegression from G2-20787 (province not updated) does not recur."
+    },
+    {
+      "Check ID": "UAT-008",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Address Attributes",
+      "Check": "Address type (billing or shipping) is correctly identified and stored in Tapir after sync",
+      "How to Verify": "Create or update an address that is explicitly typed as billing on WCS. Verify in Tapir that the address type field reflects the correct billing designation.",
+      "Pass Criteria": "Address type (billing/shipping) in Tapir matches the type set on WCS.\nSwitching address type on WCS correctly updates the type in Tapir on next sync."
+    },
+    {
+      "Check ID": "UAT-009",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Address Attributes",
+      "Check": "Default address flag is preserved and correctly reflected in Tapir after sync",
+      "How to Verify": "Set an address as the default address in WCS MyAccount. After sync, inspect the corresponding address record in Tapir and confirm the default flag is set.",
+      "Pass Criteria": "The default address flag in Tapir matches the default designation on WCS.\nOnly one address per user is marked as default in Tapir."
+    },
+    {
+      "Check ID": "UAT-010",
+      "Contact": "Cobbe, Valentina || YOOX NET A PORTER",
+      "Section": "Sync Latency",
+      "Check": "Address changes on WCS are reflected in Tapir in near real-time",
+      "How to Verify": "Perform an address create, update, or delete action on WCS and note the timestamp. Inspect Tapir at 30-second intervals and record when the change appears.",
+      "Pass Criteria": "Address change is visible in Tapir within a timeframe consistent with near real-time delivery (within minutes at most, targeting <5 seconds per initiative SLA).\nNo manual trigger or batch job is required to initiate the sync."
+    }
+  ],
+  "MATRIX_ROWS": [
+    {
+      "Coverage ID": "COV-001",
+      "Jira Source": "G2-17012",
+      "AC Ref": "AC-Scenario1",
+      "Capability": "Address Creation via MyAccount Address Book",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-001",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC explicit: add new address in WCS Address Book \u2192 sync to Tapir. Evidence: tapir#6419 (add registered-user address endpoint, merged 2025-11-21) + ant#37 (WCS\u2192Tapir middleware add-address handler, merged 2025-11-21).",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-002",
+      "Jira Source": "G2-17012",
+      "AC Ref": "AC-Scenario2",
+      "Capability": "Address Creation via Checkout Shipping Details",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-002",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC explicit: add new address in WCS checkout Shipping Details \u2192 sync to Tapir. Same implementation as COV-001: tapir#6419 add-address endpoint + ant#37 middleware handler (both merged 2025-11-21).",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-003",
+      "Jira Source": "G2-17013",
+      "AC Ref": "AC-Scenario1",
+      "Capability": "Address Update via MyAccount Address Book",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-003",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC explicit: update existing address in WCS Address Book \u2192 sync to Tapir. Evidence: ant#42 'update addresses' middleware PR (merged 2025-12-05). Tapir-side update PR #6451 was closed unmerged (WIP) \u2014 update path served by the ant middleware.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-004",
+      "Jira Source": "G2-17013",
+      "AC Ref": "AC-Scenario2",
+      "Capability": "Address Update via Checkout Shipping Details",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-004",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC explicit: update existing address in WCS checkout \u2192 sync to Tapir. Same update path as COV-003: ant#42 middleware update-addresses PR (merged 2025-12-05).",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-005",
+      "Jira Source": "G2-17014",
+      "AC Ref": "AC-Scenario1",
+      "Capability": "Address Deletion via MyAccount Address Book",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-005",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "AC explicit: delete existing address in WCS Address Book \u2192 deletion propagated to Tapir. Evidence: tapir#6489 'registered user deletes an address' (merged 2026-01-09, includes DB migration). Non-existing-address handling hardened by tapir#6634 (G2-20873, merged 2026-03-04): SyncAddressProcessor no longer requires addressId to be non-blank.",
+      "Evidence Availability": "Available",
+      "Case Type": "Functional",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-006",
+      "Jira Source": "G2-17473",
+      "AC Ref": "Epic-AC-FieldMapping",
+      "Capability": "Address Field Completeness and Accuracy",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-006",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Epic AC specifies data validated against WCS schema; all address line details must sync correctly. Field mapping is implemented within the add/update endpoints (tapir#6419, ant#37/#42); PR bodies are boilerplate so per-field mapping is not itemized \u2014 verify each field at runtime.",
+      "Evidence Availability": "Available",
+      "Case Type": "Data Integrity",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-007",
+      "Jira Source": "G2-17473",
+      "AC Ref": "Epic-AC-FieldMapping",
+      "Capability": "Province/State Field Sync Regression",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-007",
+      "AC Fidelity": "Inferred",
+      "Evidence Notes": "Inferred from closed bug G2-20787 (province not updated during sync). Developer confirmed province_name stored in DB but not shown in Tapir Admin UI.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Regression",
+      "Inconsistencies": "Province stored in DB per developer comment but Tapir Admin UI display unresolved at bug close — verify DB-level persistence."
+    },
+    {
+      "Coverage ID": "COV-008",
+      "Jira Source": "G2-17473",
+      "AC Ref": "Epic-AC-AddressType",
+      "Capability": "Billing/Shipping Address Type Propagation",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-008",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Epic AC explicitly lists address type (billing/shipping) as data to sync.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Data Integrity",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-009",
+      "Jira Source": "G2-17473",
+      "AC Ref": "Epic-AC-DefaultFlag",
+      "Capability": "Default Address Flag Propagation",
+      "Priority": "Medium",
+      "Checklist Mapping": "UAT-009",
+      "AC Fidelity": "Full",
+      "Evidence Notes": "Epic AC explicitly lists default address flag as data to sync.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Data Integrity",
+      "Inconsistencies": "None"
+    },
+    {
+      "Coverage ID": "COV-010",
+      "Jira Source": "G2-17473",
+      "AC Ref": "Epic-AC-RealTime",
+      "Capability": "Near Real-Time Sync Latency",
+      "Priority": "High",
+      "Checklist Mapping": "UAT-010",
+      "AC Fidelity": "Partial",
+      "Evidence Notes": "Epic AC states 'near real-time'; initiative G2-16119 defines <5 second SLA. Child story AC does not specify latency threshold explicitly.",
+      "Evidence Availability": "Unavailable",
+      "Case Type": "Performance",
+      "Inconsistencies": "Latency SLA defined at initiative level only; child story AC silent on specific threshold."
+    }
+  ],
+  "EXPLORATORY_ROWS": [
+    {
+      "Observation ID": "EXP-001",
+      "Source Type": "Bug Context",
+      "Jira Source": "G2-20787 / G2-20873",
+      "Summary": "Province/state field visible in Tapir Admin UI after sync",
+      "How to Validate": "Update a WCS address with a non-null province/state value. After sync, check the Tapir Admin address detail page to confirm province/state is rendered in the UI (not only stored in the province_name DB column).",
+      "Expected Observation": "Province/state value is visible in the Tapir Admin address detail UI, matching the WCS source value.",
+      "Impact": "If province/state is silently stored but not displayed in Admin UI, operations staff cannot verify address accuracy; customer service and fulfillment correctness risks.",
+      "Linked Coverage IDs": "COV-007",
+      "Evidence Notes": "G2-20787 developer comment: province correctly stored in province_name column but not exposed in Tapir Admin UI at time of bug analysis (Feb 2026). Bug closed but admin UI display gap noted."
+    },
+    {
+      "Observation ID": "EXP-002",
+      "Source Type": "Bug Context",
+      "Jira Source": "G2-20873",
+      "Summary": "WCS deletion of a non-existing Tapir address triggers DLQ handling",
+      "How to Validate": "Send a delete-address event from WCS for an address ID that does not exist in Tapir. Observe the Ant/message queue behavior and confirm the event ends in DLQ rather than causing an unhandled error or loop.",
+      "Expected Observation": "The deletion message for a non-existing Tapir address is routed to the Dead Letter Queue without crashing the sync pipeline or blocking subsequent events.",
+      "Impact": "Without proper DLQ handling, a delete event for a ghost/stale address could block the entire address sync queue or cause repeated retry storms.",
+      "Linked Coverage IDs": "COV-005",
+      "Evidence Notes": "G2-20873 (Closed bug, cloned from G2-20787): WCS deletion message of a non-existing Tapir address ends in DLQ. Confirmed by tapir#6634 (merged 2026-03-04) which removes the non-blank addressId validation requirement in SyncAddressProcessor so non-existing-address events are tolerated rather than erroring."
+    },
+    {
+      "Observation ID": "EXP-003",
+      "Source Type": "Risk Analysis",
+      "Jira Source": "G2-17473",
+      "Summary": "Sync ordering and idempotency under rapid consecutive address changes",
+      "How to Validate": "Add a new address on WCS, then immediately update the same address before the first sync event lands in Tapir. Verify that the final state in Tapir reflects the most recent WCS state and no intermediate or phantom records are created.",
+      "Expected Observation": "Tapir address reflects only the final state from WCS. Events are processed in order or deduplicated such that no stale intermediate state is persisted.",
+      "Impact": "Out-of-order event processing could leave Tapir with stale address data, causing fulfillment failures for customers who updated their address close to order placement.",
+      "Linked Coverage IDs": "COV-001, COV-002, COV-003, COV-004",
+      "Evidence Notes": "No explicit AC or evidence covers event ordering/idempotency. Gap identified from near-real-time event-driven architecture context."
+    }
+  ]
+}
